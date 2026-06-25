@@ -1,0 +1,22 @@
+{
+  "name": "@varient/ui",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles/globals.css": "./src/styles/globals.css",
+    "./utils": "./src/lib/utils.ts"
+  },
+  "scripts": {
+    "types:check": "tsc --noEmit",
+    "lint": "echo \"No lint configured yet\""
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.6.0"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}

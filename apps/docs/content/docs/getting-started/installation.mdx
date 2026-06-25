@@ -1,0 +1,55 @@
+---
+title: Installation
+description: Add Varient design tokens and utilities to your project.
+---
+
+Varient components are copied into your project — you do not install them as npm packages. This guide covers the shared foundation every component depends on.
+
+## Prerequisites
+
+- React 19+
+- Tailwind CSS v4
+- TypeScript (strict mode recommended)
+
+## 1. Copy the utility
+
+Copy `cn()` from the library into your project:
+
+```tsx title="lib/utils.ts"
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+Install dependencies:
+
+```bash
+pnpm add clsx tailwind-merge
+```
+
+## 2. Add design tokens
+
+Copy `packages/ui/src/styles/globals.css` from the Varient repo into your project and import it before Tailwind in your global CSS:
+
+```css title="app/globals.css"
+@import './tokens.css'; /* Varient design tokens */
+@import 'tailwindcss';
+```
+
+## 3. Copy components
+
+Browse the docs and copy individual component files into your project. Each component page lists its dependencies (e.g. `framer-motion` for animated components, `@radix-ui/react-dialog` for Modal).
+
+## Monorepo setup
+
+If you are working from this repository directly:
+
+```bash
+pnpm install
+pnpm dev
+```
+
+The docs site runs at [http://localhost:3000](http://localhost:3000).

@@ -1,0 +1,22 @@
+---
+title: Introduction
+description: What Varient is and how the three layers work together.
+---
+
+Varient fills the gap between animation-only libraries (MagicUI, Aceternity) and utility-only libraries (shadcn, Radix Themes) by providing **both**, plus full-page sections, with a consistent visual identity.
+
+## Three layers, one library
+
+1. **Foundation** — Utility components. Accessible, Radix-powered, clean.
+2. **Animated** — Visual components. Framer Motion powered, with live playgrounds.
+3. **Sections** — Full page blocks. Compose from Layer 1 + Layer 2 only.
+
+Every component follows the same prop naming contract (`isDisabled`, `isLoading`, `isOpen`) and uses design tokens exclusively — no raw hex values in component code.
+
+## Copy-paste DX
+
+Users copy component files directly into their project. There is no `@varient/button` npm package. The docs site is the product — each component page shows the exact code to paste plus required dependencies.
+
+## Visual identity
+
+Varient uses a **dark-first** electric indigo accent (`--brand-500`) used sparingly — focus rings, active states, key CTAs, and accent moments in animated components. Light mode is fully supported.

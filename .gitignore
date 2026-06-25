@@ -1,3 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+.turbo/
+.source/
+out/
+dist/
+build/
+
+# Environment
+.env
+.env*.local
+
+# Debug
+*.log
+npm-debug.log*
+
+# TypeScript
+next-env.d.ts
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Reference scaffold (local only)
+_fumadocs-ref/
+
 # AI tooling — personal, not for upstream
 CONTEXT.md
 AGENTS.md

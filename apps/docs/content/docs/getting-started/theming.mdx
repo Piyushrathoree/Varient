@@ -1,0 +1,52 @@
+---
+title: Theming
+description: Configure Varient design tokens, dark mode, and Tailwind v4 integration.
+---
+
+All visual values in Varient come from CSS custom properties defined in `globals.css`. Components never hardcode colors, spacing, or radii.
+
+## Token categories
+
+| Category | Examples |
+| -------- | -------- |
+| Brand | `--brand-500` (primary indigo) |
+| Neutral | `--neutral-950` through `--neutral-0` |
+| Semantic | `--success`, `--warning`, `--danger`, `--info` |
+| Surface | `--bg-base`, `--text-primary`, `--border` |
+| Typography | `--font-body`, `--text-lg`, `--weight-semibold` |
+| Radius | `--radius-md` (default for Foundation) |
+| Animation | `--duration-normal`, `--ease-out` |
+
+## Dark mode
+
+Varient uses Tailwind's `dark:` prefix. Toggle dark mode by adding or removing the `dark` class on `<html>`:
+
+```tsx
+<html className="dark">
+```
+
+The docs site defaults to dark mode. All components must work in both light and dark modes.
+
+## Tailwind v4
+
+Tokens are exposed to Tailwind via `@theme` in `globals.css`, so you can use semantic utilities:
+
+```tsx
+<div className="bg-bg-base text-text-primary border-border rounded-md">
+  <button className="bg-brand-500 hover:bg-brand-600 text-neutral-0">
+    Primary action
+  </button>
+</div>
+```
+
+## Customizing
+
+Override CSS variables in your own `:root` or `.dark` block to retheme without touching component source:
+
+```css
+:root {
+  --brand-500: #6366f1; /* your accent */
+}
+```
+
+Never use raw Tailwind slate/zinc color names or hex values in component `className` strings.
