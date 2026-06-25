@@ -6,3 +6,4 @@ WORKSPACE.md
 .agentsignore
 .cursorignore
 .cursor
+/DESIGN.md
