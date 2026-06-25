@@ -1,6 +1,11 @@
-import { HomeLayout } from 'fumadocs-ui/layouts/home';
-import { baseOptions } from '@/lib/layout.shared';
+import { SiteHeader } from '@/components/site/site-header';
+import type { ReactNode } from 'react';
 
-export default function Layout({ children }: LayoutProps<'/'>) {
-  return <HomeLayout {...baseOptions()}>{children}</HomeLayout>;
+export default function HomeLayout({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader />
+      <div className="flex flex-1 flex-col">{children}</div>
+    </div>
+  );
 }

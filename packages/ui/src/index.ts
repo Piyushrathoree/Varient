@@ -1,1 +1,2 @@
 export { cn } from './lib/utils';
+export { Button, buttonVariants, type ButtonProps, type ButtonSize, type ButtonVariant } from './components/foundation/button';

@@ -1,0 +1,42 @@
+---
+title: Button
+description: Clickable actions with variants, sizes, loading, and disabled states.
+---
+
+<ComponentPreview name="button" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/button/` into your project.
+
+```bash
+bun add clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Button } from '@/components/foundation/button';
+
+export function Example() {
+  return (
+    <Button variant="primary" size="md">
+      Click me
+    </Button>
+  );
+}
+```
+
+## Props
+
+<ButtonPropsTable />
+
+## Variants
+
+- **primary** — brand indigo, main CTAs
+- **default** — high-contrast neutral
+- **secondary** — muted background
+- **outline** — bordered, transparent
+- **ghost** — minimal, hover fill
+- **destructive** — danger actions
+- **link** — text-only with underline on hover

@@ -13,14 +13,13 @@ packages/ui   → Component library source
 
 ## Prerequisites
 
-- Node.js 20+
-- pnpm 10+
+- Bun 1.2+
 
 ## Development
 
 ```bash
-pnpm install
-pnpm dev
+bun install
+bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) for the marketing site. Docs live at `/docs`.
@@ -29,9 +28,9 @@ Open [http://localhost:3000](http://localhost:3000) for the marketing site. Docs
 
 | Command | Description |
 | ------- | ----------- |
-| `pnpm dev` | Start docs dev server (Turbopack) |
-| `pnpm build` | Build all packages |
-| `pnpm types:check` | Typecheck all packages |
+| `bun dev` | Start docs dev server (Turbopack) |
+| `bun run build` | Build all packages |
+| `bun run types:check` | Typecheck all packages |
 
 ## Design source of truth
 
