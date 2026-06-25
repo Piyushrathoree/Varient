@@ -2,10 +2,10 @@
   "name": "varient",
   "private": true,
   "scripts": {
-    "dev": "turbo dev",
-    "build": "turbo build",
-    "types:check": "turbo types:check",
-    "lint": "turbo lint"
+    "dev": "bunx turbo dev",
+    "build": "bunx turbo build",
+    "types:check": "bunx turbo types:check",
+    "lint": "bunx turbo lint"
   },
   "devDependencies": {
     "turbo": "^2.5.4",
