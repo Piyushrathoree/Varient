@@ -1,0 +1,8 @@
+# AI tooling — personal, not for upstream
+CONTEXT.md
+AGENTS.md
+WORKSPACE.md
+.agents/
+.agentsignore
+.cursorignore
+.cursor
