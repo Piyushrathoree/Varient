@@ -1,7 +1,7 @@
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 import { ComponentPreview } from '@/components/preview/component-preview';
-import { PropsTable, buttonProps } from '@/components/docs/props-table';
+import { PropsTable, buttonProps, inputProps } from '@/components/docs/props-table';
 
 export function getMDXComponents(components?: MDXComponents) {
   return {
@@ -9,6 +9,7 @@ export function getMDXComponents(components?: MDXComponents) {
     ComponentPreview,
     PropsTable,
     ButtonPropsTable: () => <PropsTable props={buttonProps} />,
+    InputPropsTable: () => <PropsTable props={inputProps} />,
     ...components,
   } satisfies MDXComponents;
 }

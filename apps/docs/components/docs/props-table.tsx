@@ -50,3 +50,18 @@ export const buttonProps: PropRow[] = [
   { name: 'children', type: 'ReactNode', description: 'Button label content.' },
   { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
 ];
+
+export const inputProps: PropRow[] = [
+  { name: 'label', type: 'string', description: 'Label text rendered above the input.' },
+  { name: 'placeholder', type: 'string', description: 'Placeholder text inside the input.' },
+  { name: 'helperText', type: 'string', description: 'Helper text shown below the input.' },
+  { name: 'errorText', type: 'string', description: 'Error message — triggers error styling.' },
+  { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the input.' },
+  { name: 'isReadOnly', type: 'boolean', defaultValue: 'false', description: 'Makes the input read-only.' },
+  { name: 'isRequired', type: 'boolean', defaultValue: 'false', description: 'Marks the field as required.' },
+  { name: 'leftAddon', type: 'ReactNode', description: 'Icon or content inside the left edge.' },
+  { name: 'rightAddon', type: 'ReactNode', description: 'Icon or content inside the right edge.' },
+  { name: 'size', type: 'InputSize', defaultValue: "'md'", description: 'Height and padding preset.' },
+  { name: 'type', type: 'string', defaultValue: "'text'", description: 'Native input type attribute.' },
+  { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+];

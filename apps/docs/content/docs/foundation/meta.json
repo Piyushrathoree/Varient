@@ -1,4 +1,4 @@
 {
   "title": "Foundation",
-  "pages": ["button"]
+  "pages": ["button", "input"]
 }

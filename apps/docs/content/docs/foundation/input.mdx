@@ -1,0 +1,43 @@
+---
+title: Input
+description: Text input with label, helper text, error states, and addons.
+---
+
+<ComponentPreview name="input" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/input/` into your project.
+
+```bash
+bun add clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Input } from '@/components/foundation/input';
+
+export function Example() {
+  return (
+    <Input
+      label="Email"
+      type="email"
+      placeholder="you@example.com"
+      helperText="We'll never share your email."
+      isRequired
+    />
+  );
+}
+```
+
+## Props
+
+<InputPropsTable />
+
+## States
+
+- **Default** — neutral border, brand focus ring
+- **Error** — danger border and ring, error message below
+- **Disabled** — reduced opacity, no interaction
+- **Addons** — `leftAddon` / `rightAddon` for icons or prefix text

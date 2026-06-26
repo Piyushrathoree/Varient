@@ -18,7 +18,7 @@ export const layerLabels: Record<ComponentLayer, string> = {
 export const components: ComponentEntry[] = [
   // Foundation
   { name: 'Button', slug: 'button', layer: 'foundation', description: 'Clickable actions with variants, sizes, and loading states.', status: 'ready' },
-  { name: 'Input', slug: 'input', layer: 'foundation', description: 'Text input with label, helper text, and error states.', status: 'coming-soon' },
+  { name: 'Input', slug: 'input', layer: 'foundation', description: 'Text input with label, helper text, and error states.', status: 'ready' },
   { name: 'Textarea', slug: 'textarea', layer: 'foundation', description: 'Multiline text input with resize control.', status: 'coming-soon' },
   { name: 'Select', slug: 'select', layer: 'foundation', description: 'Accessible dropdown select powered by Radix.', status: 'coming-soon' },
   { name: 'Checkbox', slug: 'checkbox', layer: 'foundation', description: 'Boolean input with indeterminate support.', status: 'coming-soon' },

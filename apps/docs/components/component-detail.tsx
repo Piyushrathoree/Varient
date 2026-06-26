@@ -4,10 +4,11 @@ import { Button } from '@varient/ui';
 import type { ComponentEntry } from '@/lib/components/registry';
 import { layerLabels } from '@/lib/components/registry';
 import { ComponentPreview } from '@/components/preview/component-preview';
-import { PropsTable, buttonProps } from '@/components/docs/props-table';
+import { PropsTable, buttonProps, inputProps } from '@/components/docs/props-table';
 
 const propsBySlug: Record<string, typeof buttonProps> = {
   button: buttonProps,
+  input: inputProps,
 };
 
 interface ComponentDetailProps {
