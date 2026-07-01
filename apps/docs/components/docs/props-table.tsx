@@ -11,10 +11,10 @@ interface PropsTableProps {
 
 export function PropsTable({ props }: PropsTableProps) {
   return (
-    <div className="my-6 overflow-hidden rounded-xl border border-border">
+    <div className="my-6 overflow-hidden rounded-2xl border border-border/60">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-border bg-bg-subtle/60 text-left">
+          <tr className="border-b border-border/50 bg-neutral-900/40 text-left">
             <th className="px-4 py-3 font-medium text-text-primary">Prop</th>
             <th className="px-4 py-3 font-medium text-text-primary">Type</th>
             <th className="hidden px-4 py-3 font-medium text-text-primary sm:table-cell">

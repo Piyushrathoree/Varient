@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { motion } from 'motion/react';
 import {
   components,
   getComponentsByLayer,
@@ -20,31 +21,29 @@ const filters: { id: ComponentLayer | 'all'; label: string }[] = [
 
 export function ComponentsGallery() {
   const [activeFilter, setActiveFilter] = useState<ComponentLayer | 'all'>('all');
-  const filtered = useMemo(
-    () => getComponentsByLayer(activeFilter),
-    [activeFilter],
-  );
+  const filtered = useMemo(() => getComponentsByLayer(activeFilter), [activeFilter]);
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-6 py-16">
-      <div className="mb-10 max-w-2xl">
-        <p className="text-sm font-medium uppercase tracking-wider text-brand-500">Library</p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-text-primary sm:text-4xl">
+    <div className="mx-auto w-full max-w-7xl px-6 py-20">
+      {/* Header */}
+      <div className="mb-14">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-brand-400">Library</p>
+        <h1 className="font-display text-4xl font-bold tracking-tight text-text-primary sm:text-5xl">
           Components
         </h1>
-        <p className="mt-3 text-text-secondary">
-          Browse {components.length} components across three layers.{' '}
-          <span className="text-text-primary">{getReadyCount()} ready</span> to copy — the rest
-          are shipping soon.
+        <p className="mt-4 max-w-lg text-text-secondary">
+          {components.length} components across three layers.{' '}
+          <span className="font-medium text-text-primary">{getReadyCount()} ready</span> to copy —
+          the rest are shipping soon.
         </p>
       </div>
 
-      <div className="mb-8 flex flex-wrap gap-2">
+      {/* Filters */}
+      <div className="mb-10 flex flex-wrap gap-2.5">
         {filters.map((filter) => {
           const count =
-            filter.id === 'all'
-              ? components.length
-              : getComponentsByLayer(filter.id).length;
+            filter.id === 'all' ? components.length : getComponentsByLayer(filter.id).length;
+          const isActive = activeFilter === filter.id;
 
           return (
             <button
@@ -52,19 +51,17 @@ export function ComponentsGallery() {
               type="button"
               onClick={() => setActiveFilter(filter.id)}
               className={cn(
-                'inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors',
-                activeFilter === filter.id
-                  ? 'border-brand-500 bg-brand-500 text-neutral-0'
-                  : 'border-border bg-bg-base text-text-secondary hover:bg-bg-subtle hover:text-text-primary',
+                'inline-flex items-center gap-2.5 rounded-xl border px-5 py-2 text-sm font-medium transition-all duration-200',
+                isActive
+                  ? 'border-brand-500 bg-brand-500 text-white shadow-[0_0_12px_rgb(99_102_241/0.3)]'
+                  : 'border-border bg-bg-base text-text-secondary hover:border-border-strong hover:bg-bg-subtle hover:text-text-primary',
               )}
             >
               {filter.id === 'all' ? 'All' : layerLabels[filter.id]}
               <span
                 className={cn(
                   'rounded-full px-1.5 py-0.5 text-xs',
-                  activeFilter === filter.id
-                    ? 'bg-neutral-0/20 text-neutral-0'
-                    : 'bg-bg-muted text-text-tertiary',
+                  isActive ? 'bg-white/20 text-white' : 'bg-bg-muted text-text-tertiary',
                 )}
               >
                 {count}
@@ -74,11 +71,18 @@ export function ComponentsGallery() {
         })}
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Grid */}
+      <motion.div
+        key={activeFilter}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: [0, 0, 0.2, 1] }}
+        className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+      >
         {filtered.map((entry) => (
           <ComponentCard key={`${entry.layer}-${entry.slug}`} entry={entry} />
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }

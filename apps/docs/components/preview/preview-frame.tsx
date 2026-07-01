@@ -4,44 +4,44 @@ import type { ReactNode } from 'react';
 interface PreviewFrameProps {
   children: ReactNode;
   className?: string;
-  minHeight?: 'sm' | 'md' | 'lg';
+  minHeight?: 'sm' | 'md' | 'lg' | 'xl';
+  label?: string;
 }
 
 const minHeights = {
-  sm: 'min-h-[140px]',
-  md: 'min-h-[220px]',
-  lg: 'min-h-[320px]',
+  sm: 'min-h-[160px]',
+  md: 'min-h-[240px]',
+  lg: 'min-h-[360px]',
+  xl: 'min-h-[480px]',
 };
 
 export function PreviewFrame({
   children,
   className,
   minHeight = 'md',
+  label,
 }: PreviewFrameProps) {
   return (
     <div
       className={cn(
-        'overflow-hidden rounded-xl border border-border bg-bg-base shadow-sm',
+        'overflow-hidden rounded-2xl border border-border/60 bg-bg-base',
         className,
       )}
     >
-      <div className="flex items-center justify-between border-b border-border bg-bg-subtle/60 px-4 py-2.5">
-        <div className="flex items-center gap-2">
-          <span className="size-2.5 rounded-full bg-danger/80" />
-          <span className="size-2.5 rounded-full bg-warning/80" />
-          <span className="size-2.5 rounded-full bg-success/80" />
+      {label && (
+        <div className="flex items-center justify-between border-b border-border/50 bg-bg-subtle/60 px-5 py-3">
+          <span className="text-xs font-medium uppercase tracking-wider text-text-tertiary">
+            {label}
+          </span>
         </div>
-        <span className="text-xs font-medium uppercase tracking-wider text-text-tertiary">
-          Preview
-        </span>
-        <div className="w-[52px]" />
-      </div>
+      )}
       <div
         className={cn(
-          'relative flex items-center justify-center p-6 sm:p-10',
+          'relative flex items-center justify-center p-10 sm:p-16',
           minHeights[minHeight],
-          'bg-[radial-gradient(circle_at_1px_1px,var(--border)_1px,transparent_0)] [background-size:20px_20px]',
-          'bg-bg-subtle/30',
+          /* subtle dot grid — indigo in dark mode, faint in light */
+          'bg-[radial-gradient(circle_at_1px_1px,rgb(99_102_241/0.05)_1px,transparent_0)] [background-size:24px_24px]',
+          'dark:bg-[radial-gradient(circle_at_1px_1px,rgb(99_102_241/0.1)_1px,transparent_0)] dark:[background-size:24px_24px]',
         )}
       >
         <div className="relative z-10 w-full">{children}</div>

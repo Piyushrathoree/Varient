@@ -25,7 +25,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-brand-500 text-neutral-0 hover:bg-brand-600 active:bg-brand-700',
+    'bg-brand-500 text-neutral-0 shadow-[var(--glow-brand)] hover:bg-brand-600 hover:shadow-[var(--glow-brand-strong)] active:bg-brand-700',
   default:
     'bg-neutral-900 text-neutral-0 hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-neutral-200',
   secondary:
@@ -33,7 +33,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   ghost:
     'bg-transparent text-text-primary hover:bg-neutral-100 dark:hover:bg-neutral-800',
   outline:
-    'border border-neutral-300 bg-transparent text-text-primary hover:bg-neutral-50 dark:border-neutral-700 dark:hover:bg-neutral-900',
+    'border border-border-strong bg-bg-subtle/40 text-text-primary backdrop-blur-sm hover:border-brand-500/40 hover:bg-bg-muted active:bg-bg-subtle',
   destructive: 'bg-danger text-neutral-0 hover:opacity-90 active:opacity-80',
   link: 'bg-transparent text-brand-500 underline-offset-4 hover:underline',
 };
@@ -56,7 +56,7 @@ export function buttonVariants({
   className?: string;
 }) {
   return cn(
-    'inline-flex items-center justify-center rounded-md font-medium transition-colors',
+    'inline-flex items-center justify-center rounded-md font-medium whitespace-nowrap transition-[color,background-color,box-shadow,border-color] duration-200',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base',
     'disabled:pointer-events-none disabled:opacity-50',
     variantStyles[variant],

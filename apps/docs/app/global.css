@@ -5,12 +5,247 @@
 
 @source '../../node_modules/fumadocs-ui/dist/**/*.js';
 @source '../../../node_modules/fumadocs-ui/dist/**/*.js';
+@source '../../../packages/ui/src/**/*.{ts,tsx}';
+
+/* ─── Font variable wiring ─── */
+:root {
+  --font-body: var(--font-geist-sans, 'Geist Sans', system-ui, sans-serif);
+  --font-mono: var(--font-geist-mono, 'Geist Mono', monospace);
+}
+
+/* ─── Fumadocs overrides — light mode ─── */
+:root {
+  --fd-background: var(--neutral-0);
+  --fd-card: var(--neutral-50);
+  --fd-border: var(--neutral-200);
+  --fd-primary: var(--brand-500);
+  --fd-ring: var(--brand-500);
+  --fd-muted: var(--neutral-100);
+  --fd-muted-foreground: var(--neutral-500);
+  --fd-foreground: var(--neutral-950);
+  --fd-secondary: var(--neutral-100);
+  --fd-secondary-foreground: var(--neutral-700);
+  --fd-accent: var(--neutral-100);
+  --fd-accent-foreground: var(--neutral-900);
+}
+
+/* ─── Fumadocs overrides — dark mode ─── */
+.dark {
+  --fd-background: var(--neutral-950);
+  --fd-card: var(--neutral-900);
+  --fd-border: var(--neutral-800);
+  --fd-primary: var(--brand-500);
+  --fd-ring: var(--brand-500);
+  --fd-muted: var(--neutral-850);
+  --fd-muted-foreground: var(--neutral-400);
+  --fd-foreground: var(--neutral-50);
+  --fd-secondary: var(--neutral-800);
+  --fd-secondary-foreground: var(--neutral-300);
+  --fd-accent: var(--neutral-800);
+  --fd-accent-foreground: var(--neutral-50);
+}
 
 html {
   scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--neutral-700) transparent;
 }
 
 html > body[data-scroll-locked] {
   margin-right: 0 !important;
   --removed-body-scroll-bar-size: 0 !important;
+}
+
+/* ─── Aurora hero animation ─── */
+@keyframes aurora-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ─── Shimmer animation ─── */
+@keyframes shimmer {
+  from {
+    background-position: -200% center;
+  }
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* ─── Marquee scroll ─── */
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ─── Float animation ─── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+/* ─── Pulse glow ─── */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(99 102 241 / 0.4); }
+  50% { box-shadow: 0 0 0 8px rgb(99 102 241 / 0); }
+}
+
+/* ─── Gradient text shimmer for heading ─── */
+.text-gradient-brand {
+  background: linear-gradient(
+    135deg,
+    var(--brand-300) 0%,
+    var(--brand-500) 40%,
+    var(--brand-400) 60%,
+    var(--brand-300) 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ─── Dot-grid pattern for backgrounds ─── */
+.bg-dot-grid {
+  background-image: radial-gradient(
+    circle,
+    rgb(99 102 241 / 0.15) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
+}
+
+/* ─── Card glow on hover ─── */
+.card-glow {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+.card-glow:hover {
+  box-shadow: 0 0 0 1px rgb(99 102 241 / 0.3), 0 8px 24px rgb(99 102 241 / 0.12);
+  border-color: rgb(99 102 241 / 0.4);
+  transform: translateY(-2px);
+}
+
+/* ─── Shimmer badge ─── */
+.shimmer-badge {
+  background: linear-gradient(
+    90deg,
+    rgb(99 102 241 / 0.1) 0%,
+    rgb(99 102 241 / 0.2) 50%,
+    rgb(99 102 241 / 0.1) 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ─── Marquee container utilities ─── */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 0.75rem;
+}
+.animate-marquee-left {
+  animation: marquee-left 30s linear infinite;
+}
+.animate-marquee-right {
+  animation: marquee-right 28s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ─── Glass card ─── */
+.glass-card {
+  background: rgb(255 255 255 / 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgb(255 255 255 / 0.07);
+}
+
+/* ─── Fumadocs sidebar rounded pills ─── */
+.fd-sidebar nav a,
+.fd-sidebar nav button {
+  border-radius: 10px !important;
+  transition: background-color 0.15s ease, color 0.15s ease !important;
+}
+
+[data-active="true"].fd-sidebar-item,
+.fd-sidebar nav a[aria-current="page"],
+.fd-sidebar nav [data-active] {
+  background-color: rgb(99 102 241 / 0.12) !important;
+  color: var(--brand-300) !important;
+}
+
+/* ─── Fumadocs docs page prose improvements ─── */
+.fd-prose h1,
+.fd-prose h2,
+.fd-prose h3,
+.fd-prose h4 {
+  font-family: var(--font-display) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.fd-prose pre,
+.fd-prose code:not(pre code) {
+  border-radius: 12px !important;
+}
+
+.fd-prose pre {
+  background-color: var(--neutral-950) !important;
+  border: 1px solid var(--neutral-800) !important;
+}
+
+/* ─── Fumadocs nav top bar styling ─── */
+.fd-layout-nav {
+  border-bottom: 1px solid var(--border) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+/* ─── Fumadocs sidebar bg ─── */
+.fd-sidebar {
+  background-color: var(--bg-base) !important;
+  border-right: 1px solid var(--border) !important;
+}
+
+/* ─── Fumadocs content area ─── */
+.fd-page {
+  background-color: var(--bg-base) !important;
+}
+
+/* ─── Fumadocs prose — theme-aware code blocks ─── */
+.fd-prose pre {
+  background-color: var(--bg-subtle) !important;
+  border: 1px solid var(--border) !important;
+}
+.dark .fd-prose pre {
+  background-color: var(--neutral-950) !important;
+  border: 1px solid var(--neutral-800) !important;
+}
+
+/* ─── Fumadocs TOC ─── */
+.fd-toc a {
+  border-radius: 8px !important;
+  transition: color 0.15s ease !important;
+}
+
+.fd-toc a[data-active="true"],
+.fd-toc a[aria-current] {
+  color: var(--brand-400) !important;
 }
