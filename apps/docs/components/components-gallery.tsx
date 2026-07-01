@@ -76,7 +76,7 @@ export function ComponentsGallery() {
         key={activeFilter}
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, ease: [0, 0, 0.2, 1] }}
+        transition={{ duration: 0.3, ease: [0, 0, 0.2, 1] as const }}
         className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
       >
         {filtered.map((entry) => (

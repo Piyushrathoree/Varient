@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowRight, Box, Copy, Layers, Sparkles, Zap } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, type Variants } from 'motion/react';
 import { Button } from '@varient/ui';
 import { getReadyCount, components } from '@/lib/components/registry';
 import { ComponentMarquee } from '@/components/marketing/component-marquee';
@@ -59,7 +59,7 @@ const layers = [
   },
 ];
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
@@ -68,14 +68,14 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
       duration: 0.5,
-      ease: [0, 0, 0.2, 1],
+      ease: [0, 0, 0.2, 1] as const,
     },
   },
 };
