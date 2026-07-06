@@ -42,6 +42,7 @@ const projectColumn: FooterColumn = {
   ],
 };
 
+// Shared focus treatment, ported to SmoothUI's brand token.
 const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
@@ -88,7 +89,12 @@ function LinkColumn({ column }: { column: FooterColumn }) {
   );
 }
 
-
+/**
+ * Site footer — ported from SmoothUI's `components/landing/footer.tsx`:
+ * brand column, link columns, dotted divider, bottom bar with a live status
+ * pill. The sponsor CTA card is dropped (Varient has no sponsor program);
+ * everything else follows their structure and token classes.
+ */
 export function SiteFooter() {
   const componentCount = getReadyCount();
 
@@ -145,10 +151,21 @@ export function SiteFooter() {
           className="h-px bg-[length:6px_1px] bg-repeat-x opacity-30 [background-image:linear-gradient(90deg,var(--color-foreground)_1px,transparent_1px)]"
         />
 
-        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-          <p className="text-center text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} Varient. All rights reserved.
+        {/* Bottom bar */}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <p className="text-muted-foreground text-sm">
+            &copy; {new Date().getFullYear()} Varient. UI design adapted from{' '}
+            <a
+              className={cn('text-foreground underline underline-offset-4 hover:text-brand', focusRing, 'rounded-sm')}
+              href="https://smoothui.dev"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              SmoothUI
+            </a>{' '}
+            by Edu Calvo (MIT).
           </p>
+
           {/* Status pill */}
           <div className="flex items-center gap-2 rounded-full border border-transparent bg-background py-1 pr-3 pl-2 shadow-sm ring-1 ring-border/60">
             <span aria-hidden className="relative flex size-2.5">
