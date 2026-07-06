@@ -1,14 +1,23 @@
-import { GeistSans } from 'geist/font/sans';
-import { GeistMono } from 'geist/font/mono';
-import { Bricolage_Grotesque } from 'next/font/google';
+import { Inter, Poppins } from 'next/font/google';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import Script from 'next/script';
 import './global.css';
 
-const bricolage = Bricolage_Grotesque({
+/**
+ * Body face — SmoothUI ports Inter (body) + Poppins (title) straight from
+ * next/font/google (see PORT-SPEC.md — copy, don't invent a Fontshare stack).
+ */
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-display',
-  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+/** Title/display face — headings, hero copy. */
+const poppins = Poppins({
+  subsets: ['latin'],
+  variable: '--font-poppins',
+  weight: ['400', '500', '600', '700', '800', '900'],
   display: 'swap',
 });
 
@@ -16,14 +25,15 @@ export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <html
       lang="en"
-      className={`${GeistSans.variable} ${GeistMono.variable} ${bricolage.variable}`}
+      className={`${inter.className} ${inter.variable} ${poppins.variable}`}
       suppressHydrationWarning
     >
-      <body className="flex min-h-screen flex-col bg-bg-base font-body text-text-primary antialiased">
+      <body className="flex min-h-screen flex-col bg-background font-body text-foreground antialiased">
         <RootProvider
           theme={{
-            defaultTheme: 'dark',
-            enableSystem: false,
+            attribute: 'class',
+            defaultTheme: 'system',
+            enableSystem: true,
             themes: ['light', 'dark'],
           }}
         >

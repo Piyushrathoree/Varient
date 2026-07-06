@@ -2,6 +2,7 @@ import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from 'rea
 import { cn } from '../../../lib/utils';
 
 export type InputSize = 'sm' | 'md' | 'lg';
+export type InputVariant = 'default' | 'frame';
 
 export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string;
@@ -13,6 +14,7 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   leftAddon?: ReactNode;
   rightAddon?: ReactNode;
   size?: InputSize;
+  variant?: InputVariant;
 }
 
 const sizeStyles: Record<InputSize, string> = {
@@ -40,6 +42,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       leftAddon,
       rightAddon,
       size = 'md',
+      variant = 'default',
       id: idProp,
       type = 'text',
       ...props
@@ -56,13 +59,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className={cn('flex w-full flex-col gap-1.5', className)}>
         {label && (
-          <label
-            htmlFor={inputId}
-            className="text-sm font-medium text-text-primary"
-          >
+          <label htmlFor={inputId} className="font-medium text-foreground text-sm leading-none">
             {label}
             {isRequired && (
-              <span className="ml-0.5 text-danger" aria-hidden>
+              <span className="ml-0.5 text-destructive" aria-hidden>
                 *
               </span>
             )}
@@ -71,17 +71,20 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
         <div
           className={cn(
-            'flex items-center overflow-hidden rounded-md border bg-bg-base transition-colors',
+            'flex items-center overflow-hidden rounded-md border bg-background shadow-xs transition-[color,box-shadow]',
             hasError
-              ? 'border-danger ring-2 ring-danger/20'
-              : 'border-border focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/20',
+              ? 'border-destructive ring-[3px] ring-destructive/20 dark:ring-destructive/40'
+              : variant === 'frame'
+                ? // Gradient-frame glow — pairs with Button variant="frame".
+                  'border-2 border-transparent [background:linear-gradient(var(--color-background),var(--color-background))_padding-box,linear-gradient(135deg,var(--color-brand),var(--color-brand-secondary))_border-box] focus-within:shadow-md'
+                : 'border-input focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50',
             isDisabled && 'cursor-not-allowed opacity-50',
           )}
         >
           {leftAddon && (
             <span
               className={cn(
-                'flex shrink-0 items-center pl-3 text-text-tertiary',
+                'flex shrink-0 items-center pl-3 text-muted-foreground',
                 addonSizeStyles[size],
               )}
             >
@@ -99,7 +102,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             aria-invalid={hasError || undefined}
             aria-describedby={describedBy}
             className={cn(
-              'w-full min-w-0 flex-1 bg-transparent text-text-primary outline-none placeholder:text-text-tertiary',
+              'w-full min-w-0 flex-1 bg-transparent text-foreground outline-none placeholder:text-muted-foreground',
               'disabled:cursor-not-allowed',
               sizeStyles[size],
               leftAddon ? 'pl-2' : undefined,
@@ -111,7 +114,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {rightAddon && (
             <span
               className={cn(
-                'flex shrink-0 items-center pr-3 text-text-tertiary',
+                'flex shrink-0 items-center pr-3 text-muted-foreground',
                 addonSizeStyles[size],
               )}
             >
@@ -121,13 +124,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         </div>
 
         {errorText && (
-          <p id={errorId} className="text-sm text-danger" role="alert">
+          <p id={errorId} className="text-destructive text-sm" role="alert">
             {errorText}
           </p>
         )}
 
         {!errorText && helperText && (
-          <p id={helperId} className="text-sm text-text-secondary">
+          <p id={helperId} className="text-muted-foreground text-sm">
             {helperText}
           </p>
         )}

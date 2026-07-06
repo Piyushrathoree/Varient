@@ -7,48 +7,416 @@
 @source '../../../node_modules/fumadocs-ui/dist/**/*.js';
 @source '../../../packages/ui/src/**/*.{ts,tsx}';
 
-/* ─── Font variable wiring ─── */
-:root {
-  --font-body: var(--font-geist-sans, 'Geist Sans', system-ui, sans-serif);
-  --font-mono: var(--font-geist-mono, 'Geist Mono', monospace);
+/* ═══════════════════════════════════════════════════════════════════════════
+ * SMOOTHUI TOKEN SYSTEM — ported verbatim from smoothui.dev (MIT, Edu Calvo).
+ * See PORT-SPEC.md. Two modes only, switched by `.dark` (next-themes / the
+ * fumadocs RootProvider) — the 4-identity engine is gone, never reference it.
+ * Only intentional deviation: SmoothUI's pink `--color-brand` slot carries our
+ * ember (#FF5A1F) hue instead — same architecture, our color, everything else
+ * is their values verbatim.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+@theme inline {
+  --font-body: var(--font-inter);
+  --font-title: var(--font-poppins);
+  --shiki-theme: var(--shiki--light);
+  --shiki--light: var(--shiki-theme);
+  --shiki--dark: var(--shiki-theme);
+  --shadow-custom: var(--shadow-custom);
+  --shadow-custom-brand: var(--shadow-custom-brand);
+
+  --color-brand: var(--color-brand);
+  --color-brand-secondary: var(--color-brand-secondary);
+  --color-brand-light: var(--color-brand-light);
+  --color-brand-lighter: var(--color-brand-lighter);
+  --color-smooth-50: var(--color-smooth-50);
+  --color-smooth-100: var(--color-smooth-100);
+  --color-smooth-200: var(--color-smooth-200);
+  --color-smooth-300: var(--color-smooth-300);
+  --color-smooth-400: var(--color-smooth-400);
+  --color-smooth-500: var(--color-smooth-500);
+  --color-smooth-600: var(--color-smooth-600);
+  --color-smooth-700: var(--color-smooth-700);
+  --color-smooth-800: var(--color-smooth-800);
+  --color-smooth-900: var(--color-smooth-900);
+  --color-smooth-950: var(--color-smooth-950);
+  --color-smooth-1000: var(--color-smooth-1000);
+  --color-border: var(--color-smooth-500);
+  --color-sidebar-ring: var(--color-brand);
+  --color-sidebar-border: var(--color-smooth-400);
+  --color-sidebar-accent-foreground: var(--color-smooth-900);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--color-smooth-1000);
+  --color-sidebar-primary: var(--color-brand);
+  --color-sidebar-foreground: var(--color-smooth-1000);
+  --color-sidebar: var(--color-smooth-100);
+  --color-ring: var(--color-brand);
+  --color-input: var(--color-smooth-600);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: #fff;
+  --color-accent: var(--color-brand);
+  --color-muted-foreground: var(--color-smooth-800);
+  --color-muted: var(--color-smooth-200);
+  --color-background: var(--color-smooth-50);
+  --color-foreground: var(--color-smooth-1000);
+  --color-primary: var(--color-smooth-100);
+  --color-primary-foreground: var(--color-smooth-950);
+  --color-secondary: var(--color-smooth-200);
+  --color-secondary-foreground: var(--color-smooth-900);
+  --color-popover-foreground: var(--color-smooth-1000);
+  --color-popover: var(--color-smooth-50);
+  --color-card-foreground: var(--color-smooth-1000);
+  --color-card: var(--color-smooth-50);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* ─── Fumadocs overrides — light mode ─── */
 :root {
-  --fd-background: var(--neutral-0);
-  --fd-card: var(--neutral-50);
-  --fd-border: var(--neutral-200);
-  --fd-primary: var(--brand-500);
-  --fd-ring: var(--brand-500);
-  --fd-muted: var(--neutral-100);
-  --fd-muted-foreground: var(--neutral-500);
-  --fd-foreground: var(--neutral-950);
-  --fd-secondary: var(--neutral-100);
-  --fd-secondary-foreground: var(--neutral-700);
-  --fd-accent: var(--neutral-100);
-  --fd-accent-foreground: var(--neutral-900);
+  --color-contrast-higher: #fff;
+  --color-contrast-highest: #fff;
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --shadow-custom-brand:
+    0px 1px 2px rgba(0, 0, 0, 0.4),
+    0px 0px 0px 1px var(--color-brand-secondary),
+    inset 0px 0.75px 0px rgba(255, 255, 255, 0.2);
+  --shadow-custom:
+    0px 0px 0px 1px rgba(0, 0, 0, 0.08),
+    0px 1px 2px -1px rgba(0, 0, 0, 0.08), 0px 2px 4px 0px rgba(0, 0, 0, 0.04);
+  --lines-page: url('/lines-b.png');
+  --color-fd-primary: var(--color-brand);
+  --color-fd-secondary: var(--color-smooth-50);
+
+  /* Ember — our brand, dropped into SmoothUI's `--brand` slot. Scale mirrors
+     packages/ui's ember-300/400/500/600 (see @varient/ui/styles/globals.css). */
+  --color-brand: #ff5a1f;
+  --color-brand-secondary: #f03e0c;
+  --color-brand-light: #ff7e44;
+  --color-brand-lighter: #ffa377;
+  /* shadcn-ui tokens SmoothUI's own repo pulls from an external package we
+     don't have — filled with our closest equivalents so nothing dangles. */
+  --destructive: var(--danger);
+  --sidebar-accent: var(--color-smooth-200);
+
+  --color-smooth-50: oklch(0.99 0 0);
+  --color-smooth-100: oklch(0.98 0 0);
+  --color-smooth-200: oklch(0.96 0 0);
+  --color-smooth-300: oklch(0.95 0 0);
+  --color-smooth-400: oklch(0.93 0 0);
+  --color-smooth-500: oklch(0.91 0 0);
+  --color-smooth-600: oklch(0.89 0 0);
+  --color-smooth-700: oklch(0.83 0 0);
+  --color-smooth-800: oklch(0.65 0 0);
+  --color-smooth-900: oklch(0.62 0 0);
+  --color-smooth-950: oklch(0.54 0 0);
+  --color-smooth-1000: oklch(0.2 0 0);
+  --border: var(--color-smooth-300);
+  --text-primary: var(--color-smooth-200);
+  --text-quaternary: var(--color-smooth-1000);
+  --radius: 0.625rem;
+  --color-input: var(--color-smooth-600);
+  --color-fd-card: var(--color-smooth-100);
 }
 
-/* ─── Fumadocs overrides — dark mode ─── */
 .dark {
-  --fd-background: var(--neutral-950);
-  --fd-card: var(--neutral-900);
-  --fd-border: var(--neutral-800);
-  --fd-primary: var(--brand-500);
-  --fd-ring: var(--brand-500);
-  --fd-muted: var(--neutral-850);
-  --fd-muted-foreground: var(--neutral-400);
-  --fd-foreground: var(--neutral-50);
-  --fd-secondary: var(--neutral-800);
-  --fd-secondary-foreground: var(--neutral-300);
-  --fd-accent: var(--neutral-800);
-  --fd-accent-foreground: var(--neutral-50);
+  --shadow-custom:
+    0px -1px 0px 0px hsla(0, 0%, 100%, 0.06),
+    0px 0px 0px 1px hsla(0, 0%, 100%, 0.06), 0px 0px 0px 1px #27272a,
+    0px 1px 2px 0px rgba(0, 0, 0, 0.32), 0px 2px 4px 0px rgba(0, 0, 0, 0.32);
+  --lines-page: url('/lines-w.png');
+
+  --color-smooth-50: oklch(20.02% 0 0);
+  --color-smooth-100: oklch(22.64% 0 0);
+  --color-smooth-200: oklch(25.62% 0 0);
+  --color-smooth-300: oklch(27.68% 0 0);
+  --color-smooth-400: oklch(30.12% 0 0);
+  --color-smooth-500: oklch(32.5% 0 0);
+  --color-smooth-600: oklch(36.39% 0 0);
+  --color-smooth-700: oklch(43.13% 0 0);
+  --color-smooth-800: oklch(54.52% 0 0);
+  --color-smooth-900: oklch(59.31% 0 0);
+  --color-smooth-950: oklch(70.58% 0 0);
+  --color-smooth-1000: oklch(94.61% 0 0);
+  --border: var(--color-smooth-300);
+  --text-primary: var(--color-smooth-200);
+  --text-quaternary: var(--color-smooth-1000);
+  --color-input: var(--color-smooth-700);
+  --color-fd-card: var(--color-smooth-100);
 }
 
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  .dark {
+    --shiki-theme: var(--shiki--dark);
+    --shiki--light: var(--shiki-theme);
+    --shiki--dark: var(--shiki-theme);
+  }
+  [data-theme='dark'] {
+    --shiki-theme: var(--shiki--dark);
+  }
+  [data-theme='light'] {
+    --shiki-theme: var(--shiki--light);
+  }
+}
+
+::selection {
+  @apply bg-brand-secondary/20 text-brand;
+}
+
+.shiki {
+  box-shadow: none;
+}
+
+.gradient-brand {
+  @apply from-brand-secondary to-brand bg-gradient-to-bl;
+}
+.hover\:gradient-brand:hover {
+  @apply from-brand-secondary to-brand bg-gradient-to-bl;
+}
+
+.shadow-custom-btgray {
+  box-shadow:
+    0px 1px 2px rgba(0, 0, 0, 0.4),
+    0px 0px 0px 1px var(--color-bt-gray),
+    inset 0px 0.75px 0px rgba(255, 255, 255, 0.2);
+}
+
+.bg-lines-page {
+  background-image: var(--lines-page);
+  background-repeat: repeat;
+}
+
+[data-slot='dropdown-menu-item'] {
+  @apply focus:bg-primary focus:border-border text-foreground border border-transparent;
+}
+
+.float-trigger {
+  @apply text-foreground flex cursor-pointer flex-row items-center justify-center rounded-full border border-transparent px-4 py-2 text-sm font-medium outline-0;
+}
+
+.float-trigger:hover {
+  @apply bg-primary border-border border;
+}
+
+.prose :where(ul):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  padding-inline-start: 1rem;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  list-style-type: disc;
+}
+.prose
+  :where(ul > li):not(
+    :where([class~='not-prose'], [class~='not-prose'] *)
+  )::marker {
+  color: var(--color-smooth-800);
+}
+
+.frame-box {
+  @apply bg-primary inset-ring-background border inset-ring-2 before:absolute before:inset-0 before:bg-[radial-gradient(var(--dots-color)_1px,transparent_1px)] before:[background-size:16px_16px] before:[--dots-color:--alpha(var(--color-foreground)/5%)];
+}
+
+/* Price Flow Animations */
+@keyframes slide-out-up {
+  0% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-out-down {
+  0% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-in-up {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-down {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+.slide-out-up {
+  animation: slide-out-up 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.slide-out-down {
+  animation: slide-out-down 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.slide-in-up {
+  animation: slide-in-up 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.slide-in-down {
+  animation: slide-in-down 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.prose
+  :where(h1, h2, h3, h4, h5, h6):not(
+    :where([class~='not-prose'], [class~='not-prose'] *)
+  ) {
+  @apply font-semibold text-foreground tracking-tight;
+}
+.prose :where(h1):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply -tracking-wide font-bold text-3xl;
+}
+.prose :where(h2):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply font-semibold text-lg;
+}
+.prose :where(h3):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply font-semibold text-base;
+}
+.prose :where(h4):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply font-semibold text-sm;
+}
+.prose :where(h5):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply font-semibold text-xs;
+}
+.prose :where(h6):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply font-medium text-xs;
+}
+.prose :where(p):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply text-base;
+}
+.prose
+  :where(strong):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply font-semibold;
+}
+.prose :where(.peer):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply font-semibold;
+}
+
+/* Accordion Animations */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * COMPAT ALIASES — old semantic classes/vars → SmoothUI tokens. Keeps every
+ * not-yet-ported file (see PORT-SPEC.md "files owned by other agents")
+ * rendering unchanged. New/ported code should reach for SmoothUI's own
+ * classes directly (bg-background, text-foreground, border-border, …) —
+ * these aliases are a bridge, not the destination.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+@theme inline {
+  --color-bg-base: var(--color-background);
+  --color-bg-subtle: var(--color-smooth-100);
+  --color-bg-muted: var(--color-muted);
+  --color-bg-elevated: var(--color-smooth-100);
+  --color-border-strong: var(--color-smooth-600);
+  --color-text-primary: var(--color-foreground);
+  --color-text-secondary: var(--color-muted-foreground);
+  --color-text-tertiary: var(--color-smooth-800);
+  --color-accent: var(--color-brand);
+  --color-accent-hover: var(--color-brand-secondary);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-accent-soft: var(--accent-soft);
+
+  --radius-theme: var(--radius-lg);
+  --radius-theme-pill: 9999px;
+
+  --shadow-theme: var(--shadow-theme);
+  --shadow-glow-theme: var(--glow-theme);
+
+  --font-display: var(--font-title);
+  --font-mono: var(--font-mono);
+}
+
+:root {
+  --accent-contrast: #ffffff;
+  --accent-soft: rgb(255 90 31 / 0.1);
+  --accent-gradient: linear-gradient(135deg, #ff5a1f, #ff8a3d);
+  --shadow-theme: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --glow-theme: 0 0 0 3px rgb(255 90 31 / 0.16);
+  --skeleton-shimmer: rgb(0 0 0 / 0.06);
+  --motion-duration: 180ms;
+  --motion-duration-slow: 260ms;
+  --motion-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --font-mono: ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.dark {
+  --accent-contrast: #1a0f08;
+  --accent-soft: rgb(255 90 31 / 0.12);
+  --accent-gradient: linear-gradient(135deg, #ff5a1f, #ff9e6b);
+  --shadow-theme: inset 0 1px 0 0 rgb(255 255 255 / 0.03);
+  --glow-theme: 0 0 0 1px rgb(255 90 31 / 0.3), 0 0 18px -2px rgb(255 90 31 / 0.22);
+  --skeleton-shimmer: rgb(255 255 255 / 0.06);
+}
+
+/* ─── Focus ring — visible everywhere, doesn't depend on component-level
+   focus-visible utilities alone. ─── */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* ─── Scrollbar ─── */
 html {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
-  scrollbar-color: var(--neutral-700) transparent;
+  scrollbar-color: var(--color-smooth-600) transparent;
 }
 
 html > body[data-scroll-locked] {
@@ -56,27 +424,38 @@ html > body[data-scroll-locked] {
   --removed-body-scroll-bar-size: 0 !important;
 }
 
-/* ─── Aurora hero animation ─── */
-@keyframes aurora-shift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-/* ─── Shimmer animation ─── */
-@keyframes shimmer {
+/* ─── Skeleton shimmer sweep — Planned components in the gallery ─── */
+@keyframes skeleton-sweep {
   from {
-    background-position: -200% center;
+    background-position: -150% 0;
   }
   to {
-    background-position: 200% center;
+    background-position: 150% 0;
   }
 }
 
-/* ─── Marquee scroll ─── */
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--skeleton-shimmer), transparent);
+  background-size: 200% 100%;
+  animation: skeleton-sweep 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer::after {
+    animation: none;
+    background: none;
+  }
+}
+
+/* ─── Marquee scroll — component-marquee.tsx ─── */
 @keyframes marquee-left {
   from {
     transform: translateX(0);
@@ -95,67 +474,6 @@ html > body[data-scroll-locked] {
   }
 }
 
-/* ─── Float animation ─── */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-}
-
-/* ─── Pulse glow ─── */
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgb(99 102 241 / 0.4); }
-  50% { box-shadow: 0 0 0 8px rgb(99 102 241 / 0); }
-}
-
-/* ─── Gradient text shimmer for heading ─── */
-.text-gradient-brand {
-  background: linear-gradient(
-    135deg,
-    var(--brand-300) 0%,
-    var(--brand-500) 40%,
-    var(--brand-400) 60%,
-    var(--brand-300) 100%
-  );
-  background-size: 200% auto;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer 4s linear infinite;
-}
-
-/* ─── Dot-grid pattern for backgrounds ─── */
-.bg-dot-grid {
-  background-image: radial-gradient(
-    circle,
-    rgb(99 102 241 / 0.15) 1px,
-    transparent 1px
-  );
-  background-size: 28px 28px;
-}
-
-/* ─── Card glow on hover ─── */
-.card-glow {
-  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
-}
-.card-glow:hover {
-  box-shadow: 0 0 0 1px rgb(99 102 241 / 0.3), 0 8px 24px rgb(99 102 241 / 0.12);
-  border-color: rgb(99 102 241 / 0.4);
-  transform: translateY(-2px);
-}
-
-/* ─── Shimmer badge ─── */
-.shimmer-badge {
-  background: linear-gradient(
-    90deg,
-    rgb(99 102 241 / 0.1) 0%,
-    rgb(99 102 241 / 0.2) 50%,
-    rgb(99 102 241 / 0.1) 100%
-  );
-  background-size: 200% auto;
-  animation: shimmer 3s linear infinite;
-}
-
-/* ─── Marquee container utilities ─── */
 .marquee-track {
   display: flex;
   width: max-content;
@@ -171,28 +489,87 @@ html > body[data-scroll-locked] {
   animation-play-state: paused;
 }
 
-/* ─── Glass card ─── */
-.glass-card {
-  background: rgb(255 255 255 / 0.03);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgb(255 255 255 / 0.07);
+/* ─── Gradient text shimmer for headings — pulls from --accent-gradient ─── */
+@keyframes shimmer {
+  from {
+    background-position: -200% center;
+  }
+  to {
+    background-position: 200% center;
+  }
 }
 
-/* ─── Fumadocs sidebar rounded pills ─── */
+.text-gradient-brand {
+  background-image: var(--accent-gradient);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-gradient-brand {
+    animation: none;
+  }
+}
+
+/* ─── Grid lattice — quiet structural texture behind hero/preview frames ─── */
+.bg-grid-lines {
+  background-image:
+    linear-gradient(to right, rgb(255 246 238 / 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 246 238 / 0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ─── Cursor spotlight surface — spotlight-card.tsx ─── */
+.spotlight-surface {
+  position: relative;
+}
+.spotlight-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 220ms ease;
+  background: radial-gradient(
+    circle 220px at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
+    var(--accent-soft),
+    transparent 68%
+  );
+}
+.spotlight-surface:hover::before,
+.spotlight-surface:focus-within::before {
+  opacity: 1;
+}
+
+/* ─── Hairline card — the default machined surface (hairline + catch-light) ─── */
+.surface-hairline {
+  background-color: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06);
+}
+.dark .surface-hairline {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04);
+}
+
+/* ─── Fumadocs doc-site chrome polish — unrelated to the token system,
+   layered on top of fumadocs' own component styles. ─── */
 .fd-sidebar nav a,
 .fd-sidebar nav button {
   border-radius: 10px !important;
   transition: background-color 0.15s ease, color 0.15s ease !important;
 }
 
-[data-active="true"].fd-sidebar-item,
-.fd-sidebar nav a[aria-current="page"],
+[data-active='true'].fd-sidebar-item,
+.fd-sidebar nav a[aria-current='page'],
 .fd-sidebar nav [data-active] {
-  background-color: rgb(99 102 241 / 0.12) !important;
-  color: var(--brand-300) !important;
+  background-color: rgb(255 90 31 / 0.12) !important;
+  color: var(--color-brand) !important;
 }
 
-/* ─── Fumadocs docs page prose improvements ─── */
 .fd-prose h1,
 .fd-prose h2,
 .fd-prose h3,
@@ -207,45 +584,26 @@ html > body[data-scroll-locked] {
   border-radius: 12px !important;
 }
 
-.fd-prose pre {
-  background-color: var(--neutral-950) !important;
-  border: 1px solid var(--neutral-800) !important;
-}
-
-/* ─── Fumadocs nav top bar styling ─── */
 .fd-layout-nav {
-  border-bottom: 1px solid var(--border) !important;
+  border-bottom: 1px solid var(--color-border) !important;
   backdrop-filter: blur(16px) !important;
 }
 
-/* ─── Fumadocs sidebar bg ─── */
 .fd-sidebar {
-  background-color: var(--bg-base) !important;
-  border-right: 1px solid var(--border) !important;
+  background-color: var(--color-bg-base) !important;
+  border-right: 1px solid var(--color-border) !important;
 }
 
-/* ─── Fumadocs content area ─── */
 .fd-page {
-  background-color: var(--bg-base) !important;
+  background-color: var(--color-bg-base) !important;
 }
 
-/* ─── Fumadocs prose — theme-aware code blocks ─── */
-.fd-prose pre {
-  background-color: var(--bg-subtle) !important;
-  border: 1px solid var(--border) !important;
-}
-.dark .fd-prose pre {
-  background-color: var(--neutral-950) !important;
-  border: 1px solid var(--neutral-800) !important;
-}
-
-/* ─── Fumadocs TOC ─── */
 .fd-toc a {
   border-radius: 8px !important;
   transition: color 0.15s ease !important;
 }
 
-.fd-toc a[data-active="true"],
+.fd-toc a[data-active='true'],
 .fd-toc a[aria-current] {
-  color: var(--brand-400) !important;
+  color: var(--color-brand) !important;
 }

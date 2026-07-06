@@ -5,8 +5,8 @@ export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
       title: (
-        <span className="font-semibold tracking-tight">
-          <span className="text-brand-500">Varient</span>
+        <span className="font-display select-none text-xl font-medium tracking-tight text-foreground">
+          Vari<span className="text-brand">ent</span>
         </span>
       ),
     },

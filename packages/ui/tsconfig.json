@@ -8,5 +8,6 @@
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["node_modules"]
+  "//": "*.native.tsx needs React Native + Reanimated types; it is typechecked by the mobile app, not by this web-oriented package typecheck.",
+  "exclude": ["node_modules", "src/**/*.native.tsx"]
 }

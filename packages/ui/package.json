@@ -5,6 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./native": "./src/native.ts",
+    "./tokens": "./src/tokens/index.ts",
     "./styles/globals.css": "./src/styles/globals.css",
     "./utils": "./src/lib/utils.ts"
   },
@@ -15,11 +17,19 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
     "clsx": "^2.1.1",
+    "motion": "^12.19.0",
     "tailwind-merge": "^3.6.0"
   },
   "peerDependencies": {
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-native": ">=0.79.0",
+    "react-native-reanimated": ">=4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react-dom": { "optional": true },
+    "react-native": { "optional": true },
+    "react-native-reanimated": { "optional": true }
   },
   "devDependencies": {
     "@types/react": "^19.2.14",

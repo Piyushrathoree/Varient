@@ -5,8 +5,13 @@ import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { cn } from '@varient/ui';
 
-export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+/**
+ * Light/dark toggle — ported from SmoothUI's `ThemeSwitch` (float-nav.tsx).
+ * Two modes only, switched via the `.dark` class (next-themes, wired through
+ * fumadocs' `RootProvider`). No system option, no theme-identity engine.
+ */
+export function ThemeToggle({ className }: { className?: string }) {
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -14,10 +19,15 @@ export function ThemeToggle() {
   }, []);
 
   if (!mounted) {
-    return <div className="size-9 rounded-lg border border-border bg-bg-subtle" aria-hidden />;
+    return (
+      <div
+        aria-hidden
+        className={cn('size-9 rounded-full border border-transparent bg-muted/50', className)}
+      />
+    );
   }
 
-  const isDark = theme === 'dark';
+  const isDark = resolvedTheme === 'dark';
 
   return (
     <button
@@ -25,8 +35,11 @@ export function ThemeToggle() {
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       className={cn(
-        'inline-flex size-9 items-center justify-center rounded-lg border border-border bg-bg-subtle text-text-secondary transition-all duration-150',
-        'hover:border-border-strong hover:text-text-primary',
+        'inline-flex size-9 items-center justify-center rounded-full border border-transparent text-foreground transition-colors duration-150 active:scale-[0.97]',
+        'hover:border-border hover:bg-primary',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+        'motion-reduce:transition-none motion-reduce:active:scale-100',
+        className,
       )}
     >
       {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}

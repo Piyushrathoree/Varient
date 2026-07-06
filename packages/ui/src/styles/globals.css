@@ -1,17 +1,33 @@
-/* Varient design tokens — source of truth: DESIGN.md §3 */
+/* Varient design tokens — SmoothUI port (PORT-SPEC.md). Light + dark only. */
+
+@import './themes.css';
 
 :root {
-  /* Brand */
-  --brand-50: #eef0ff;
-  --brand-100: #dde2ff;
-  --brand-200: #c0c8ff;
-  --brand-300: #9aa4ff;
-  --brand-400: #7c85fd;
-  --brand-500: #6366f1;
-  --brand-600: #4f46e5;
-  --brand-700: #3730a3;
-  --brand-800: #2e2a7e;
-  --brand-900: #1e1b5e;
+  /* Signal — EMBER. The one accent, spent sparingly (focus/active/charge/state).
+     Indigo is retired: Tailwind indigo-500 is the documented "AI purple" tell. */
+  --ember-50: #fff4ee;
+  --ember-100: #ffe4d5;
+  --ember-200: #ffc6a8;
+  --ember-300: #ffa377;
+  --ember-400: #ff7e44;
+  --ember-500: #ff5a1f; /* PRIMARY signal */
+  --ember-600: #f03e0c;
+  --ember-700: #c22f08;
+  --ember-800: #94240a;
+  --ember-900: #6b1c0c;
+
+  /* `brand-*` aliases ember so any legacy reference retextures automatically.
+     Prefer `ember-*` / semantic `accent` tokens in new code. */
+  --brand-50: var(--ember-50);
+  --brand-100: var(--ember-100);
+  --brand-200: var(--ember-200);
+  --brand-300: var(--ember-300);
+  --brand-400: var(--ember-400);
+  --brand-500: var(--ember-500);
+  --brand-600: var(--ember-600);
+  --brand-700: var(--ember-700);
+  --brand-800: var(--ember-800);
+  --brand-900: var(--ember-900);
 
   /* Neutral */
   --neutral-0: #ffffff;
@@ -34,10 +50,10 @@
   --danger: #ef4444;
   --info: #3b82f6;
 
-  /* Typography */
-  --font-display: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
-  --font-body: 'Geist Sans', 'Inter', system-ui, sans-serif;
-  --font-mono: 'Geist Mono', 'Fira Code', monospace;
+  /* Typography — --font-body is universal (set once); --font-display and
+     --font-mono are mode-driven (see themes.css — same value in light/dark,
+     overridden by the host app's next/font wiring). */
+  --font-body: 'Inter', system-ui, sans-serif;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -61,12 +77,12 @@
   --weight-semibold: 600;
   --weight-bold: 700;
 
-  /* Border radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 24px;
+  /* Border radius — generous by default across the whole app */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
   --radius-full: 9999px;
 
   /* Shadows */
@@ -74,8 +90,8 @@
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-  --glow-brand: 0 0 20px rgb(99 102 241 / 0.4);
-  --glow-brand-strong: 0 0 28px rgb(99 102 241 / 0.45);
+  --glow-brand: 0 0 20px rgb(255 90 31 / 0.4);
+  --glow-brand-strong: 0 0 28px rgb(255 90 31 / 0.45);
   --glow-white: 0 0 20px rgb(255 255 255 / 0.1);
 
   /* Animation */
@@ -89,26 +105,8 @@
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-  /* Surface (light mode) */
-  --bg-base: var(--neutral-0);
-  --bg-subtle: var(--neutral-50);
-  --bg-muted: var(--neutral-100);
-  --border: var(--neutral-200);
-  --border-strong: var(--neutral-300);
-  --text-primary: var(--neutral-950);
-  --text-secondary: var(--neutral-500);
-  --text-tertiary: var(--neutral-400);
-}
-
-.dark {
-  --bg-base: var(--neutral-950);
-  --bg-subtle: var(--neutral-900);
-  --bg-muted: var(--neutral-850);
-  --border: var(--neutral-800);
-  --border-strong: var(--neutral-700);
-  --text-primary: var(--neutral-50);
-  --text-secondary: var(--neutral-400);
-  --text-tertiary: var(--neutral-600);
+  /* Surface tokens (--bg-base, --border, --text-primary, etc.) are mode-driven
+     — see themes.css. `:root` there is light, `.dark` is dark. No other modes. */
 }
 
 @theme {
@@ -122,6 +120,17 @@
   --color-brand-700: var(--brand-700);
   --color-brand-800: var(--brand-800);
   --color-brand-900: var(--brand-900);
+
+  --color-ember-50: var(--ember-50);
+  --color-ember-100: var(--ember-100);
+  --color-ember-200: var(--ember-200);
+  --color-ember-300: var(--ember-300);
+  --color-ember-400: var(--ember-400);
+  --color-ember-500: var(--ember-500);
+  --color-ember-600: var(--ember-600);
+  --color-ember-700: var(--ember-700);
+  --color-ember-800: var(--ember-800);
+  --color-ember-900: var(--ember-900);
 
   --color-neutral-0: var(--neutral-0);
   --color-neutral-50: var(--neutral-50);
@@ -145,6 +154,7 @@
   --color-bg-base: var(--bg-base);
   --color-bg-subtle: var(--bg-subtle);
   --color-bg-muted: var(--bg-muted);
+  --color-bg-elevated: var(--bg-elevated);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
   --color-text-primary: var(--text-primary);
@@ -155,15 +165,34 @@
   --font-body: var(--font-body);
   --font-mono: var(--font-mono);
 
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+
+  /* ── Mode tokens — light in :root, dark in .dark, see themes.css ── */
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-accent-soft: var(--accent-soft);
+
+  --shadow-theme: var(--shadow-theme);
+  --shadow-glow-theme: var(--glow-theme);
+}
+
+/*
+ * Runtime radius tokens — MUST be `@theme inline` so utilities emit
+ * `border-radius: var(--radius-*)` instead of baking in 0 at build time.
+ * Without inline, rounded-theme / rounded-2xl etc. render as square corners.
+ */
+@theme inline {
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
   --radius-2xl: var(--radius-2xl);
+  --radius-3xl: 32px;
   --radius-full: var(--radius-full);
-
-  --shadow-sm: var(--shadow-sm);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
+  --radius-theme: var(--radius-theme);
+  --radius-theme-pill: var(--radius-theme-pill);
 }

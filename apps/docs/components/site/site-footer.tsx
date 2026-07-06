@@ -1,82 +1,179 @@
 import Link from 'next/link';
-import { Sparkles } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+import { Github } from '@/components/site/brand-icons';
+import { getReadyCount } from '@/lib/components/registry';
+import { cn } from '@varient/ui';
 
-const footerLinks = [
-  {
-    heading: 'Library',
-    items: [
-      { label: 'Components', href: '/components' },
-      { label: 'Documentation', href: '/docs' },
-      { label: 'Foundation', href: '/components?layer=foundation' },
-      { label: 'Animated', href: '/components?layer=animated' },
-      { label: 'Sections', href: '/components?layer=sections' },
-    ],
-  },
-  {
-    heading: 'Getting Started',
-    items: [
-      { label: 'Introduction', href: '/docs' },
-      { label: 'Installation', href: '/docs/getting-started/installation' },
-      { label: 'Theming', href: '/docs/getting-started/theming' },
-    ],
-  },
-  {
-    heading: 'Project',
-    items: [
-      { label: 'GitHub', href: 'https://github.com/piyush/varient' },
-      { label: 'Changelog', href: '/docs' },
-    ],
-  },
-];
+interface FooterLink {
+  external?: boolean;
+  href: string;
+  label: string;
+}
 
-export function SiteFooter() {
+interface FooterColumn {
+  title: string;
+  links: FooterLink[];
+}
+
+const libraryColumn: FooterColumn = {
+  title: 'Library',
+  links: [
+    { label: 'Components', href: '/components' },
+    { label: 'Foundation', href: '/components?layer=foundation' },
+    { label: 'Animated', href: '/components?layer=animated' },
+    { label: 'Sections', href: '/components?layer=sections' },
+  ],
+};
+
+const guideColumn: FooterColumn = {
+  title: 'Guide',
+  links: [
+    { label: 'Introduction', href: '/docs/getting-started/introduction' },
+    { label: 'Installation', href: '/docs/getting-started/installation' },
+    { label: 'Theming', href: '/docs/getting-started/theming' },
+  ],
+};
+
+const projectColumn: FooterColumn = {
+  title: 'Project',
+  links: [
+    { label: 'GitHub', href: 'https://github.com/piyush/varient', external: true },
+    { label: 'Changelog', href: '/docs' },
+  ],
+};
+
+// Shared focus treatment, ported to SmoothUI's brand token.
+const focusRing =
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background';
+
+const columnTitleClass = 'mb-4 block font-medium text-foreground text-sm';
+const linkClass =
+  'inline-flex items-center gap-1 text-muted-foreground text-sm transition-colors duration-200 hover:text-brand';
+
+function FooterLinkItem({ link }: { link: FooterLink }) {
+  if (link.external) {
+    return (
+      <a
+        className={cn(linkClass, focusRing, 'rounded-sm')}
+        href={link.href}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <span>{link.label}</span>
+        <ArrowUpRight
+          aria-hidden
+          className="size-3 shrink-0 opacity-60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+        />
+      </a>
+    );
+  }
   return (
-    <footer className="border-t border-border bg-bg-subtle/30">
-      <div className="mx-auto max-w-7xl px-6 py-16">
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:grid-cols-5">
-          {/* Brand */}
-          <div className="col-span-2 sm:col-span-4 lg:col-span-2">
-            <Link href="/" className="inline-flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-500 shadow-[0_0_12px_rgb(99_102_241/0.4)]">
-                <Sparkles className="size-3.5 text-white" />
-              </div>
-              <span className="font-display text-base font-semibold text-text-primary">Varient</span>
+    <Link className={cn(linkClass, focusRing, 'rounded-sm')} href={link.href}>
+      {link.label}
+    </Link>
+  );
+}
+
+function LinkColumn({ column }: { column: FooterColumn }) {
+  return (
+    <nav aria-label={column.title}>
+      <span className={columnTitleClass}>{column.title}</span>
+      <ul className="flex flex-col gap-3">
+        {column.links.map((link) => (
+          <li className="group block" key={link.href}>
+            <FooterLinkItem link={link} />
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
+/**
+ * Site footer — ported from SmoothUI's `components/landing/footer.tsx`:
+ * brand column, link columns, dotted divider, bottom bar with a live status
+ * pill. The sponsor CTA card is dropped (Varient has no sponsor program);
+ * everything else follows their structure and token classes.
+ */
+export function SiteFooter() {
+  const componentCount = getReadyCount();
+
+  return (
+    <footer className="border-t border-border bg-muted/40">
+      <div className="mx-auto max-w-6xl space-y-14 px-6 py-16 sm:py-20">
+        <div className="grid gap-12 md:grid-cols-5">
+          {/* Brand column (spans 2) */}
+          <div className="space-y-6 md:col-span-2 md:space-y-8">
+            <Link
+              aria-label="Varient home"
+              className={cn('inline-flex items-center gap-2 rounded-sm', focusRing)}
+              href="/"
+            >
+              <span className="font-semibold text-foreground text-xl tracking-tight">
+                Varient
+              </span>
+              <span aria-hidden className="size-1.5 rounded-full bg-brand" />
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-text-secondary">
-              Copy-paste React components for utilities, animations, and full-page sections.
-              You own the code — no lock-in, no per-component installs.
+            <p className="max-w-xs text-balance text-muted-foreground text-sm leading-relaxed">
+              Copy-paste React components for utilities, animations, and full-page sections. You
+              own the code — no lock-in, no per-component installs.
             </p>
           </div>
 
-          {/* Link columns */}
-          {footerLinks.map((col) => (
-            <div key={col.heading}>
-              <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-text-tertiary">
-                {col.heading}
-              </p>
-              <ul className="space-y-2.5">
-                {col.items.map((item) => (
-                  <li key={item.label}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-text-secondary transition-colors hover:text-text-primary"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+          {/* 3 link columns */}
+          <div className="grid gap-8 sm:grid-cols-3 md:col-span-3">
+            <LinkColumn column={libraryColumn} />
+            <LinkColumn column={guideColumn} />
+            <div>
+              <LinkColumn column={projectColumn} />
+              <div className="mt-5 flex items-center gap-3">
+                <a
+                  aria-label="Varient on GitHub"
+                  className={cn(
+                    'text-muted-foreground transition-colors duration-200 hover:text-brand',
+                    focusRing,
+                    'rounded-sm',
+                  )}
+                  href="https://github.com/piyush/varient"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <Github className="size-[18px]" />
+                </a>
+              </div>
             </div>
-          ))}
+          </div>
         </div>
 
-        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row">
-          <p className="text-xs text-text-tertiary">
-            © {new Date().getFullYear()} Varient. Open-source under MIT license.
+        {/* Dotted divider */}
+        <div
+          aria-hidden
+          className="h-px bg-[length:6px_1px] bg-repeat-x opacity-30 [background-image:linear-gradient(90deg,var(--color-foreground)_1px,transparent_1px)]"
+        />
+
+        {/* Bottom bar */}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <p className="text-muted-foreground text-sm">
+            &copy; {new Date().getFullYear()} Varient. UI design adapted from{' '}
+            <a
+              className={cn('text-foreground underline underline-offset-4 hover:text-brand', focusRing, 'rounded-sm')}
+              href="https://smoothui.dev"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              SmoothUI
+            </a>{' '}
+            by Edu Calvo (MIT).
           </p>
-          <p className="text-xs text-text-tertiary">
-            Built by Piyush · Copy-paste, you own it.
-          </p>
+
+          {/* Status pill */}
+          <div className="flex items-center gap-2 rounded-full border border-transparent bg-background py-1 pr-3 pl-2 shadow-sm ring-1 ring-border/60">
+            <span aria-hidden className="relative flex size-2.5">
+              <span className="absolute inset-0 inline-flex size-full animate-ping rounded-full bg-brand/60 opacity-75 motion-reduce:animate-none" />
+              <span className="relative inline-flex size-2.5 rounded-full bg-brand" />
+            </span>
+            <span className="text-foreground text-xs">{componentCount} components shipped</span>
+          </div>
         </div>
       </div>
     </footer>

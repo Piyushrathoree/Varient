@@ -1,0 +1,7 @@
+# React Native / Metro / Babel assume a HOISTED node_modules — they don't
+# fully support Bun's default isolated (pnpm-style) layout, which breaks
+# transitive Babel plugin resolution (babel-preset-expo → @babel/plugin-*).
+# Hoisting flattens node_modules so Metro/Babel resolve as they expect.
+# The web workspaces (apps/docs, packages/ui) are unaffected by this.
+[install]
+linker = "hoisted"

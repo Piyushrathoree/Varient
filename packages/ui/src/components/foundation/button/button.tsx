@@ -9,7 +9,9 @@ export type ButtonVariant =
   | 'ghost'
   | 'outline'
   | 'destructive'
-  | 'link';
+  | 'link'
+  | 'sweep'
+  | 'frame';
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
@@ -24,26 +26,41 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
+  // Hero CTA — SmoothUI's "candy" treatment: a brand gradient fill with a
+  // hairline highlight border and a soft ring, our ember hue in their brand
+  // slot. This is the one high-voltage signal, reserved for the primary action.
   primary:
-    'bg-brand-500 text-neutral-0 shadow-[var(--glow-brand)] hover:bg-brand-600 hover:shadow-[var(--glow-brand-strong)] active:bg-brand-700',
-  default:
-    'bg-neutral-900 text-neutral-0 hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-neutral-200',
-  secondary:
-    'bg-neutral-100 text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700',
-  ghost:
-    'bg-transparent text-text-primary hover:bg-neutral-100 dark:hover:bg-neutral-800',
+    'border-[0.5px] border-white/25 bg-gradient-to-b from-brand to-brand-secondary text-white shadow-black/20 shadow-md ring-1 ring-(--ring-color) [--ring-color:color-mix(in_oklab,var(--color-foreground)_15%,var(--color-brand))] hover:from-brand-secondary hover:to-brand-secondary [&_svg]:drop-shadow-sm',
+  // Neutral high-contrast — SmoothUI's default button surface.
+  default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+  secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
+  ghost: 'hover:bg-background hover:text-foreground hover:shadow-sm',
   outline:
-    'border border-border-strong bg-bg-subtle/40 text-text-primary backdrop-blur-sm hover:border-brand-500/40 hover:bg-bg-muted active:bg-bg-subtle',
-  destructive: 'bg-danger text-neutral-0 hover:opacity-90 active:opacity-80',
-  link: 'bg-transparent text-brand-500 underline-offset-4 hover:underline',
+    'border border-input bg-background shadow-xs hover:bg-accent hover:text-white dark:bg-input/30 dark:hover:bg-input/50',
+  destructive:
+    'bg-gradient-to-b from-[#FD4B4E] to-destructive text-white shadow-[0px_1px_2px_rgba(0,0,0,0.4),0px_0px_0px_1px_#F61418,inset_0px_0.75px_0px_rgba(255,255,255,0.2)] hover:from-destructive hover:to-destructive',
+  link: 'bg-transparent text-primary underline-offset-4 hover:underline',
+  // Fill-on-hover — adapted from uiverse "red-stingray". A brand-outlined
+  // pill; on hover a hidden circle floods it via an expanding inset shadow and
+  // the label inverts. Themed off --color-brand so it tracks the token, not a hex.
+  sweep:
+    'relative isolate overflow-hidden border border-brand bg-transparent text-brand hover:text-white active:text-white ' +
+    "before:pointer-events-none before:absolute before:top-0 before:bottom-0 before:left-[-5em] before:my-auto before:-z-10 before:block before:h-[20em] before:w-[20em] before:rounded-full before:transition-[box-shadow] before:duration-500 before:ease-out before:content-[''] " +
+    'hover:before:shadow-[inset_0_0_0_10em_var(--color-brand)] active:before:shadow-[inset_0_0_0_10em_var(--color-brand-secondary)]',
+  // Gradient-frame glow — a surface pill rimmed by a brand gradient
+  // (padding-box/border-box trick, no wrapper so asChild still works),
+  // lifting + shadow-growing on hover.
+  frame:
+    'border-2 border-transparent bg-background text-foreground shadow-xs hover:-translate-y-px hover:shadow-md active:translate-y-0 ' +
+    '[background:linear-gradient(var(--color-background),var(--color-background))_padding-box,linear-gradient(135deg,var(--color-brand),var(--color-brand-secondary))_border-box]',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
   xs: 'h-7 gap-1 px-2.5 text-xs',
-  sm: 'h-8 gap-1.5 px-3 text-sm',
+  sm: 'h-9 gap-1.5 px-4 text-sm',
   md: 'h-10 gap-2 px-4 text-sm',
-  lg: 'h-11 gap-2 px-5 text-base',
-  xl: 'h-12 gap-2.5 px-6 text-base',
+  lg: 'h-11 gap-2 px-8 text-base',
+  xl: 'h-12 gap-2.5 px-8 text-base',
 };
 
 export function buttonVariants({
@@ -56,8 +73,8 @@ export function buttonVariants({
   className?: string;
 }) {
   return cn(
-    'inline-flex items-center justify-center rounded-md font-medium whitespace-nowrap transition-[color,background-color,box-shadow,border-color] duration-200',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base',
+    'inline-flex cursor-pointer items-center justify-center rounded-md font-medium whitespace-nowrap ring-offset-background transition-transform duration-150 ease-out active:scale-[0.97]',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50',
     variantStyles[variant],
     sizeStyles[size],

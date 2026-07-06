@@ -8,6 +8,7 @@
     "lint": "bunx turbo lint"
   },
   "devDependencies": {
+    "shadcn": "^4.13.0",
     "turbo": "^2.5.4",
     "typescript": "^6.0.3"
   },
@@ -15,7 +16,7 @@
   "engines": {
     "node": ">=20"
   },
-"workspaces": [
+  "workspaces": [
     "apps/*",
     "packages/*"
   ]

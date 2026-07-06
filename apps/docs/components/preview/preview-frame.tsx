@@ -5,45 +5,47 @@ interface PreviewFrameProps {
   children: ReactNode;
   className?: string;
   minHeight?: 'sm' | 'md' | 'lg' | 'xl';
+  /** Optional chrome label — e.g. a filename — shown in a hairline header bar. */
   label?: string;
 }
 
-const minHeights = {
-  sm: 'min-h-[160px]',
-  md: 'min-h-[240px]',
-  lg: 'min-h-[360px]',
-  xl: 'min-h-[480px]',
-};
+// Padding scales with height so a compact card preview doesn't drown in
+// whitespace while the full detail-page sandbox gets room to breathe.
+const sizeStyles = {
+  sm: 'min-h-[160px] p-6',
+  md: 'min-h-[240px] p-8',
+  lg: 'min-h-[360px] p-10 sm:p-14',
+  xl: 'min-h-[480px] p-12 sm:p-16',
+} satisfies Record<NonNullable<PreviewFrameProps['minHeight']>, string>;
 
-export function PreviewFrame({
-  children,
-  className,
-  minHeight = 'md',
-  label,
-}: PreviewFrameProps) {
+/**
+ * The sandboxed surface every live/looping demo renders inside — SmoothUI's
+ * "frame-box" dotted canvas (app/global.css `.frame-box`), ported as a
+ * self-contained utility stack rather than a global class: a rounded card on
+ * `bg-background`/`border-border`, with a `currentColor`-driven dot-grid so
+ * it repaints correctly in light and dark without a `dark:` override.
+ */
+export function PreviewFrame({ children, className, minHeight = 'md', label }: PreviewFrameProps) {
   return (
-    <div
-      className={cn(
-        'overflow-hidden rounded-2xl border border-border/60 bg-bg-base',
-        className,
-      )}
-    >
+    <div className={cn('overflow-hidden rounded-2xl border border-border bg-background', className)}>
       {label && (
-        <div className="flex items-center justify-between border-b border-border/50 bg-bg-subtle/60 px-5 py-3">
-          <span className="text-xs font-medium uppercase tracking-wider text-text-tertiary">
+        <div className="flex items-center justify-between border-b border-border bg-muted/40 px-4 py-2.5">
+          <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
             {label}
           </span>
         </div>
       )}
       <div
         className={cn(
-          'relative flex items-center justify-center p-10 sm:p-16',
-          minHeights[minHeight],
-          /* subtle dot grid — indigo in dark mode, faint in light */
-          'bg-[radial-gradient(circle_at_1px_1px,rgb(99_102_241/0.05)_1px,transparent_0)] [background-size:24px_24px]',
-          'dark:bg-[radial-gradient(circle_at_1px_1px,rgb(99_102_241/0.1)_1px,transparent_0)] dark:[background-size:24px_24px]',
+          'relative isolate flex items-center justify-center overflow-hidden bg-background',
+          sizeStyles[minHeight],
         )}
       >
+        {/* Dotted canvas — currentColor keeps it theme-correct without dark: */}
+        <div
+          aria-hidden
+          className="absolute inset-0 text-foreground/[0.07] [background-image:radial-gradient(currentColor_1px,transparent_1px)] [background-size:18px_18px]"
+        />
         <div className="relative z-10 w-full">{children}</div>
       </div>
     </div>

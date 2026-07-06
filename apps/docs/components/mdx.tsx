@@ -15,7 +15,7 @@ export function getMDXComponents(components?: MDXComponents) {
     pre: ({ className, ...props }: HTMLAttributes<HTMLPreElement>) => (
       <pre
         className={cn(
-          'my-6 overflow-x-auto rounded-2xl border border-border/60 bg-neutral-950 p-5 text-sm leading-relaxed',
+          'my-6 overflow-x-auto rounded-xl border border-border bg-muted/40 p-5 text-sm leading-relaxed',
           className,
         )}
         {...props}
@@ -27,8 +27,8 @@ export function getMDXComponents(components?: MDXComponents) {
         <code
           className={cn(
             isInline
-              ? 'rounded-md bg-neutral-800/70 px-1.5 py-0.5 text-xs font-mono text-brand-300'
-              : 'font-mono text-neutral-300',
+              ? 'rounded-md bg-muted px-1.5 py-0.5 text-xs font-mono text-brand'
+              : 'font-mono text-muted-foreground',
             className,
           )}
           {...props}
@@ -38,7 +38,7 @@ export function getMDXComponents(components?: MDXComponents) {
     h1: ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
       <h1
         className={cn(
-          'font-display mt-2 mb-6 text-4xl font-bold tracking-tight text-text-primary',
+          'font-display mt-2 mb-6 text-3xl font-bold tracking-tight text-foreground',
           className,
         )}
         {...props}
@@ -47,7 +47,7 @@ export function getMDXComponents(components?: MDXComponents) {
     h2: ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
       <h2
         className={cn(
-          'font-display mt-10 mb-4 text-2xl font-semibold tracking-tight text-text-primary',
+          'font-display mt-10 mb-4 text-lg font-semibold tracking-tight text-foreground',
           className,
         )}
         {...props}
@@ -55,23 +55,17 @@ export function getMDXComponents(components?: MDXComponents) {
     ),
     h3: ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
       <h3
-        className={cn(
-          'font-display mt-8 mb-3 text-xl font-semibold text-text-primary',
-          className,
-        )}
+        className={cn('font-display mt-8 mb-3 text-base font-semibold text-foreground', className)}
         {...props}
       />
     ),
     p: ({ className, ...props }: HTMLAttributes<HTMLParagraphElement>) => (
-      <p
-        className={cn('mb-4 leading-relaxed text-text-secondary', className)}
-        {...props}
-      />
+      <p className={cn('mb-4 text-base leading-relaxed text-muted-foreground', className)} {...props} />
     ),
     a: ({ className, ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) => (
       <a
         className={cn(
-          'text-brand-400 underline underline-offset-4 transition-colors hover:text-brand-300',
+          'text-brand underline underline-offset-4 transition-colors hover:text-brand/80',
           className,
         )}
         {...props}
@@ -79,22 +73,45 @@ export function getMDXComponents(components?: MDXComponents) {
     ),
     ul: ({ className, ...props }: HTMLAttributes<HTMLUListElement>) => (
       <ul
-        className={cn('my-4 ml-6 list-disc space-y-2 text-text-secondary', className)}
+        className={cn('my-4 ml-6 list-disc space-y-2 text-muted-foreground', className)}
         {...props}
       />
     ),
     ol: ({ className, ...props }: HTMLAttributes<HTMLOListElement>) => (
       <ol
-        className={cn('my-4 ml-6 list-decimal space-y-2 text-text-secondary', className)}
+        className={cn('my-4 ml-6 list-decimal space-y-2 text-muted-foreground', className)}
         {...props}
       />
     ),
     blockquote: ({ className, ...props }: HTMLAttributes<HTMLQuoteElement>) => (
       <blockquote
         className={cn(
-          'my-6 rounded-2xl border-l-4 border-brand-500/50 bg-brand-500/5 px-6 py-4 text-text-secondary',
+          'my-6 rounded-xl border-l-4 border-brand/50 bg-brand/5 px-6 py-4 text-muted-foreground',
           className,
         )}
+        {...props}
+      />
+    ),
+    strong: ({ className, ...props }: HTMLAttributes<HTMLElement>) => (
+      <strong className={cn('font-semibold text-foreground', className)} {...props} />
+    ),
+    table: ({ className, ...props }: HTMLAttributes<HTMLTableElement>) => (
+      <div className="my-6 overflow-x-auto rounded-xl border border-border">
+        <table className={cn('w-full border-collapse text-sm', className)} {...props} />
+      </div>
+    ),
+    th: ({ className, ...props }: HTMLAttributes<HTMLTableCellElement>) => (
+      <th
+        className={cn(
+          'border-b border-border bg-muted/40 px-4 py-2.5 text-left font-medium text-foreground',
+          className,
+        )}
+        {...props}
+      />
+    ),
+    td: ({ className, ...props }: HTMLAttributes<HTMLTableCellElement>) => (
+      <td
+        className={cn('border-b border-border px-4 py-2.5 text-muted-foreground', className)}
         {...props}
       />
     ),

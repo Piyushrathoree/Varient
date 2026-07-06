@@ -12,6 +12,7 @@
     "postinstall": "fumadocs-mdx"
   },
   "dependencies": {
+    "@radix-ui/react-accordion": "^1.2.2",
     "@varient/ui": "workspace:*",
     "fumadocs-core": "16.8.12",
     "fumadocs-mdx": "15.0.7",
