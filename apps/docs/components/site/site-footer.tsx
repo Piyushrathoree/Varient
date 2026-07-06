@@ -151,19 +151,9 @@ export function SiteFooter() {
           className="h-px bg-[length:6px_1px] bg-repeat-x opacity-30 [background-image:linear-gradient(90deg,var(--color-foreground)_1px,transparent_1px)]"
         />
 
-        {/* Bottom bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center justify-between">
           <p className="text-muted-foreground text-sm">
-            &copy; {new Date().getFullYear()} Varient. UI design adapted from{' '}
-            <a
-              className={cn('text-foreground underline underline-offset-4 hover:text-brand', focusRing, 'rounded-sm')}
-              href="https://smoothui.dev"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              SmoothUI
-            </a>{' '}
-            by Edu Calvo (MIT).
+            &copy; {new Date().getFullYear()} Varient. All rights reserved.
           </p>
 
           {/* Status pill */}
