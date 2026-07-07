@@ -1,0 +1,82 @@
+---
+title: Toast
+description: Transient notifications with auto-dismiss, actions, and a stacked viewport.
+---
+
+<ComponentPreview name="toast" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/toast/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+Wrap your app (or the section that needs toasts) in `<ToastProvider>` — it owns the toast queue and renders the stacked viewport in a portal:
+
+```tsx
+import { ToastProvider } from '@/components/foundation/toast';
+
+export function App({ children }: { children: React.ReactNode }) {
+  return <ToastProvider>{children}</ToastProvider>;
+}
+```
+
+## Usage
+
+```tsx
+import { ToastProvider, useToast } from '@/components/foundation/toast';
+
+function SaveButton() {
+  const { toast } = useToast();
+
+  return (
+    <button
+      onClick={() =>
+        toast.success('Changes saved', { description: 'Your profile has been updated.' })
+      }
+    >
+      Save
+    </button>
+  );
+}
+
+export function Example() {
+  return (
+    <ToastProvider>
+      <SaveButton />
+    </ToastProvider>
+  );
+}
+```
+
+`toast(options)` fires a default toast; `toast.success` / `toast.error` / `toast.warning` / `toast.info` are shorthands that set the title and variant in one call. Every call returns the toast's id, which `dismiss(id)` accepts to close it early.
+
+## Props
+
+`useToast()` returns `{ toast, dismiss }`. `toast(options)` (and its shorthands) accept a `ToastOptions` object:
+
+<PropsTable props={[
+  { name: 'title', type: 'ReactNode', description: 'Required — the toast’s heading. Shorthands (toast.success(title)) pass this as the first argument.' },
+  { name: 'description', type: 'ReactNode', description: 'Optional supporting text shown below the title.' },
+  { name: 'variant', type: "'default' | 'success' | 'error' | 'warning' | 'info'", defaultValue: "'default'", description: 'Status icon and accent — default renders no icon.' },
+  { name: 'duration', type: 'number', defaultValue: '5000', description: 'Auto-dismiss delay in ms. 0 disables auto-dismiss; the timer pauses while hovered.' },
+  { name: 'action', type: '{ label: string; onClick: () => void }', description: 'Optional inline action button — clicking it calls onClick, then dismisses the toast.' },
+]} />
+
+## Variants
+
+- **default** — no status icon, no accent
+- **success** — check-circle icon, emerald accent
+- **error** — x-circle icon, destructive accent, announced as an alert
+- **warning** — triangle icon, amber accent
+- **info** — info icon, neutral (foreground) accent
+
+## Accessibility
+
+- The viewport is a labeled `region` (`aria-label="Notifications"`) so screen reader users can jump to it.
+- Each toast is `role="status"` with `aria-live="polite"`, except **error** toasts, which use `role="alert"` with `aria-live="assertive"` so failures interrupt and are announced immediately.
+- The auto-dismiss timer pauses on hover/focus so a toast never disappears mid-read.
+- The close button is a real `<button>` with `aria-label="Dismiss notification"` — reachable and operable by keyboard alone.
+- All motion (enter, exit, and stack reflow) is skipped under `prefers-reduced-motion`.

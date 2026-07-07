@@ -1,0 +1,81 @@
+---
+title: Radio Group
+description: Single choice from a group of options, with a spring-scaled selection dot.
+---
+
+<ComponentPreview name="radio-group" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/radio-group/` into your project.
+
+```bash
+bun add @radix-ui/react-radio-group motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { useState } from 'react';
+import { RadioGroup } from '@/components/foundation/radio-group';
+
+export function Example() {
+  const [plan, setPlan] = useState('pro');
+
+  return (
+    <RadioGroup value={plan} onChange={setPlan}>
+      <RadioGroup.Item value="free" label="Free" />
+      <RadioGroup.Item value="pro" label="Pro" />
+      <RadioGroup.Item value="team" label="Team" />
+    </RadioGroup>
+  );
+}
+```
+
+`RadioGroup.Item` skips its built-in `label` (leave the prop out) when you need a richer click target — pass your own `id` and wrap a `<label htmlFor>` around whatever markup you want.
+
+For the common "selectable tile" case, use `variant="card"` instead — it wraps the dot and a two-line `label`/`description` in a soft-cornered, fully clickable tile for you (this is what the plan-picker above uses):
+
+```tsx
+<RadioGroup value={plan} onChange={setPlan}>
+  <RadioGroup.Item
+    variant="card"
+    value="pro"
+    label="Pro"
+    description="$19/mo — full animated layer, priority support."
+  />
+</RadioGroup>
+```
+
+## Props
+
+### RadioGroup
+
+<PropsTable
+  props={[
+    { name: 'value', type: 'string', description: 'Required — the currently selected item value.' },
+    { name: 'onChange', type: '(value: string) => void', description: 'Required — called with the newly selected value.' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables every item in the group. An item can still opt out with its own isDisabled={false}.' },
+    { name: 'orientation', type: "'horizontal' | 'vertical'", defaultValue: "'vertical'", description: 'Layout direction and arrow-key navigation axis.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the group container.' },
+  ]}
+/>
+
+### RadioGroup.Item
+
+<PropsTable
+  props={[
+    { name: 'value', type: 'string', description: 'Required — this item’s value within the group.' },
+    { name: 'isDisabled', type: 'boolean', description: 'Disables this item. Falls back to the group’s isDisabled when omitted.' },
+    { name: 'label', type: 'string', description: 'Label rendered next to (or, in the card variant, beside) the dot and linked via htmlFor. Omit it to compose a custom label yourself.' },
+    { name: 'description', type: 'string', description: 'Secondary line of copy under the label. Only rendered by the card variant.' },
+    { name: 'variant', type: "RadioGroupItemVariant ('default' | 'card')", defaultValue: "'default'", description: "'card' wraps the dot + label/description in a soft-cornered (rounded-xl), fully clickable tile — the selectable-plan pattern." },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the circular control (never the card variant’s wrapper).' },
+  ]}
+/>
+
+RadioGroup is fully controlled — there is no internal selected-value state, so both `value` and `onChange` are required even when the group is disabled.
+
+## Accessibility
+
+RadioGroup renders Radix's WAI-ARIA radio group pattern: the root gets `role="radiogroup"` and each item gets `role="radio"` with `aria-checked`. Arrow Right/Down and Arrow Left/Up move focus between items and immediately select the newly-focused one (roving tabindex, automatic activation) — the axis follows `orientation`. When `label` is passed on an item, it renders as a `<label>` tied to that item through a `useId()`-generated (or caller-supplied) `id`/`htmlFor` pair. The selection dot's scale-in/out animation drops to a duration of `0` when `prefers-reduced-motion` is set.

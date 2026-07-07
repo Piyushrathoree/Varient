@@ -1,8 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { ArrowRight, Send, Sparkles } from 'lucide-react';
-import { Button } from '@varient/ui';
+import { Button, type ButtonVariant } from '@varient/ui';
+
+const VARIANTS: { variant: ButtonVariant; label: string }[] = [
+  { variant: 'primary', label: 'Primary' },
+  { variant: 'default', label: 'Default' },
+  { variant: 'secondary', label: 'Secondary' },
+  { variant: 'outline', label: 'Outline' },
+  { variant: 'ghost', label: 'Ghost' },
+  { variant: 'destructive', label: 'Destructive' },
+  { variant: 'link', label: 'Link' },
+  { variant: 'sweep', label: 'Sweep' },
+  { variant: 'frame', label: 'Frame' },
+];
+
+function DemoCard({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+      {children}
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
+    </div>
+  );
+}
 
 export function ButtonDemo() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,59 +37,62 @@ export function ButtonDemo() {
     <div className="flex w-full flex-col gap-8">
       <div className="flex flex-col gap-3">
         <p className="text-sm font-medium text-muted-foreground">Variants</p>
-        <div className="flex flex-wrap gap-3">
-          <Button
-            variant="primary"
-            rightIcon={<ArrowRight className="size-4" strokeWidth={1.75} />}
-          >
-            Primary
-          </Button>
-          <Button variant="default">Default</Button>
-          <Button variant="secondary">Secondary</Button>
-          <Button variant="outline">Outline</Button>
-          <Button variant="ghost">Ghost</Button>
-          <Button variant="destructive">Destructive</Button>
-          <Button variant="link">Link</Button>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <p className="text-sm font-medium text-muted-foreground">Signature</p>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button variant="sweep" leftIcon={<Send className="size-4" strokeWidth={1.75} />}>
-            Sweep
-          </Button>
-          <Button variant="frame" rightIcon={<ArrowRight className="size-4" strokeWidth={1.75} />}>
-            Frame
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <p className="text-sm font-medium text-muted-foreground">Sizes</p>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button size="xs">Extra small</Button>
-          <Button size="sm">Small</Button>
-          <Button size="md">Medium</Button>
-          <Button size="lg">Large</Button>
-          <Button size="xl">Extra large</Button>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {VARIANTS.map(({ variant, label }) => (
+            <DemoCard key={variant} label={label}>
+              <Button variant={variant}>{label}</Button>
+            </DemoCard>
+          ))}
         </div>
       </div>
 
       <div className="flex flex-col gap-3">
         <p className="text-sm font-medium text-muted-foreground">States</p>
-        <div className="flex flex-wrap gap-3">
-          <Button
-            variant="primary"
-            isLoading={isLoading}
-            onClick={handleLoadingDemo}
-            leftIcon={<Sparkles className="size-4" strokeWidth={1.75} />}
-          >
-            Click to load
-          </Button>
-          <Button variant="outline" isDisabled>
-            Disabled
-          </Button>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <DemoCard label="Loading (click to trigger)">
+            <Button
+              variant="primary"
+              isLoading={isLoading}
+              onClick={handleLoadingDemo}
+              leftIcon={<Sparkles className="size-4" strokeWidth={1.75} />}
+            >
+              Click to load
+            </Button>
+          </DemoCard>
+
+          <DemoCard label="Disabled">
+            <Button variant="outline" isDisabled>
+              Disabled
+            </Button>
+          </DemoCard>
+
+          <DemoCard label="Left icon">
+            <Button variant="sweep" leftIcon={<Send className="size-4" strokeWidth={1.75} />}>
+              Sweep
+            </Button>
+          </DemoCard>
+
+          <DemoCard label="Right icon">
+            <Button
+              variant="frame"
+              rightIcon={<ArrowRight className="size-4" strokeWidth={1.75} />}
+            >
+              Frame
+            </Button>
+          </DemoCard>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <p className="text-sm font-medium text-muted-foreground">Sizes</p>
+        <div className="rounded-xl border border-border bg-card p-6">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Button size="xs">Extra small</Button>
+            <Button size="sm">Small</Button>
+            <Button size="md">Medium</Button>
+            <Button size="lg">Large</Button>
+            <Button size="xl">Extra large</Button>
+          </div>
         </div>
       </div>
     </div>

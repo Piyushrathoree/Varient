@@ -1,0 +1,67 @@
+---
+title: Select
+description: Accessible dropdown select with grouped options and labels, built on Radix.
+---
+
+<ComponentPreview name="select" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/select/` into your project.
+
+```bash
+bun add @radix-ui/react-select motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Select } from '@/components/foundation/select';
+
+export function Example() {
+  return (
+    <Select defaultValue="next">
+      <Select.Trigger aria-label="Framework">
+        <Select.Value placeholder="Select a framework" />
+      </Select.Trigger>
+      <Select.Content>
+        <Select.Group>
+          <Select.Label>Frameworks</Select.Label>
+          <Select.Item value="next">Next.js</Select.Item>
+          <Select.Item value="react">React</Select.Item>
+        </Select.Group>
+      </Select.Content>
+    </Select>
+  );
+}
+```
+
+## Props
+
+<PropsTable props={[
+  { name: 'value', type: 'string', description: 'Controlled selected value — pass with onValueChange (Select root).' },
+  { name: 'defaultValue', type: 'string', description: 'Initial selected value for uncontrolled usage (Select root).' },
+  { name: 'onValueChange', type: '(value: string) => void', description: 'Called when the selected value changes (Select root).' },
+  { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the whole select (Select root).' },
+  { name: 'open / defaultOpen / onOpenChange', type: 'boolean / boolean / (open: boolean) => void', description: 'Controlled or uncontrolled open state for the dropdown (Select root).' },
+  { name: 'Select.Trigger size', type: "'sm' | 'md' | 'lg'", defaultValue: "'md'", description: "Height and padding preset — matches Input's sizes exactly." },
+  { name: 'Select.Trigger variant', type: "'default' | 'ghost' | 'filled'", defaultValue: "'default'", description: 'Surface treatment — bordered, transparent, or filled. All three share the same focus/open border+ring emphasis.' },
+  { name: 'Select.Value placeholder', type: 'string', description: 'Text shown in the trigger when no value is selected.' },
+  { name: 'Select.Item value', type: 'string', description: 'Required — the value this item represents.' },
+  { name: 'Select.Item disabled', type: 'boolean', description: 'Disables an individual item.' },
+  { name: 'Select.Group', type: 'ComponentProps<"div">', description: 'Groups related items — pair with Select.Label.' },
+  { name: 'Select.Label', type: 'ComponentProps<"div">', description: 'Non-interactive heading for a Select.Group.' },
+  { name: 'Select.Separator', type: 'ComponentProps<"div">', description: 'Visual divider between groups.' },
+]} />
+
+## Accessibility
+
+Built on `@radix-ui/react-select`, which implements the [ARIA listbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) for you:
+
+- **Space / Enter** — opens the dropdown, or selects the highlighted item while open
+- **Arrow Up / Down** — moves the highlighted item; wraps at the ends
+- **Home / End** — jumps to the first / last item
+- **Typeahead** — typing letters jumps to the next matching item's label
+- **Escape** — closes the dropdown and returns focus to the trigger
+- Trigger exposes `role="combobox"` with `aria-expanded` / `aria-controls`; the content is a `role="listbox"` with `aria-selected` on items
+- Respects `prefers-reduced-motion` — the open/close, chevron, item stagger, and check-mark animations all drop to an instant transition

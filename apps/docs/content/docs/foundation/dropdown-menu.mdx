@@ -1,0 +1,112 @@
+---
+title: Dropdown Menu
+description: Accessible menu of actions, built on Radix, with an origin-aware scale + fade transition.
+---
+
+<ComponentPreview name="dropdown-menu" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/dropdown-menu/` into your project.
+
+```bash
+bun add @radix-ui/react-dropdown-menu motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { LogOut, Settings, User } from 'lucide-react';
+import { Button } from '@/components/foundation/button';
+import { DropdownMenu } from '@/components/foundation/dropdown-menu';
+
+export function Example() {
+  return (
+    <DropdownMenu>
+      <DropdownMenu.Trigger asChild>
+        <Button variant="outline">Account</Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        <DropdownMenu.Item icon={<User className="size-4" />}>
+          Profile
+          <DropdownMenu.Shortcut>⇧⌘P</DropdownMenu.Shortcut>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item icon={<Settings className="size-4" />}>
+          Settings
+          <DropdownMenu.Shortcut>⌘,</DropdownMenu.Shortcut>
+        </DropdownMenu.Item>
+        <DropdownMenu.Separator />
+        <DropdownMenu.Item variant="destructive" icon={<LogOut className="size-4" />}>
+          Log out
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu>
+  );
+}
+```
+
+Uncontrolled by default — the menu tracks its own open state. Pass `open` together with `onOpenChange` to control it externally.
+
+## Props
+
+### DropdownMenu
+
+<PropsTable
+  props={[
+    { name: 'open', type: 'boolean', description: 'Controlled open state.' },
+    { name: 'defaultOpen', type: 'boolean', defaultValue: 'false', description: 'Initial open state for uncontrolled usage.' },
+    { name: 'onOpenChange', type: '(open: boolean) => void', description: 'Called on trigger click, item select, outside click, or Escape.' },
+    { name: 'modal', type: 'boolean', defaultValue: 'true', description: "Radix's modal mode — traps focus inside the menu and blocks outside pointer events while open." },
+  ]}
+/>
+
+### DropdownMenu.Trigger
+
+<PropsTable
+  props={[
+    { name: 'asChild', type: 'boolean', defaultValue: 'false', description: 'Merges trigger behavior onto its child element instead of rendering its own button.' },
+  ]}
+/>
+
+### DropdownMenu.Content
+
+<PropsTable
+  props={[
+    { name: 'align', type: "'start' | 'center' | 'end'", defaultValue: "'start'", description: 'Alignment relative to the trigger.' },
+    { name: 'sideOffset', type: 'number', defaultValue: '4', description: 'Gap in pixels between the trigger and the menu.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+### DropdownMenu.Item
+
+<PropsTable
+  props={[
+    { name: 'icon', type: 'ReactNode', description: 'Icon rendered before the label.' },
+    { name: 'variant', type: "'default' | 'destructive'", defaultValue: "'default'", description: 'destructive tints the label and highlight for dangerous actions (Log out, Delete).' },
+    { name: 'disabled', type: 'boolean', defaultValue: 'false', description: 'Disables the item — no select, no highlight.' },
+    { name: 'onSelect', type: '(event: Event) => void', description: 'Called when the item is chosen via click, Enter, or Space.' },
+  ]}
+/>
+
+### DropdownMenu.Label / Separator / Shortcut / Group
+
+<PropsTable
+  props={[
+    { name: 'DropdownMenu.Label', type: 'HTMLAttributes<HTMLDivElement>', description: 'Small muted section heading above a group of items.' },
+    { name: 'DropdownMenu.Separator', type: 'HTMLAttributes<HTMLDivElement>', description: 'A 1px hairline divider between groups.' },
+    { name: 'DropdownMenu.Shortcut', type: 'HTMLAttributes<HTMLSpanElement>', description: 'Trailing key-combo text, right-aligned inside an Item via ml-auto.' },
+    { name: 'DropdownMenu.Group', type: 'HTMLAttributes<HTMLDivElement>', description: 'Groups related items under role="group" — no default styling.' },
+  ]}
+/>
+
+## Accessibility
+
+DropdownMenu follows the WAI-ARIA menu pattern via Radix:
+
+- The trigger gets `aria-haspopup`, `aria-expanded`, and `aria-controls` pointing at the menu.
+- Arrow Up / Arrow Down move the highlighted item; Home / End jump to the first / last item.
+- Typeahead — typing jumps to the next item whose label starts with those characters.
+- Escape closes the menu and returns focus to the trigger; clicking outside does the same.
+- `modal` (default `true`) traps focus inside the open menu and blocks pointer events on the rest of the page.
+- The scale + fade transition is skipped in favor of an instant swap when `prefers-reduced-motion` is set.

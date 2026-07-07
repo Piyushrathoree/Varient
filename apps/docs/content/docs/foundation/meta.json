@@ -1,4 +1,19 @@
 {
   "title": "Foundation",
-  "pages": ["button", "input"]
+  "pages": [
+    "accordion",
+    "badge",
+    "button",
+    "card",
+    "checkbox",
+    "dialog",
+    "dropdown-menu",
+    "input",
+    "radio-group",
+    "select",
+    "switch",
+    "tabs",
+    "toast",
+    "tooltip"
+  ]
 }

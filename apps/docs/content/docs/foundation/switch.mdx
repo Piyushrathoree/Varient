@@ -1,0 +1,59 @@
+---
+title: Switch
+description: Accessible on/off toggle with a spring-animated thumb, in three styles.
+---
+
+<ComponentPreview name="switch" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/switch/` into your project.
+
+```bash
+bun add clsx tailwind-merge motion
+```
+
+## Usage
+
+```tsx
+import { useState } from 'react';
+import { Switch } from '@/components/foundation/switch';
+
+export function Example() {
+  const [checked, setChecked] = useState(true);
+
+  return <Switch isChecked={checked} onChange={setChecked} label="Push notifications" />;
+}
+```
+
+### Variants
+
+```tsx
+<Switch variant="default" isChecked={checked} onChange={setChecked} />
+<Switch variant="icons" isChecked={checked} onChange={setChecked} />
+<Switch variant="labeled" isChecked={checked} onChange={setChecked} />
+```
+
+- `default` — the plain spring-animated pill.
+- `icons` — check/x glyphs are fixed at the track's inner edges; the thumb sliding away reveals one and covers the other, cross-fading with a subtle scale + nudge in sync with the thumb's spring.
+- `labeled` — the same reveal mechanism as `icons`, with "I" / "O" text glyphs instead.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'isChecked', type: 'boolean', description: 'Required — the current on/off state.' },
+    { name: 'onChange', type: '(checked: boolean) => void', description: 'Required — called with the next state when toggled.' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the switch.' },
+    { name: 'size', type: 'SwitchSize', defaultValue: "'md'", description: 'Track/thumb size — sm, md, or lg.' },
+    { name: 'variant', type: 'SwitchVariant', defaultValue: "'default'", description: "Visual style — 'default', 'icons' (check/x), or 'labeled' (I/O text)." },
+    { name: 'label', type: 'string', description: 'Inline label rendered next to the track and linked via htmlFor.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the track.' },
+  ]}
+/>
+
+Switch is fully controlled — there is no internal checked state, so both `isChecked` and `onChange` are required even when the switch is disabled.
+
+## Accessibility
+
+Switch renders a real `<button type="button" role="switch" aria-checked={isChecked}>`, so Enter/Space activation comes free from native button semantics — no custom key handling is added. When `label` is passed, it renders as a `<label>` tied to the button through a `useId()`-generated (or caller-supplied) `id`/`htmlFor` pair. Without a `label`, the button falls back to `aria-label="Toggle"` unless a custom `aria-label` is passed. The thumb's spring transition — and the press squash/stretch, and the `icons`/`labeled` track glyph cross-fade — all drop to a duration of `0` when `prefers-reduced-motion` is set. The `icons`/`labeled` track glyphs are purely decorative (`aria-hidden`); state is still communicated via `aria-checked`.

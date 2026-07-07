@@ -1,0 +1,73 @@
+---
+title: Badge
+description: Small status label with four visual appearances, six semantic colors, and two shapes.
+---
+
+<ComponentPreview name="badge" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/badge/` into your project.
+
+```bash
+bun add clsx tailwind-merge motion
+```
+
+## Usage
+
+```tsx
+import { Sparkles } from 'lucide-react';
+import { Badge } from '@/components/foundation/badge';
+
+export function Example() {
+  return (
+    <Badge variant="primary" icon={<Sparkles className="size-3" strokeWidth={1.75} />}>
+      New
+    </Badge>
+  );
+}
+```
+
+Badge separates **what it means** (`variant`, the semantic color) from **how it looks** (`appearance`, the visual style) — any color works with any appearance.
+
+```tsx
+<Badge variant="success" appearance="solid">Shipped</Badge>
+<Badge variant="warning" appearance="dot">Degraded</Badge>
+<Badge variant="danger" appearance="outline">Failed</Badge>
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'variant', type: 'BadgeVariant', defaultValue: "'default'", description: 'Semantic color — default, primary, secondary, success, warning, danger, or outline.' },
+    { name: 'appearance', type: 'BadgeAppearance', defaultValue: "'soft'", description: "Visual style applied to the variant's color — soft, solid, outline, or dot. variant=\"outline\" keeps resolving to the outline appearance when appearance is omitted, for backward compatibility." },
+    { name: 'size', type: 'BadgeSize', defaultValue: "'md'", description: 'Padding and text size — sm, md, or lg.' },
+    { name: 'shape', type: 'BadgeShape', defaultValue: "'pill'", description: 'Corner treatment — pill (rounded-full) or square (rounded-md).' },
+    { name: 'icon', type: 'ReactNode', description: 'Optional leading icon, rendered before the label and after the status dot.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+Badge extends `HTMLAttributes<HTMLSpanElement>` — any native span prop (`onClick`, `id`, `aria-*`) passes through.
+
+## Variants (color)
+
+- **default** — neutral ink, no particular meaning
+- **primary** — brand tint
+- **secondary** — muted, low-emphasis
+- **success** — positive states
+- **warning** — caution states
+- **danger** — destructive/error states
+- **outline** — legacy neutral shortcut; equivalent to `variant="default" appearance="outline"`
+
+## Appearances (style)
+
+- **soft** — tinted wash + matching ink. The default for every variant except `outline`.
+- **solid** — filled with the semantic color and a contrasting ink (white for brand/danger, an auto-flipping `text-background` for success/warning since those tokens brighten in dark mode).
+- **outline** — hairline colored border, transparent background, colored text.
+- **dot** — a small animated status dot carries the color; the label stays neutral text on a subtle wash. The dot pops in with a reduced-motion-aware spring on mount.
+
+## Accessibility
+
+Badge renders a plain `<span>` — no implicit ARIA role, since it's a label rather than a control. Color alone never conveys the status: every appearance pairs its color with visible text, and `dot` additionally marks its indicator `aria-hidden` so screen readers only announce the label. If a badge needs to announce a live change, add `role="status"` or `aria-label` yourself through the pass-through span props. The `dot` appearance's mount animation respects `prefers-reduced-motion` and renders with no transition when set.

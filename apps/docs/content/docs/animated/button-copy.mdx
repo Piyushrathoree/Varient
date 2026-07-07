@@ -1,0 +1,73 @@
+---
+title: Button Copy
+description: Copy button that morphs idle → copying → copied with a circular spinner.
+---
+
+<ComponentPreview name="button-copy" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/button-copy/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { ButtonCopy } from '@/components/animated/button-copy';
+
+export function Example() {
+  return <ButtonCopy content="npx varient add button-copy" />;
+}
+```
+
+Pass `onCopy` instead of `content` for custom copy logic (e.g. copying
+rendered code rather than a raw string) — `onCopy` takes priority when both
+are set:
+
+```tsx
+<ButtonCopy onCopy={async () => copyRenderedSnippet()} />
+```
+
+Set `display="label"` to widen into a pill with a text label next to the
+icon — the button's width animates smoothly as the label changes length:
+
+```tsx
+<ButtonCopy display="label" content="npx varient add button-copy" />
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'content', type: 'string', description: 'Text written via navigator.clipboard.writeText. Ignored when onCopy is set.' },
+    { name: 'onCopy', type: '() => Promise<void> | void', description: 'Custom copy handler, takes priority over content. Awaited before the "copied" state shows.' },
+    { name: 'variant', type: "'default' | 'secondary' | 'outline' | 'ghost'", defaultValue: "'outline'", description: 'Visual style of the button.' },
+    { name: 'size', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", defaultValue: "'md'", description: 'Size preset — same scale as Button.' },
+    { name: 'display', type: "'icon' | 'label'", defaultValue: "'icon'", description: 'icon is a circular icon-only button; label widens into a pill with a "Copy" / "Copying" / "Copied" text label beside the icon.' },
+    { name: 'resetDelay', type: 'number', defaultValue: '1500', description: 'Milliseconds the "copied" state holds before resetting to idle.' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the button.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- In icon mode, the accessible name lives in a visually-hidden
+  `aria-live="polite"` span, so "Copy" → "Copying" → "Copied" is announced to
+  screen readers as the state changes, without depending on assistive tech
+  re-reading a changing `aria-label`. In label mode, the visible text is the
+  accessible name and the button itself is the `aria-live="polite"` region.
+- Interaction is disabled while copying or while showing the copied
+  confirmation, preventing duplicate clipboard writes mid-animation.
+- The icon morph (copy → spinner → check) is purely decorative and marked
+  `aria-hidden`; the live-region text carries the actual state.
+- The loading spinner is a genuine round SVG ring (a partial circular arc
+  with round line caps) that spins continuously; the rotation is skipped
+  under `prefers-reduced-motion` but the ring itself still renders, keeping
+  the state visually distinct.
+- The "copied" checkmark's `text-emerald-500` accent is a deliberate,
+  scoped exception to the semantic token palette — it matches the app's own
+  copy-button confirmation color.

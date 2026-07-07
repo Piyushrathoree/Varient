@@ -1,0 +1,65 @@
+---
+title: Card
+description: Composable content container with header, body, and footer slots, plus hover and click states.
+---
+
+<ComponentPreview name="card" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/card/` into your project.
+
+```bash
+bun add clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Card } from '@/components/foundation/card';
+
+export function Example() {
+  return (
+    <Card isHoverable>
+      <Card.Header>
+        <Card.Title>Pro plan</Card.Title>
+        <Card.Description>
+          Everything in Free, plus the full animated layer and priority support.
+        </Card.Description>
+      </Card.Header>
+      <Card.Body>
+        <p className="text-sm text-muted-foreground">$19/month, billed annually.</p>
+      </Card.Body>
+    </Card>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'variant', type: "'default' | 'outline' | 'ghost'", defaultValue: "'default'", description: 'default is the hairline surface with a soft shadow; outline drops the fill; ghost drops both border and fill.' },
+    { name: 'isHoverable', type: 'boolean', defaultValue: 'false', description: 'Lifts and brightens the hairline on hover — for cards in a browsable grid.' },
+    { name: 'isClickable', type: 'boolean', defaultValue: 'false', description: 'Marks the card as an interactive target: pointer cursor, press feedback, and keyboard activation (Enter/Space).' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+Card extends `HTMLAttributes<HTMLDivElement>` — any native div prop passes through, including `onClick` for `isClickable` cards.
+
+## Anatomy
+
+Card is a compound component — compose only the slots a given card needs:
+
+- **Card.Header** — `flex flex-col gap-1.5 p-6`; groups Title and Description
+- **Card.Title** — renders an `<h3>`
+- **Card.Description** — renders a `<p>`
+- **Card.Body** — main content area; regains top padding automatically when used without a Header
+- **Card.Footer** — actions row; same auto-padding rule as Body
+
+All five accept their element's standard HTML attributes — there is no dedicated props interface beyond that.
+
+## Accessibility
+
+Card is a plain `<div>` by default — no role, not focusable. Setting `isClickable` adds `role="button"`, `tabIndex={0}`, and a keydown handler that simulates a real click on Enter or Space, so keyboard users get the same activation a mouse click would trigger. `isClickable` only wires up the semantics and key handling — the `onClick` behavior still has to be supplied by the consumer.

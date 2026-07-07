@@ -40,13 +40,17 @@ const variantStyles: Record<ButtonVariant, string> = {
   destructive:
     'bg-gradient-to-b from-[#FD4B4E] to-destructive text-white shadow-[0px_1px_2px_rgba(0,0,0,0.4),0px_0px_0px_1px_#F61418,inset_0px_0.75px_0px_rgba(255,255,255,0.2)] hover:from-destructive hover:to-destructive',
   link: 'bg-transparent text-primary underline-offset-4 hover:underline',
-  // Fill-on-hover — adapted from uiverse "red-stingray". A brand-outlined
-  // pill; on hover a hidden circle floods it via an expanding inset shadow and
-  // the label inverts. Themed off --color-brand so it tracks the token, not a hex.
+  // Fill-on-hover — a brand-outlined pill. On hover a solid layer glides in
+  // from the left edge on a GPU-composited `scaleX` transform (clipped to
+  // the button's own rounded corners via overflow-hidden), and the label
+  // inverts. Previously this animated an inset box-shadow's spread, which is
+  // paint-driven (not compositor-only) and reads as a hard-edged, boxy step
+  // rather than a glide — the transform swap fixes that. Themed off
+  // --color-brand so it tracks the token, not a hex.
   sweep:
     'relative isolate overflow-hidden border border-brand bg-transparent text-brand hover:text-white active:text-white ' +
-    "before:pointer-events-none before:absolute before:top-0 before:bottom-0 before:left-[-5em] before:my-auto before:-z-10 before:block before:h-[20em] before:w-[20em] before:rounded-full before:transition-[box-shadow] before:duration-500 before:ease-out before:content-[''] " +
-    'hover:before:shadow-[inset_0_0_0_10em_var(--color-brand)] active:before:shadow-[inset_0_0_0_10em_var(--color-brand-secondary)]',
+    "before:pointer-events-none before:absolute before:inset-0 before:-z-10 before:origin-left before:scale-x-0 before:bg-brand before:transition-transform before:duration-500 before:ease-[cubic-bezier(0.23,1,0.32,1)] before:content-[''] motion-reduce:before:transition-none " +
+    'hover:before:scale-x-100 active:before:bg-brand-secondary',
   // Gradient-frame glow — a surface pill rimmed by a brand gradient
   // (padding-box/border-box trick, no wrapper so asChild still works),
   // lifting + shadow-growing on hover.
@@ -73,7 +77,13 @@ export function buttonVariants({
   className?: string;
 }) {
   return cn(
-    'inline-flex cursor-pointer items-center justify-center rounded-md font-medium whitespace-nowrap ring-offset-background transition-transform duration-150 ease-out active:scale-[0.97]',
+    // Transition property list is intentionally broad — beyond the press
+    // scale, several variants swap background/border/text color or shadow
+    // on hover (frame's lift, outline's fill, etc.); without those in here
+    // those swaps snap instantly while the scale eases, which reads as
+    // linear/Base-UI-ish rather than springy. Duration + curve match
+    // EASE_OUT from lib/animation.ts (0.2s, premium decelerate).
+    'inline-flex cursor-pointer items-center justify-center rounded-md font-medium whitespace-nowrap ring-offset-background transition-[transform,box-shadow,background-color,border-color,color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] motion-reduce:transition-none',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50',
     variantStyles[variant],

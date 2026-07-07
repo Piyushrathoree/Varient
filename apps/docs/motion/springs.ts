@@ -2,7 +2,7 @@ import type { Transition } from 'motion/react';
 
 /**
  * Single motion signature — SmoothUI-style: a snappy, no-overshoot ease
- * (see PORT-SPEC.md). The old per-identity signature table (void/paper/
+ * (see .agent-docs/PORT-SPEC.md). The old per-identity signature table (void/paper/
  * studio/aurora, each with its own duration/curve) is gone along with the
  * 4-identity engine; there's one register now, for both light and dark.
  */

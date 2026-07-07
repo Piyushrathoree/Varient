@@ -12,9 +12,11 @@ import {
   type HTMLAttributes,
   type KeyboardEvent,
 } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { DURATION_INSTANT, SPRING_DEFAULT, SPRING_SNAPPY } from '../../../lib/animation';
 
-export type TabsVariant = 'underline' | 'pills';
+export type TabsVariant = 'underline' | 'pills' | 'segmented';
 
 export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
   /** Controlled active tab value. */
@@ -122,7 +124,9 @@ export const TabsList = forwardRef<HTMLDivElement, TabsListProps>(
         onKeyDown={handleKeyDown}
         className={cn(
           'inline-flex items-center gap-1',
-          variant === 'underline' ? 'border-b border-border' : 'rounded-full bg-muted p-1',
+          variant === 'underline' && 'border-b border-border',
+          variant === 'pills' && 'rounded-full bg-muted p-1',
+          variant === 'segmented' && 'flex w-full items-stretch gap-0 rounded-lg bg-muted p-1',
           className,
         )}
         {...props}
@@ -138,12 +142,24 @@ export interface TabsTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement
   value: string;
 }
 
+// One shared `bg-card` chip/bar slides between triggers via a shared
+// `layoutId` — only the selected trigger ever renders it, so motion treats it
+// as a single element moving between DOM positions (a "shared layout"
+// animation) rather than two elements cross-fading.
+function indicatorClassName(variant: TabsVariant): string {
+  if (variant === 'underline') return 'absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-brand';
+  if (variant === 'segmented')
+    return 'absolute inset-0 rounded-md border border-border bg-card shadow-sm';
+  return 'absolute inset-0 rounded-full border border-border bg-card shadow-sm';
+}
+
 export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
   ({ className, value, onClick, disabled, children, ...props }, ref) => {
     const { value: activeValue, setValue, variant, idBase } = useTabsContext('Trigger');
     const isSelected = activeValue === value;
     const triggerId = `${idBase}-trigger-${value}`;
     const panelId = `${idBase}-panel-${value}`;
+    const shouldReduceMotion = useReducedMotion();
 
     return (
       <button
@@ -160,32 +176,28 @@ export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
           if (!event.defaultPrevented) setValue(value);
         }}
         className={cn(
-          'relative inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium transition-colors duration-150 ease-out motion-reduce:transition-none',
+          'relative inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-colors duration-150 ease-out motion-reduce:transition-none',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           'disabled:pointer-events-none disabled:opacity-50',
-          variant === 'underline'
-            ? cn(
-                '-mb-px border-b-2',
-                // The indicator bar carries the brand color; the label itself
-                // stays neutral (foreground/muted-foreground), matching
-                // SmoothUI's underline tabs.
-                isSelected
-                  ? 'border-brand text-foreground'
-                  : 'border-transparent text-muted-foreground hover:text-foreground',
-              )
-            : cn(
-                'rounded-full',
-                // Selected pill is a raised neutral chip (background + hairline
-                // + shadow), not a brand fill — matches SmoothUI's pill/segment tabs.
-                isSelected
-                  ? 'bg-background text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground',
-              ),
+          // The indicator (bar/pill/chip) carries the "selected" surface; the
+          // label itself only ever changes color, matching SmoothUI's tabs.
+          variant === 'pills' && 'rounded-full',
+          variant === 'segmented' && 'flex-1',
+          isSelected ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
           className,
         )}
         {...props}
       >
-        {children}
+        {isSelected && (
+          <motion.span
+            aria-hidden
+            className={indicatorClassName(variant)}
+            layout
+            layoutId={`${idBase}-indicator`}
+            transition={shouldReduceMotion ? DURATION_INSTANT : SPRING_DEFAULT}
+          />
+        )}
+        <span className="relative z-10 inline-flex items-center gap-1.5">{children}</span>
       </button>
     );
   },
@@ -200,6 +212,7 @@ export const TabsContent = forwardRef<HTMLDivElement, TabsContentProps>(
   ({ className, value, children, ...props }, ref) => {
     const { value: activeValue, idBase } = useTabsContext('Content');
     const isSelected = activeValue === value;
+    const shouldReduceMotion = useReducedMotion();
     const triggerId = `${idBase}-trigger-${value}`;
     const panelId = `${idBase}-panel-${value}`;
 
@@ -218,7 +231,17 @@ export const TabsContent = forwardRef<HTMLDivElement, TabsContentProps>(
         )}
         {...props}
       >
-        {children}
+        {/* Every mount (i.e. every time this panel becomes the active one)
+            fades and slides up into place. There's intentionally no exit
+            animation on the outgoing panel — see the Tabs.Content doc
+            comment / tabs.mdx for why unmount stays synchronous. */}
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
+          transition={shouldReduceMotion ? DURATION_INSTANT : SPRING_SNAPPY}
+        >
+          {children}
+        </motion.div>
       </div>
     );
   },

@@ -1,0 +1,41 @@
+---
+title: Number Ticker
+description: Count-up number that animates once it scrolls into view.
+---
+
+<ComponentPreview name="number-ticker" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/number-ticker/` into your project.
+
+```bash
+bun add clsx tailwind-merge motion
+```
+
+## Usage
+
+```tsx
+import { NumberTicker } from '@/components/animated/number-ticker';
+
+export function Example() {
+  return <NumberTicker value={100} suffix="%" />;
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'value', type: 'number', description: 'Required — the target value counted up to.' },
+    { name: 'prefix', type: 'string', defaultValue: "''", description: 'Text rendered before the number, e.g. "$".' },
+    { name: 'suffix', type: 'string', defaultValue: "''", description: 'Text rendered after the number, e.g. "%" or "+".' },
+    { name: 'decimalPlaces', type: 'number', defaultValue: '0', description: 'Fixed number of decimal places shown while counting and at rest.' },
+    { name: 'duration', type: 'number', defaultValue: '1.2', description: 'Count-up duration in seconds.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+The animating digits are `aria-hidden` — a rapidly-updating number is not something a screen reader should narrate mid-count. The final formatted value (prefix + value + suffix) is always present through a visually-hidden (`sr-only`) span, so assistive tech reads it once, correctly, regardless of animation state. When `prefers-reduced-motion` is set, the count-up is skipped entirely and the final value renders immediately. The animation fires once, the first time the component scrolls into view (`useInView` with `once: true` and a `-80px` margin) — it does not replay on later scrolls.

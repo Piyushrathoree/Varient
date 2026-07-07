@@ -1,0 +1,54 @@
+---
+title: Magnetic Button
+description: Button that magnetically drifts toward the cursor, then springs back on leave.
+---
+
+<ComponentPreview name="magnetic-button" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/magnetic-button/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+`MagneticButton` renders a plain `<button>` and wraps whatever you pass as
+children — pair it with `buttonVariants` to reuse Button's look:
+
+```tsx
+import { buttonVariants } from '@/components/foundation/button';
+import { MagneticButton } from '@/components/animated/magnetic-button';
+
+export function Example() {
+  return (
+    <MagneticButton className={buttonVariants({ variant: 'primary', size: 'lg' })}>
+      Hover me
+    </MagneticButton>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'strength', type: 'number', defaultValue: '0.3', description: 'Pull intensity, roughly 0–1. Higher values track the cursor more closely.' },
+    { name: 'distance', type: 'number', defaultValue: '100', description: "Radius in pixels, measured from the button's center, within which the pull is active." },
+    { name: 'children', type: 'ReactNode', description: 'Button content.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- Tracking only engages for fine pointers (`hover: hover` and
+  `pointer: fine`) — touch devices render a static, fully functional button
+  with no pointer listeners attached.
+- Fully disabled under `prefers-reduced-motion`: no `pointermove` listener
+  is attached and the translate never applies, so the button is inert
+  visually but identical functionally.
+- Renders a real `<button>` element, so keyboard focus, `Enter`/`Space`
+  activation, and the visible focus ring all work without any extra markup.

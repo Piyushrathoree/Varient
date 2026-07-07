@@ -1,0 +1,61 @@
+---
+title: Checkbox
+description: Boolean input with a spring-animated checkmark and indeterminate support.
+---
+
+<ComponentPreview name="checkbox" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/checkbox/` into your project.
+
+```bash
+bun add @radix-ui/react-checkbox motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { useState } from 'react';
+import { Checkbox } from '@/components/foundation/checkbox';
+
+export function Example() {
+  const [checked, setChecked] = useState(true);
+
+  return <Checkbox isChecked={checked} onChange={setChecked} label="Remember me" />;
+}
+```
+
+Indeterminate ("select all") pattern:
+
+```tsx
+const allSelected = selected.length === items.length;
+const someSelected = selected.length > 0 && !allSelected;
+
+<Checkbox
+  isChecked={allSelected}
+  isIndeterminate={someSelected}
+  onChange={(checked) => setSelected(checked ? items : [])}
+  label="Select all"
+/>;
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'isChecked', type: 'boolean', description: 'Required — the current checked state.' },
+    { name: 'onChange', type: '(checked: boolean) => void', description: 'Required — called with the next state when toggled.' },
+    { name: 'isIndeterminate', type: 'boolean', defaultValue: 'false', description: 'Shows a dash instead of a checkmark. Takes over from isChecked visually; clicking always resolves to checked.' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the checkbox.' },
+    { name: 'size', type: 'CheckboxSize', defaultValue: "'md'", description: 'Box/icon size — sm, md, or lg.' },
+    { name: 'label', type: 'string', description: 'Inline label rendered next to the box and linked via htmlFor.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the box.' },
+  ]}
+/>
+
+Checkbox is fully controlled — there is no internal checked state, so both `isChecked` and `onChange` are required even when the checkbox is disabled.
+
+## Accessibility
+
+Checkbox renders Radix's `<button type="button" role="checkbox">`, which sets `aria-checked` to `true`, `false`, or `"mixed"` (when `isIndeterminate`) automatically — no custom ARIA wiring is needed. Space toggles the box via native button semantics. When `label` is passed, it renders as a `<label>` tied to the box through a `useId()`-generated (or caller-supplied) `id`/`htmlFor` pair; without a `label`, the box falls back to `aria-label="Checkbox"` unless a custom `aria-label` is passed. Clicking a checkbox while `isIndeterminate` is true always resolves to checked, matching native `<input type="checkbox">` behavior. The checkmark/dash path animation and its entrance/exit both drop to a duration of `0` when `prefers-reduced-motion` is set.

@@ -1,0 +1,135 @@
+---
+title: Dialog
+description: Focused modal overlay with a spring-scale panel, built on Radix for focus trap, portal, and a11y.
+---
+
+<ComponentPreview name="dialog" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/dialog/` into your project.
+
+```bash
+bun add @radix-ui/react-dialog motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Dialog, Button } from '@/components/foundation/dialog';
+
+export function Example() {
+  return (
+    <Dialog>
+      <Dialog.Trigger asChild>
+        <Button variant="outline">Edit profile</Button>
+      </Dialog.Trigger>
+
+      <Dialog.Content>
+        <Dialog.Header>
+          <Dialog.Title>Edit profile</Dialog.Title>
+          <Dialog.Description>
+            Make changes to your profile here. Click save when you&apos;re done.
+          </Dialog.Description>
+        </Dialog.Header>
+
+        {/* form fields */}
+
+        <Dialog.Footer>
+          <Dialog.Close asChild>
+            <Button variant="outline">Cancel</Button>
+          </Dialog.Close>
+          <Button variant="primary">Save changes</Button>
+        </Dialog.Footer>
+      </Dialog.Content>
+    </Dialog>
+  );
+}
+```
+
+For controlled usage, pass `isOpen` and `onOpenChange` to `Dialog` instead of relying on `Dialog.Trigger` — useful when a save action or async flow should close the dialog programmatically.
+
+```tsx
+const [isOpen, setIsOpen] = useState(false);
+
+<Dialog isOpen={isOpen} onOpenChange={setIsOpen}>
+  <Dialog.Trigger asChild>
+    <Button variant="outline">Delete account</Button>
+  </Dialog.Trigger>
+  <Dialog.Content>{/* ... */}</Dialog.Content>
+</Dialog>;
+```
+
+## Props
+
+<PropsTable
+  props={[
+    {
+      name: 'isOpen',
+      type: 'boolean',
+      description:
+        'Controlled open state — pair with onOpenChange. Omit for uncontrolled usage (Dialog root).',
+    },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean) => void',
+      description:
+        'Called whenever the open state should change — trigger click, Esc, overlay click, or Dialog.Close (Dialog root).',
+    },
+    {
+      name: 'defaultOpen',
+      type: 'boolean',
+      defaultValue: 'false',
+      description: 'Initial open state for uncontrolled usage (Dialog root).',
+    },
+    {
+      name: 'modal',
+      type: 'boolean',
+      defaultValue: 'true',
+      description:
+        'Traps focus and disables outside pointer events while open. Passed through to Radix (Dialog root).',
+    },
+    {
+      name: 'Dialog.Trigger asChild',
+      type: 'boolean',
+      defaultValue: 'false',
+      description: 'Merges onto the child element instead of rendering its own <button>.',
+    },
+    {
+      name: 'Dialog.Content showCloseButton',
+      type: 'boolean',
+      defaultValue: 'true',
+      description: 'Renders the built-in top-right X button. Set false to omit it entirely.',
+    },
+    {
+      name: 'Dialog.Content className',
+      type: 'string',
+      description: 'Additional Tailwind classes merged via cn(), applied to the panel.',
+    },
+    {
+      name: 'Dialog.Close asChild',
+      type: 'boolean',
+      defaultValue: 'false',
+      description:
+        'Merges onto the child element — pair with a Button in Dialog.Footer to dismiss on click.',
+    },
+    {
+      name: 'Dialog.Header / Footer',
+      type: 'HTMLAttributes<HTMLDivElement>',
+      description: 'Layout slots — standard div props.',
+    },
+    {
+      name: 'Dialog.Title / Description',
+      type: 'HTMLAttributes<HTMLHeadingElement> / <HTMLParagraphElement>',
+      description: "Renders Radix's Title (h2) / Description (p) for automatic aria wiring.",
+    },
+  ]}
+/>
+
+## Accessibility
+
+- Built on `@radix-ui/react-dialog` for focus trap, portal rendering, and dismiss handling.
+- **Esc** closes the dialog; clicking the overlay closes it too (unless `modal={false}` changes outside-interaction behavior).
+- Focus moves into the panel on open and returns to the trigger on close — Tab is trapped inside the panel while it's open.
+- `Dialog.Title` renders Radix's `Title` primitive, which wires `aria-labelledby` on the panel automatically. `Dialog.Description` does the same for `aria-describedby`. Always include a `Dialog.Title` — if you want to hide it visually, wrap it with a visually-hidden utility rather than omitting it.
+- All entrance/exit motion respects `prefers-reduced-motion` — reduced-motion users get an instant, un-animated state change instead of the scale/fade transition.

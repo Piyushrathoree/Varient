@@ -1,0 +1,123 @@
+---
+title: Tooltip
+description: A short, floating hint anchored to its trigger — hover or focus to reveal.
+---
+
+<ComponentPreview name="tooltip" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/tooltip/` into your project.
+
+```bash
+bun add @radix-ui/react-tooltip motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Tooltip } from '@/components/foundation/tooltip';
+
+export function Example() {
+  return (
+    <Tooltip content="Save changes" side="top">
+      <button>Save</button>
+    </Tooltip>
+  );
+}
+```
+
+The trigger is whatever single element you pass as `children` — it's merged onto the
+element via Radix's `asChild`, so it must accept a `ref` (any Varient component or a
+plain DOM element works).
+
+Wrap a group in `Tooltip.Provider` to share `delayDuration` (and the hover skip-delay
+window) across every tooltip beneath it — each `Tooltip` still works fully on its own
+without one:
+
+```tsx
+import { Tooltip } from '@/components/foundation/tooltip';
+
+export function Toolbar() {
+  return (
+    <Tooltip.Provider delayDuration={300}>
+      <Tooltip content="Bold">
+        <button>B</button>
+      </Tooltip>
+      <Tooltip content="Italic">
+        <button>I</button>
+      </Tooltip>
+    </Tooltip.Provider>
+  );
+}
+```
+
+## Colors
+
+Set `color` to map the bubble (and its arrow) to a semantic token. `default` is the
+neutral inverse surface used above; the rest borrow status/brand tokens for
+callouts inside toolbars, forms, and confirmation flows.
+
+```tsx
+<Tooltip content="Recommended" color="brand">
+  <button>Upgrade</button>
+</Tooltip>
+<Tooltip content="Synced" color="success">
+  <button>Save</button>
+</Tooltip>
+<Tooltip content="Needs review" color="warning">
+  <button>Submit</button>
+</Tooltip>
+<Tooltip content="Cannot be undone" color="destructive">
+  <button>Delete</button>
+</Tooltip>
+<Tooltip content="Matches the popover surface" color="surface">
+  <button>Info</button>
+</Tooltip>
+```
+
+## Animation variants
+
+Set `variant` to change how the tooltip enters. `scale` is the default — the
+original scale + fade + subtle directional pull. `slide` swaps that for a more
+pronounced directional slide on a snappier spring. `fade` drops movement and
+scale entirely for a soft opacity-only cross-fade.
+
+```tsx
+<Tooltip content="Slides in from the side" variant="slide">
+  <button>Slide</button>
+</Tooltip>
+<Tooltip content="Just a soft cross-fade" variant="fade">
+  <button>Fade</button>
+</Tooltip>
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'content', type: 'ReactNode', description: 'Required — content rendered inside the tooltip bubble.' },
+    { name: 'children', type: 'ReactElement', description: 'Required — the trigger element, merged via asChild.' },
+    { name: 'side', type: "'top' | 'right' | 'bottom' | 'left'", defaultValue: "'top'", description: 'Which side of the trigger the tooltip opens on.' },
+    { name: 'align', type: "'start' | 'center' | 'end'", defaultValue: "'center'", description: 'Alignment along the chosen side.' },
+    { name: 'sideOffset', type: 'number', defaultValue: '8', description: 'Pixel gap between the trigger and the tooltip.' },
+    { name: 'delayDuration', type: 'number', defaultValue: '200', description: 'Hover/focus delay in ms before the tooltip opens.' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Prevents the tooltip from ever opening.' },
+    { name: 'color', type: "'default' | 'brand' | 'success' | 'warning' | 'destructive' | 'surface'", defaultValue: "'default'", description: 'Bubble color, mapped to semantic tokens. The arrow always matches.' },
+    { name: 'variant', type: "'scale' | 'slide' | 'fade'", defaultValue: "'scale'", description: 'Entrance animation style.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged onto the tooltip bubble via cn().' },
+    { name: 'Tooltip.Provider delayDuration', type: 'number', defaultValue: '200', description: 'Shared default for every Tooltip nested beneath one Provider.' },
+    { name: 'Tooltip.Provider skipDelayDuration', type: 'number', defaultValue: '300', description: 'Grace period for moving between adjacent tooltips without re-incurring the delay.' },
+  ]}
+/>
+
+## Accessibility
+
+- Opens on both **hover** and **keyboard focus** of the trigger, and closes on blur or
+  pointer-leave — never mouse-only.
+- Pressing **Esc** dismisses an open tooltip.
+- Radix wires `aria-describedby` from the trigger to the tooltip's `role="tooltip"`
+  content automatically — icon-only triggers still need their own `aria-label` for an
+  accessible name, since a description doesn't replace one.
+- All motion is gated behind `useReducedMotion()` — reduced-motion users get an instant
+  cross-fade regardless of `variant`.

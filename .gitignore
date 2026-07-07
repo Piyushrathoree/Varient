@@ -28,6 +28,8 @@ Thumbs.db
 _fumadocs-ref/
 
 # AI tooling — personal, not for upstream
+# Orchestration / design scaffolding docs (HANDOFF, PORT-SPEC, DESIGN-DNA, IMPROVEMENT-SPEC, …)
+.agent-docs/
 CONTEXT.md
 AGENTS.md
 WORKSPACE.md

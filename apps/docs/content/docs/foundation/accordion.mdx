@@ -1,0 +1,91 @@
+---
+title: Accordion
+description: Collapsible sections for FAQs and grouped content, with an animated height/opacity panel.
+---
+
+<ComponentPreview name="accordion" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/accordion/` into your project.
+
+```bash
+bun add @radix-ui/react-accordion motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Accordion } from '@/components/foundation/accordion';
+
+export function Example() {
+  return (
+    <Accordion defaultValue="item-1">
+      <Accordion.Item value="item-1">
+        <Accordion.Trigger>What is Varient?</Accordion.Trigger>
+        <Accordion.Content>
+          A copy-paste component library, animated and accessible by default.
+        </Accordion.Content>
+      </Accordion.Item>
+
+      <Accordion.Item value="item-2">
+        <Accordion.Trigger>Can more than one item be open?</Accordion.Trigger>
+        <Accordion.Content>
+          Pass <code>isMultiple</code> to the root to allow several items open at once.
+        </Accordion.Content>
+      </Accordion.Item>
+    </Accordion>
+  );
+}
+```
+
+## Variants
+
+Three visual styles, switched with the `variant` prop — the compound API
+(`Accordion.Item` / `Accordion.Trigger` / `Accordion.Content`) is identical
+across all of them.
+
+```tsx
+<Accordion variant="separated" defaultValue="item-1">
+  {/* ...items */}
+</Accordion>
+```
+
+- **`default`** — a single bordered card with hairline dividers between rows. Good default for a settings page or sidebar.
+- **`separated`** — every item is its own rounded card with a gap between them, lifting slightly when open. Reads well for FAQ sections that need visual separation.
+- **`ghost`** — no frame at all; the active row gets a soft `bg-muted` fill instead of a border. Good for dense, low-chrome contexts.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'isMultiple', type: 'boolean', defaultValue: 'false', description: 'Allows more than one item open at once. false keeps it single-open.' },
+    { name: 'isCollapsible', type: 'boolean', defaultValue: 'true', description: 'Single mode only — lets the open item collapse back to none.' },
+    { name: 'defaultValue', type: 'string | string[]', description: 'Uncontrolled initial value — a string in single mode, a string[] in multiple mode.' },
+    { name: 'value', type: 'string | string[]', description: 'Controlled value — pass together with onValueChange.' },
+    { name: 'onValueChange', type: '(value: string | string[]) => void', description: 'Called with the next open value(s) when an item is toggled.' },
+    { name: 'variant', type: "'default' | 'separated' | 'ghost'", defaultValue: "'default'", description: 'Visual style — a single bordered card, per-item cards with a gap, or a bare low-chrome list.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root surface.' },
+    { name: 'Accordion.Item value', type: 'string', description: 'Required — a unique id for the item, matched against the accordion’s value(s).' },
+    { name: 'Accordion.Item isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the item — its trigger stops responding to interaction.' },
+    { name: 'Accordion.Trigger', type: 'ButtonHTMLAttributes<HTMLButtonElement>', description: 'The row header — renders the label and the animated chevron.' },
+    { name: 'Accordion.Content', type: 'HTMLAttributes<HTMLDivElement>', description: 'The panel — animates height and opacity open/closed with motion/react.' },
+  ]}
+/>
+
+## Accessibility
+
+Built on `@radix-ui/react-accordion` for correct roles and keyboard behavior.
+
+| Key           | Action                                             |
+| ------------- | --------------------------------------------------- |
+| `Enter` / `Space` | Toggles the focused item open or closed.          |
+| `Tab` / `Shift + Tab` | Moves focus to the next / previous focusable element. |
+| `Arrow Down`  | Moves focus to the next trigger.                    |
+| `Arrow Up`    | Moves focus to the previous trigger.                |
+| `Home`        | Moves focus to the first trigger.                   |
+| `End`         | Moves focus to the last trigger.                    |
+
+Each panel is a `role="region"` labelled by its trigger, and every open/close
+transition is gated behind `prefers-reduced-motion` — reduced-motion users get
+an instant toggle instead of the spring animation.

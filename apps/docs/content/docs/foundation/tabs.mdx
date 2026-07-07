@@ -1,0 +1,78 @@
+---
+title: Tabs
+description: Accessible tabs with a sliding active indicator, in underline, pills, or segmented styles.
+---
+
+<ComponentPreview name="tabs" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/tabs/` into your project.
+
+```bash
+bun add clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Tabs } from '@/components/foundation/tabs';
+
+export function Example() {
+  return (
+    <Tabs defaultValue="overview">
+      <Tabs.List>
+        <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+        <Tabs.Trigger value="usage">Usage</Tabs.Trigger>
+      </Tabs.List>
+      <Tabs.Content value="overview">Overview panel.</Tabs.Content>
+      <Tabs.Content value="usage">Usage panel.</Tabs.Content>
+    </Tabs>
+  );
+}
+```
+
+## Props
+
+### Tabs
+
+<PropsTable
+  props={[
+    { name: 'value', type: 'string', description: 'Controlled active tab value — pass with onValueChange.' },
+    { name: 'defaultValue', type: 'string', description: 'Initial active tab for uncontrolled usage.' },
+    { name: 'onValueChange', type: '(value: string) => void', description: 'Called when the active tab changes.' },
+    { name: 'variant', type: "'underline' | 'pills' | 'segmented'", defaultValue: "'underline'", description: 'Visual style shared by List and Trigger. `segmented` is new — an enclosed, full-width segmented control.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+Uncontrolled by default — pass `defaultValue` and Tabs tracks its own active tab. Pass `value` together with `onValueChange` to control it externally.
+
+### Variants
+
+- **`underline`** — a thin `bg-brand` bar slides beneath the active trigger, sitting on the tab strip's baseline.
+- **`pills`** — a raised `bg-card` capsule slides behind the active trigger inside a `bg-muted` track.
+- **`segmented`** — an enclosed, full-width segmented control: equal-width segments on a `bg-muted` track, with a `bg-card` chip sliding behind the active one.
+
+All three share the same sliding-indicator mechanic: only the active `Tabs.Trigger` renders the indicator element, tagged with a shared `layoutId`, so motion animates it smoothly between trigger positions (a shared-layout / FLIP transition) instead of cross-fading two separate elements. It's driven by a spring (`SPRING_DEFAULT`) and collapses to an instant snap when `prefers-reduced-motion` is set.
+
+### Tabs.List / Tabs.Trigger / Tabs.Content
+
+<PropsTable
+  props={[
+    { name: 'Tabs.List', type: 'HTMLAttributes<HTMLDivElement>', description: 'Tab strip. Renders role="tablist" and owns arrow-key navigation — no props of its own.' },
+    { name: 'Tabs.Trigger value', type: 'string', description: 'Required — the tab value this trigger activates.' },
+    { name: 'Tabs.Content value', type: 'string', description: 'Required — renders this panel only when it matches the active value; unmounts when not selected.' },
+  ]}
+/>
+
+## Accessibility
+
+Tabs implements the WAI-ARIA APG tabs pattern with automatic activation:
+
+- `Tabs.List` gets `role="tablist"` and `aria-orientation="horizontal"`.
+- `Tabs.Trigger` gets `role="tab"`, `aria-selected`, `aria-controls` pointing at its panel, and roving `tabIndex` — the active tab is `0`, every other tab is `-1`.
+- Arrow Right / Arrow Left / Home / End move focus between tabs and immediately activate the newly-focused tab (automatic activation, not manual).
+- `Tabs.Content` gets `role="tabpanel"`, `aria-labelledby` pointing back at its trigger, and `tabIndex={0}` so keyboard users can focus and scroll panel content.
+
+Inactive `Tabs.Content` panels are not hidden with CSS — they return `null` and unmount completely, so any local state inside an unselected panel is lost when its tab is not active. This is unchanged from before: the newly active panel now fades and slides up into place on mount (gated by `prefers-reduced-motion`), but there's intentionally no exit animation on the outgoing panel — it still unmounts synchronously, so switching tabs never leaves two panels mounted at once.

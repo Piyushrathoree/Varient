@@ -5,7 +5,7 @@ import './global.css';
 
 /**
  * Body face — SmoothUI ports Inter (body) + Poppins (title) straight from
- * next/font/google (see PORT-SPEC.md — copy, don't invent a Fontshare stack).
+ * next/font/google (see .agent-docs/PORT-SPEC.md — copy, don't invent a Fontshare stack).
  */
 const inter = Inter({
   subsets: ['latin'],

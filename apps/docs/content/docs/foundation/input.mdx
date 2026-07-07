@@ -33,11 +33,33 @@ export function Example() {
 
 ## Props
 
-<InputPropsTable />
+<PropsTable
+  props={[
+    { name: 'label', type: 'string', description: 'Label text rendered above the input.' },
+    { name: 'placeholder', type: 'string', description: 'Placeholder text inside the input.' },
+    { name: 'helperText', type: 'string', description: 'Helper text shown below the input.' },
+    { name: 'errorText', type: 'string', description: 'Error message — triggers error styling and takes over from helperText.' },
+    { name: 'variant', type: "InputVariant", defaultValue: "'default'", description: "'default' is a bordered surface, 'filled' is a soft bg-muted surface with no visible border until focus, 'frame' pairs with Button variant=\"frame\" — a gradient-rimmed input that glows on focus." },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the input.' },
+    { name: 'isReadOnly', type: 'boolean', defaultValue: 'false', description: 'Makes the input read-only.' },
+    { name: 'isRequired', type: 'boolean', defaultValue: 'false', description: 'Marks the field as required.' },
+    { name: 'leftAddon', type: 'ReactNode', description: 'Icon or content inside the left edge.' },
+    { name: 'rightAddon', type: 'ReactNode', description: 'Icon or content inside the right edge.' },
+    { name: 'size', type: 'InputSize', defaultValue: "'md'", description: 'Height and padding preset — sm, md, or lg.' },
+    { name: 'type', type: 'string', defaultValue: "'text'", description: 'Native input type attribute.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Variants
+
+- **Default** — a bordered surface at rest; focus swaps the border to the accent color and adds a soft, low-opacity glow (never a hard double ring).
+- **Filled** — a quiet `bg-muted` fill with no visible border until focus, when it lifts to `bg-background` with the same accent border + soft glow.
+- **Frame** — a gradient-rimmed border (pairs with `Button variant="frame"`) that glows in the brand color on focus.
 
 ## States
 
-- **Default** — neutral border, brand focus ring
-- **Error** — danger border and ring, error message below
+- **Default** — neutral border, soft accent glow on focus
+- **Error** — danger border and matching soft glow, error message below (always visible, not just on focus)
 - **Disabled** — reduced opacity, no interaction
 - **Addons** — `leftAddon` / `rightAddon` for icons or prefix text

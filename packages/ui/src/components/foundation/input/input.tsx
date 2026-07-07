@@ -2,7 +2,7 @@ import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from 'rea
 import { cn } from '../../../lib/utils';
 
 export type InputSize = 'sm' | 'md' | 'lg';
-export type InputVariant = 'default' | 'frame';
+export type InputVariant = 'default' | 'filled' | 'frame';
 
 export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string;
@@ -28,6 +28,27 @@ const addonSizeStyles: Record<InputSize, string> = {
   md: 'text-sm',
   lg: 'text-base',
 };
+
+// One clear focus signal per variant: the border shifts to a solid accent
+// color, backed by a soft low-opacity glow (never a hard, opaque second
+// ring stacked on top of the border — that reads as a double outline).
+const containerVariantStyles: Record<InputVariant, string> = {
+  default:
+    'border border-input hover:border-input/70 focus-within:border-ring focus-within:shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-ring)_16%,transparent)]',
+  // Soft filled surface at rest — no visible border until focused, so the
+  // fill itself signals "this is editable" without adding a second line.
+  filled:
+    'border border-transparent bg-muted hover:bg-muted/70 focus-within:border-ring focus-within:bg-background focus-within:shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-ring)_16%,transparent)]',
+  // Gradient-frame glow — pairs with Button variant="frame".
+  frame:
+    'border-2 border-transparent [background:linear-gradient(var(--color-background),var(--color-background))_padding-box,linear-gradient(135deg,var(--color-brand),var(--color-brand-secondary))_border-box] hover:shadow-xs focus-within:shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-brand)_16%,transparent)]',
+};
+
+// Error takes over the container look entirely regardless of variant — same
+// soft-glow treatment as focus, just in the destructive hue, and always on
+// (not gated to focus-within) so the problem stays visible at a glance.
+const errorStyles =
+  'border border-destructive shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-destructive)_16%,transparent)]';
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
@@ -71,13 +92,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
         <div
           className={cn(
-            'flex items-center overflow-hidden rounded-md border bg-background shadow-xs transition-[color,box-shadow]',
-            hasError
-              ? 'border-destructive ring-[3px] ring-destructive/20 dark:ring-destructive/40'
-              : variant === 'frame'
-                ? // Gradient-frame glow — pairs with Button variant="frame".
-                  'border-2 border-transparent [background:linear-gradient(var(--color-background),var(--color-background))_padding-box,linear-gradient(135deg,var(--color-brand),var(--color-brand-secondary))_border-box] focus-within:shadow-md'
-                : 'border-input focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50',
+            'flex items-center overflow-hidden rounded-md bg-background transition-[color,box-shadow,border-color] duration-200 ease-out motion-reduce:transition-none',
+            hasError ? errorStyles : containerVariantStyles[variant],
             isDisabled && 'cursor-not-allowed opacity-50',
           )}
         >
