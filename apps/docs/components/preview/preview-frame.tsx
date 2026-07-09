@@ -4,9 +4,11 @@ import type { ReactNode } from 'react';
 interface PreviewFrameProps {
   children: ReactNode;
   className?: string;
-  minHeight?: 'sm' | 'md' | 'lg' | 'xl';
+  minHeight?: 'sm' | 'md' | 'lg' | 'xl' | 'section';
   /** Optional chrome label — e.g. a filename — shown in a hairline header bar. */
   label?: string;
+  /** When true, content aligns to the top instead of center — better for scaled section previews. */
+  alignTop?: boolean;
 }
 
 // Padding scales with height so a compact card preview doesn't drown in
@@ -16,6 +18,7 @@ const sizeStyles = {
   md: 'min-h-[240px] p-8',
   lg: 'min-h-[360px] p-10 sm:p-14',
   xl: 'min-h-[480px] p-12 sm:p-16',
+  section: 'min-h-[280px] p-0 sm:min-h-[320px]',
 } satisfies Record<NonNullable<PreviewFrameProps['minHeight']>, string>;
 
 /**
@@ -25,7 +28,13 @@ const sizeStyles = {
  * `bg-background`/`border-border`, with a `currentColor`-driven dot-grid so
  * it repaints correctly in light and dark without a `dark:` override.
  */
-export function PreviewFrame({ children, className, minHeight = 'md', label }: PreviewFrameProps) {
+export function PreviewFrame({
+  children,
+  className,
+  minHeight = 'md',
+  label,
+  alignTop = false,
+}: PreviewFrameProps) {
   return (
     <div className={cn('overflow-hidden rounded-2xl border border-border bg-background', className)}>
       {label && (
@@ -37,7 +46,8 @@ export function PreviewFrame({ children, className, minHeight = 'md', label }: P
       )}
       <div
         className={cn(
-          'relative isolate flex items-center justify-center overflow-hidden bg-background',
+          'relative isolate flex overflow-hidden bg-background',
+          alignTop ? 'items-start justify-center' : 'items-center justify-center',
           sizeStyles[minHeight],
         )}
       >

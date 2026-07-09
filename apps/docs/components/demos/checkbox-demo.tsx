@@ -88,5 +88,9 @@ export function CheckboxDemo() {
 
 export function CheckboxPreviewCompact() {
   const [checked, setChecked] = useState(true);
-  return <Checkbox isChecked={checked} onChange={setChecked} label="Remember me" />;
+  return (
+    <div className="flex items-center justify-center">
+      <Checkbox isChecked={checked} onChange={setChecked} label="Remember me" />
+    </div>
+  );
 }

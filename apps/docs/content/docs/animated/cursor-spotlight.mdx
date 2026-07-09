@@ -1,0 +1,57 @@
+---
+title: Cursor Spotlight
+description: Mask-reveal spotlight that shows full-brightness content in a circle around the cursor.
+---
+
+<ComponentPreview name="cursor-spotlight" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/cursor-spotlight/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+`CursorSpotlight` renders two layers: a dimmed base and a full-brightness
+overlay clipped by a radial mask that follows the pointer:
+
+```tsx
+import { CursorSpotlight } from '@/components/animated/cursor-spotlight';
+
+export function Example() {
+  return (
+    <CursorSpotlight className="h-56 rounded-xl border border-border bg-background">
+      <div className="grid grid-cols-3 gap-2 p-4">
+        {['Motion', 'Tokens', 'Radix'].map((word) => (
+          <span key={word} className="rounded-lg border border-border bg-card px-3 py-2 text-sm">
+            {word}
+          </span>
+        ))}
+      </div>
+    </CursorSpotlight>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: 'Content revealed under the cursor spotlight.' },
+    { name: 'size', type: 'number', defaultValue: '200', description: 'Spotlight radius in pixels.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- The dimmed duplicate layer is `aria-hidden` so screen readers only encounter
+  the content once in the DOM tree (the visible overlay is also decorative).
+- Under `prefers-reduced-motion`, children render at full brightness with no
+  mask and no pointer tracking listeners attached.
+- Requires a fine pointer for the reveal effect; touch users see the dimmed
+  base layer only — ensure underlying content remains readable without the
+  spotlight.

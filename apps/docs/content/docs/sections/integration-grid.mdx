@@ -1,0 +1,76 @@
+---
+title: Integration Grid
+description: A responsive grid of supported integrations with optional badges and outbound links.
+---
+
+<ComponentPreview name="integration-grid" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/integration-grid/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { IntegrationGrid } from '@/components/sections/integration-grid';
+
+export function IntegrationsPage() {
+  return (
+    <IntegrationGrid
+      eyebrow="Integrations"
+      title="Connect the tools you already use"
+      description="Plug into your stack in minutes."
+      integrations={[
+        {
+          name: 'GitHub',
+          description: 'Sync issues and pull requests',
+          href: 'https://github.com',
+        },
+        {
+          name: 'Linear',
+          description: 'Track issues and roadmaps',
+          badge: 'New',
+          href: 'https://linear.app',
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'eyebrow', type: 'string', defaultValue: "'Integrations'", description: 'Small brand-colored label above the section title.' },
+    { name: 'title', type: 'string', defaultValue: "'Connect the tools you already use'", description: 'Section headline.' },
+    { name: 'description', type: 'string', description: 'One-line supporting copy below the title.' },
+    { name: 'integrations', type: 'Integration[]', description: 'Grid items — each needs a name; description, icon, href, and badge are optional.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
+  ]}
+/>
+
+### Integration
+
+<PropsTable
+  props={[
+    { name: 'name', type: 'string', description: 'Integration display name.' },
+    { name: 'description', type: 'string', description: 'One-line summary shown under the name.' },
+    { name: 'icon', type: 'ReactNode', description: 'Custom icon — a hand-drawn inline SVG placeholder renders when omitted.' },
+    { name: 'href', type: 'string', description: 'When set, the tile becomes an outbound link that opens in a new tab.' },
+    { name: 'badge', type: 'string', description: 'Optional status label (e.g. "New", "Beta") rendered as a Badge in the tile corner.' },
+  ]}
+/>
+
+## Accessibility
+
+The section uses a semantic `<section>` with `aria-labelledby` pointing at the heading.
+Tiles with `href` render as focusable links with visible focus rings and descriptive `aria-label` values combining name and description.
+Decorative placeholder SVG glyphs are `aria-hidden`.
+Outbound links use `rel="noopener noreferrer"`.
+
+Scroll-reveal animations are gated behind `prefers-reduced-motion` — reduced-motion users see content immediately without stagger or fade.

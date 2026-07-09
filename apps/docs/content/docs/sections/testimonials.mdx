@@ -1,0 +1,72 @@
+---
+title: Testimonials
+description: A masonry-style grid of customer quote cards with avatars and optional scroll-reveal animation.
+---
+
+<ComponentPreview name="testimonials" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/testimonials/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge @radix-ui/react-avatar
+```
+
+## Usage
+
+```tsx
+import { Testimonials } from '@/components/sections/testimonials';
+
+export function LandingPage() {
+  return (
+    <Testimonials
+      eyebrow="Testimonials"
+      title="Teams ship faster with Varient"
+      description="Real feedback from builders who copied components into production."
+      testimonials={[
+        {
+          quote: 'We shipped our landing page in a day instead of a week.',
+          name: 'Maya Chen',
+          role: 'Product lead, Northline',
+          avatarSrc: 'https://i.pravatar.cc/150?img=1',
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'eyebrow', type: 'string', defaultValue: "'Testimonials'", description: 'Small brand-colored label above the section title.' },
+    { name: 'title', type: 'string', defaultValue: "'Teams ship faster with Varient'", description: 'Section headline.' },
+    { name: 'description', type: 'string', description: 'One-line supporting copy below the title.' },
+    { name: 'testimonials', type: 'Testimonial[]', description: 'Quote cards — each needs quote and name; role and avatarSrc are optional.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
+  ]}
+/>
+
+### Testimonial
+
+<PropsTable
+  props={[
+    { name: 'quote', type: 'string', description: 'Customer quote body copy.' },
+    { name: 'name', type: 'string', description: 'Person name shown in the card footer.' },
+    { name: 'role', type: 'string', description: 'Optional role or company line below the name.' },
+    { name: 'avatarSrc', type: 'string', description: 'Optional image URL for the footer avatar.' },
+  ]}
+/>
+
+## Accessibility
+
+The section uses a semantic `<section>` with `aria-labelledby` pointing at the heading.
+Each quote renders inside a `<blockquote>` with a `<footer>` for attribution.
+
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift + Tab` | Moves focus through any interactive elements inside the section. |
+
+Scroll-reveal animations are gated behind `prefers-reduced-motion` — reduced-motion users see content immediately without stagger or fade.

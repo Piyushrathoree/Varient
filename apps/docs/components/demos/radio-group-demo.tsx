@@ -87,9 +87,11 @@ export function RadioGroupDemo() {
 export function RadioGroupPreviewCompact() {
   const [value, setValue] = useState('pro');
   return (
-    <RadioGroup value={value} onChange={setValue} orientation="horizontal">
-      <RadioGroup.Item value="free" label="Free" />
-      <RadioGroup.Item value="pro" label="Pro" />
-    </RadioGroup>
+    <div className="flex w-full items-center justify-center">
+      <RadioGroup value={value} onChange={setValue} orientation="horizontal">
+        <RadioGroup.Item value="free" label="Free" />
+        <RadioGroup.Item value="pro" label="Pro" />
+      </RadioGroup>
+    </div>
   );
 }

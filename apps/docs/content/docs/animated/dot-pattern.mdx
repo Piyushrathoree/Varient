@@ -1,0 +1,53 @@
+---
+title: Dot Pattern
+description: Dot-grid background texture with optional staggered glow pulse and radial mask support.
+---
+
+<ComponentPreview name="dot-pattern" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/dot-pattern/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+`DotPattern` mirrors the `.frame-box` dotted canvas. Pass a radial mask via
+`className` to fade dots at the edges:
+
+```tsx
+import { DotPattern } from '@/components/animated/dot-pattern';
+
+export function Example() {
+  return (
+    <div className="relative h-56 overflow-hidden rounded-xl border border-border bg-primary">
+      <DotPattern
+        isGlowing
+        className="[mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_75%)]"
+      />
+    </div>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'size', type: 'number', defaultValue: '16', description: 'Spacing between dot centers in pixels.' },
+    { name: 'radius', type: 'number', defaultValue: '1', description: 'Dot radius in pixels.' },
+    { name: 'offsetX', type: 'number', defaultValue: '0', description: 'Horizontal pattern offset.' },
+    { name: 'offsetY', type: 'number', defaultValue: '0', description: 'Vertical pattern offset.' },
+    { name: 'isGlowing', type: 'boolean', defaultValue: 'false', description: 'When true, dots pulse opacity in a staggered wave.' },
+    { name: 'className', type: 'string', description: 'Additional classes — use for radial masks or positioning.' },
+  ]}
+/>
+
+## Accessibility
+
+- Decorative SVG layer is `aria-hidden` with `pointer-events-none`.
+- Under `prefers-reduced-motion`, the glow wave is disabled and dots render
+  as a static pattern.

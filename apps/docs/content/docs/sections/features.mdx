@@ -1,0 +1,78 @@
+---
+title: Features
+description: A landing section with an eyebrow header and a responsive grid of feature cards with inline icons.
+---
+
+<ComponentPreview name="features" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/features/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Features } from '@/components/sections/features';
+
+export function LandingPage() {
+  return (
+    <Features
+      eyebrow="Why Varient"
+      title={
+        <>
+          Everything you need to{' '}
+          <span className="text-brand">ship polished UI</span>
+        </>
+      }
+      description="Foundation components, animated flourishes, and ready-made sections."
+      features={[
+        {
+          title: 'Animated by default',
+          description: 'Motion with prefers-reduced-motion fallbacks built in.',
+        },
+        {
+          title: 'Copy-paste, you own it',
+          description: 'Copy source files directly into your project.',
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'eyebrow', type: 'string', defaultValue: "'Why Varient'", description: 'Small brand-colored label above the section title.' },
+    { name: 'title', type: 'ReactNode', description: 'Section headline — defaults to a title with a brand-colored span.' },
+    { name: 'description', type: 'string', description: 'One-line supporting copy below the title.' },
+    { name: 'features', type: 'FeatureItem[]', description: 'Grid items — each needs title and description; icon is optional (built-in SVGs rotate when omitted).' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
+  ]}
+/>
+
+### FeatureItem
+
+<PropsTable
+  props={[
+    { name: 'icon', type: 'ReactNode', description: 'Optional custom icon — omit to use a built-in inline SVG.' },
+    { name: 'title', type: 'string', description: 'Feature card headline.' },
+    { name: 'description', type: 'string', description: 'Feature card body copy.' },
+  ]}
+/>
+
+## Accessibility
+
+The section uses a semantic `<section>` with `aria-labelledby` pointing at the heading.
+Feature cards render as `<article>` elements with heading hierarchy (`h2` section title, `h3` per card).
+
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift + Tab` | Moves focus through any interactive elements inside the section. |
+
+Scroll-reveal animations are gated behind `prefers-reduced-motion` — reduced-motion users see content immediately without stagger or fade.

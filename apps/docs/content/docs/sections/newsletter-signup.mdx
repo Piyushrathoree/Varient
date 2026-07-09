@@ -1,0 +1,73 @@
+---
+title: Newsletter Signup
+description: Email capture section with inline validation, loading state, and an animated success confirmation.
+---
+
+<ComponentPreview name="newsletter-signup" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/newsletter-signup/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+Also copy the Foundation dependencies it composes: `button` and `input` from `packages/ui/src/components/foundation/`.
+
+## Usage
+
+```tsx
+import { NewsletterSignup } from '@/components/sections/newsletter-signup';
+
+export function Footer() {
+  return (
+    <NewsletterSignup
+      variant="card"
+      title="Stay in the loop"
+      description="Product updates and release notes — no spam."
+      onSubscribe={async (email) => {
+        // Your API call here
+        console.log(email);
+      }}
+    />
+  );
+}
+```
+
+## Variants
+
+Two layout styles via the `variant` prop:
+
+```tsx
+<NewsletterSignup variant="inline" title="Stay in the loop" />
+<NewsletterSignup variant="card" title="Stay in the loop" description="Join the list." />
+```
+
+- **`inline`** — email input and subscribe button in a single row on `sm+`. Good for footers and narrow bands.
+- **`card`** — centered `rounded-2xl` bordered surface with title and description above the form. Good for dedicated signup moments.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'string', defaultValue: "'Stay in the loop'", description: 'Headline shown above the form (card) or beside it (inline).' },
+    { name: 'description', type: 'string', description: 'Supporting copy below the title.' },
+    { name: 'placeholder', type: 'string', defaultValue: "'you@company.com'", description: 'Email input placeholder.' },
+    { name: 'buttonLabel', type: 'string', defaultValue: "'Subscribe'", description: 'Submit button label.' },
+    { name: 'onSubscribe', type: '(email: string) => void | Promise<void>', description: 'Called with the validated email on submit. If omitted, a ~800ms simulated delay runs before success.' },
+    { name: 'variant', type: "'inline' | 'card'", defaultValue: "'inline'", description: 'Layout — single-row capture or centered card surface.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section wrapper.' },
+  ]}
+/>
+
+## Accessibility
+
+The form uses the Foundation `Input` label association (`htmlFor` / `id`) and surfaces validation errors through `errorText` with `role="alert"`. The status region uses `aria-live="polite"` so screen readers announce loading and success without interrupting.
+
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift + Tab` | Moves focus between the email field and subscribe button. |
+| `Enter` | Submits the form when focus is inside it. |
+
+Invalid email shows **"Enter a valid email address."** via the input's `errorText` prop. On success, the form swaps to a `role="status"` confirmation row. All transitions are gated behind `prefers-reduced-motion`.

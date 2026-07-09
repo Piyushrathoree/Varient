@@ -1,0 +1,42 @@
+---
+title: Word Rotate
+description: Cycles through a list of words in place with a rise-and-fade transition.
+---
+
+<ComponentPreview name="word-rotate" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/word-rotate/` into your project.
+
+```bash
+bun add clsx tailwind-merge motion
+```
+
+## Usage
+
+```tsx
+import { WordRotate } from '@/components/animated/word-rotate';
+
+export function Example() {
+  return (
+    <h1 className="text-3xl font-semibold text-foreground">
+      Build something <WordRotate words={['beautiful', 'delightful', 'accessible']} />
+    </h1>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'words', type: 'string[]', description: 'Required — words cycled in place, one at a time.' },
+    { name: 'duration', type: 'number', defaultValue: '2500', description: 'Milliseconds between word swaps.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(). Defaults include `text-brand`.' },
+  ]}
+/>
+
+## Accessibility
+
+The outer wrapper is `aria-live="polite"` and `aria-atomic="true"`, so each word change is announced without interrupting the user. When `prefers-reduced-motion` is set, words still cycle on the same interval but swap instantly — no opacity or translate animation. Only `transform` and `opacity` animate in the default motion path, keeping the transition GPU-friendly and predictable.

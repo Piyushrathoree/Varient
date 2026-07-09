@@ -1,0 +1,49 @@
+---
+title: Progress
+description: Linear progress bar with sizes, optional value label, and indeterminate sweep animation.
+---
+
+<ComponentPreview name="progress" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/progress/` into your project.
+
+```bash
+bun add @radix-ui/react-progress motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Progress } from '@/components/foundation/progress';
+
+export function Example() {
+  return (
+    <Progress value={65} max={100} showValueLabel aria-label="Upload progress" />
+  );
+}
+```
+
+For loading states where completion percentage is unknown:
+
+```tsx
+<Progress isIndeterminate aria-label="Loading" />
+```
+
+## Props
+
+<PropsTable props={[
+  { name: 'value', type: 'number', defaultValue: '0', description: 'Current progress value (Progress root).' },
+  { name: 'max', type: 'number', defaultValue: '100', description: 'Maximum value (Progress root).' },
+  { name: 'size', type: "'sm' | 'md' | 'lg'", defaultValue: "'md'", description: 'Track height preset.' },
+  { name: 'isIndeterminate', type: 'boolean', defaultValue: 'false', description: 'Shows an animated sweep instead of a fixed fill.' },
+  { name: 'showValueLabel', type: 'boolean', defaultValue: 'false', description: 'Renders the numeric percentage beside the track.' },
+  { name: 'aria-label', type: 'string', description: 'Required accessible name when no visible label is present.' },
+]} />
+
+## Accessibility
+
+- Built on `@radix-ui/react-progress` — exposes `role="progressbar"` with `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` when determinate.
+- Indeterminate mode omits a fixed value and shows an ellipsis in the optional label.
+- Sweep animation is replaced by a static 50% bar when `prefers-reduced-motion` is enabled.

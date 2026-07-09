@@ -1,0 +1,120 @@
+---
+title: Popover
+description: Floating contextual panel anchored to a trigger, with spring scale/fade entrance and Radix focus management.
+---
+
+<ComponentPreview name="popover" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/popover/` into your project.
+
+```bash
+bun add @radix-ui/react-popover motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Popover, Button } from '@/components/foundation/popover';
+
+export function Example() {
+  return (
+    <Popover>
+      <Popover.Trigger asChild>
+        <Button variant="outline">Open popover</Button>
+      </Popover.Trigger>
+
+      <Popover.Content>
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium leading-none">Dimensions</h4>
+          <p className="text-sm text-muted-foreground">
+            Set the width and height for the layer.
+          </p>
+        </div>
+      </Popover.Content>
+    </Popover>
+  );
+}
+```
+
+For controlled usage, pass `isOpen` and `onOpenChange` to `Popover` instead of relying on the trigger alone — useful when a save action or async flow should close the panel programmatically.
+
+```tsx
+const [isOpen, setIsOpen] = useState(false);
+
+<Popover isOpen={isOpen} onOpenChange={setIsOpen}>
+  <Popover.Trigger asChild>
+    <Button variant="outline">Edit</Button>
+  </Popover.Trigger>
+  <Popover.Content>{/* ... */}</Popover.Content>
+</Popover>;
+```
+
+## Props
+
+<PropsTable
+  props={[
+    {
+      name: 'isOpen',
+      type: 'boolean',
+      description:
+        'Controlled open state — pair with onOpenChange. Omit for uncontrolled usage (Popover root).',
+    },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean) => void',
+      description:
+        'Called whenever the open state should change — trigger click, Esc, or outside click (Popover root).',
+    },
+    {
+      name: 'defaultOpen',
+      type: 'boolean',
+      defaultValue: 'false',
+      description: 'Initial open state for uncontrolled usage (Popover root).',
+    },
+    {
+      name: 'Popover.Trigger asChild',
+      type: 'boolean',
+      defaultValue: 'false',
+      description: 'Merges onto the child element instead of rendering its own <button>.',
+    },
+    {
+      name: 'Popover.Content side',
+      type: "'top' | 'right' | 'bottom' | 'left'",
+      defaultValue: "'bottom'",
+      description: 'Which edge of the trigger the panel anchors to.',
+    },
+    {
+      name: 'Popover.Content align',
+      type: "'start' | 'center' | 'end'",
+      defaultValue: "'center'",
+      description: 'Alignment along the anchor edge.',
+    },
+    {
+      name: 'Popover.Content sideOffset',
+      type: 'number',
+      defaultValue: '8',
+      description: 'Gap in pixels between the trigger and the panel.',
+    },
+    {
+      name: 'Popover.Content className',
+      type: 'string',
+      description: 'Additional Tailwind classes merged via cn(), applied to the panel.',
+    },
+  ]}
+/>
+
+## Accessibility
+
+Built on `@radix-ui/react-popover` for focus management, portal rendering, and dismiss handling.
+
+| Key | Action |
+| --- | --- |
+| `Enter` / `Space` | Opens the popover when the trigger is focused. |
+| `Esc` | Closes the popover and returns focus to the trigger. |
+| `Tab` / `Shift + Tab` | Moves focus inside the panel while open. |
+
+- Focus moves into the panel on open and returns to the trigger on close.
+- Clicking outside the panel dismisses it.
+- All entrance/exit motion respects `prefers-reduced-motion` — reduced-motion users get an instant state change instead of the scale/fade transition.

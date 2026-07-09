@@ -92,5 +92,9 @@ export function SwitchDemo() {
 
 export function SwitchPreviewCompact() {
   const [checked, setChecked] = useState(true);
-  return <Switch variant="icons" isChecked={checked} onChange={setChecked} label="Auto-save" />;
+  return (
+    <div className="flex items-center justify-center">
+      <Switch variant="icons" isChecked={checked} onChange={setChecked} aria-label="Auto-save" />
+    </div>
+  );
 }

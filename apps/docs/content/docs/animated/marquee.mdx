@@ -1,0 +1,51 @@
+---
+title: Marquee
+description: Infinitely scrolling strip of content with edge fade masks and hover pause.
+---
+
+<ComponentPreview name="marquee" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/marquee/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Marquee } from '@/components/animated/marquee';
+
+export function Example() {
+  return (
+    <Marquee gap={12} speed={20}>
+      <span>Item one</span>
+      <span>Item two</span>
+      <span>Item three</span>
+    </Marquee>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: 'Content rendered in the scrolling strip. Duplicated once for a seamless loop.' },
+    { name: 'direction', type: "'left' | 'right' | 'up' | 'down'", defaultValue: "'left'", description: 'Scroll direction.' },
+    { name: 'speed', type: 'number', defaultValue: '20', description: 'Seconds for one full loop.' },
+    { name: 'isPaused', type: 'boolean', defaultValue: 'false', description: 'When true, the animation is paused.' },
+    { name: 'pauseOnHover', type: 'boolean', defaultValue: 'true', description: 'Pause the animation while the pointer is over the track.' },
+    { name: 'isReverse', type: 'boolean', defaultValue: 'false', description: 'Flip the scroll direction.' },
+    { name: 'gap', type: 'number', defaultValue: '16', description: 'Gap between items in pixels.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- Duplicate content in the loop is marked `aria-hidden` so screen readers do not hear the same items twice.
+- The track sets `aria-live="off"` to avoid announcing every scroll tick.
+- Under `prefers-reduced-motion`, the marquee renders a static row with no animation and no perpetual motion.

@@ -1,0 +1,52 @@
+---
+title: Retro Grid
+description: Scrolling perspective grid background with overlay slot and optional brand tint.
+---
+
+<ComponentPreview name="retro-grid" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/retro-grid/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Wrap hero or section content — the grid scrolls behind a radial mask while children stay in the overlay slot:
+
+```tsx
+import { RetroGrid } from '@/components/animated/retro-grid';
+
+export function Example() {
+  return (
+    <RetroGrid isBrandTinted className="min-h-[400px] rounded-xl">
+      <div className="flex min-h-[400px] flex-col items-center justify-center p-8">
+        <h2 className="text-2xl font-semibold text-foreground">Your headline</h2>
+      </div>
+    </RetroGrid>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: 'Content rendered above the grid in a relative overlay slot.' },
+    { name: 'cellSize', type: 'number', defaultValue: '48', description: 'Grid cell size in pixels.' },
+    { name: 'perspective', type: 'number', defaultValue: '220', description: 'CSS perspective depth in pixels.' },
+    { name: 'angle', type: 'number', defaultValue: '62', description: 'Tilt angle of the grid plane in degrees.' },
+    { name: 'speed', type: 'number', defaultValue: '18', description: 'Seconds for one scroll loop.' },
+    { name: 'isBrandTinted', type: 'boolean', defaultValue: 'false', description: 'When true, grid lines pick up a faint brand tint.' },
+    { name: 'className', type: 'string', description: 'Size and layout on the outer relative container.' },
+  ]}
+/>
+
+## Accessibility
+
+- The grid layer is decorative (`aria-hidden`) and uses `pointer-events-none` — overlay content remains fully interactive.
+- Under `prefers-reduced-motion`, the grid plane is static with no scroll keyframes.
+- Pair with sufficient contrast on overlay text — the radial mask fades lines toward the edges.

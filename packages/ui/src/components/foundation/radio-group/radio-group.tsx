@@ -120,7 +120,7 @@ const RadioGroupItem = forwardRef<HTMLButtonElement, RadioGroupItemProps>(
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
             'disabled:cursor-not-allowed disabled:opacity-50',
             isItemChecked
-              ? 'border-brand ring-4 ring-brand/15'
+              ? 'border-brand'
               : 'border-input hover:border-foreground/20',
             className,
           )}
@@ -166,7 +166,7 @@ const RadioGroupItem = forwardRef<HTMLButtonElement, RadioGroupItemProps>(
           className={cn(
             'flex items-start gap-3 rounded-xl border p-4 transition-colors',
             disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
-            isItemChecked ? 'border-brand bg-brand/5' : 'border-border hover:border-foreground/20',
+            isItemChecked ? 'border-brand bg-muted' : 'border-border hover:border-foreground/20',
           )}
         >
           {dot}

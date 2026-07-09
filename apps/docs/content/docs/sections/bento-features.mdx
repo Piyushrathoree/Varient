@@ -1,0 +1,87 @@
+---
+title: Bento Features
+description: An asymmetric bento-style feature showcase with varied grid spans, card surfaces, and scroll-reveal animations.
+---
+
+<ComponentPreview name="bento-features" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/bento-features/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { BentoFeatures } from '@/components/sections/bento-features';
+
+export function LandingPage() {
+  return (
+    <BentoFeatures
+      eyebrow="Features"
+      title={
+        <>
+          Built for teams who{' '}
+          <span className="text-brand">ship fast</span>
+        </>
+      }
+      description="An asymmetric bento grid that highlights what makes your product different."
+      items={[
+        {
+          title: 'Token-driven theming',
+          description: 'One CSS file restyles every component.',
+          className: 'md:col-span-2',
+        },
+        {
+          title: 'Copy-paste DX',
+          description: 'Copy the source and own the code.',
+          className: 'md:row-span-2',
+        },
+        {
+          title: 'Motion built in',
+          description: 'Springs with reduced-motion fallbacks.',
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'eyebrow', type: 'string', defaultValue: "'Features'", description: 'Small brand-colored label above the section title.' },
+    { name: 'title', type: 'ReactNode', description: 'Section headline — defaults to a title with a brand-colored span.' },
+    { name: 'description', type: 'string', description: 'One-line supporting copy below the title.' },
+    { name: 'items', type: 'BentoFeatureItem[]', description: 'Feature cards — each can set className for col/row spans in the bento grid.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
+  ]}
+/>
+
+### BentoFeatureItem
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'string', description: 'Card headline.' },
+    { name: 'description', type: 'string', description: 'Supporting copy below the title.' },
+    { name: 'visual', type: 'ReactNode', description: 'Optional visual slot — defaults to a built-in placeholder (gradient, diagram, or stat).' },
+    { name: 'className', type: 'string', description: 'Grid placement classes, e.g. md:col-span-2 or md:row-span-2.' },
+  ]}
+/>
+
+## Accessibility
+
+Each feature card uses the Foundation `Card` surface inside a semantic `<section>`
+with a labelled heading. Visual placeholders are `aria-hidden`. Cards lift on
+hover via `isHoverable`. Scroll-reveal stagger on cards respects
+`prefers-reduced-motion`.
+
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift + Tab` | Moves focus through any interactive elements inside custom visual slots. |
+
+No keyboard traps — the default placeholders are decorative only.

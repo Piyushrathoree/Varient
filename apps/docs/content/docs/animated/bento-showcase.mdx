@@ -1,0 +1,69 @@
+---
+title: Bento Showcase
+description: Rich animated bento grid with hover-reveal footers, background slots, and group dimming.
+---
+
+<ComponentPreview name="bento-showcase" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/bento-showcase/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Compose cells with `colSpan` / `rowSpan`, mount animated backgrounds per card, and reveal a footer CTA on hover:
+
+```tsx
+import { BentoShowcase, BentoShowcaseCard } from '@/components/animated/bento-showcase';
+
+export function Example() {
+  return (
+    <BentoShowcase>
+      <BentoShowcaseCard
+        colSpan={2}
+        title="Wide feature"
+        description="Background slot + hover footer."
+        background={<div className="h-full bg-gradient-to-br from-brand/15 to-muted" />}
+        footer={<span className="text-sm font-medium text-brand">Learn more →</span>}
+      />
+      <BentoShowcaseCard title="Standard cell" description="Single column." />
+    </BentoShowcase>
+  );
+}
+```
+
+## Props
+
+### BentoShowcase
+
+<PropsTable
+  props={[
+    { name: 'className', type: 'string', description: 'Grid layout classes (default: 1 col mobile, 3 col md).' },
+    { name: 'children', type: 'ReactNode', description: 'BentoShowcaseCard instances.' },
+  ]}
+/>
+
+### BentoShowcaseCard
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'ReactNode', description: 'Card heading.' },
+    { name: 'description', type: 'ReactNode', description: 'Supporting copy below the title.' },
+    { name: 'icon', type: 'ReactNode', description: 'Optional icon in a brand-tinted chip.' },
+    { name: 'background', type: 'ReactNode', description: 'Decorative layer mounted behind card content.' },
+    { name: 'footer', type: 'ReactNode', description: 'Footer slot — slides up on hover (e.g. CTA link).' },
+    { name: 'colSpan', type: '1 | 2 | 3', defaultValue: '1', description: 'Column span on md+ breakpoints.' },
+    { name: 'rowSpan', type: '1 | 2', defaultValue: '1', description: 'Row span on md+ breakpoints.' },
+    { name: 'className', type: 'string', description: 'Cell surface overrides.' },
+  ]}
+/>
+
+## Accessibility
+
+- Cards use semantic heading (`h3`) and paragraph text for screen readers.
+- Hover-reveal footers are always visible under `prefers-reduced-motion` via `motion-reduce` utilities.
+- Group dimming and staggered entrance are disabled under reduced motion — cells render statically at full opacity.

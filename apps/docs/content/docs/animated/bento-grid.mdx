@@ -1,0 +1,65 @@
+---
+title: Bento Grid
+description: Staggered-entrance bento layout with hover lift on each card.
+---
+
+<ComponentPreview name="bento-grid" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/bento-grid/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Compose a grid of `BentoGridItem` cells. Use `className` on items for span overrides:
+
+```tsx
+import { BentoGrid, BentoGridItem } from '@/components/animated/bento-grid';
+
+export function Example() {
+  return (
+    <BentoGrid>
+      <BentoGridItem
+        className="md:col-span-2"
+        title="Wide cell"
+        description="Spans two columns on md+."
+        header={<div className="h-28 bg-muted" />}
+      />
+      <BentoGridItem title="Standard" description="Single column cell." />
+    </BentoGrid>
+  );
+}
+```
+
+## Props
+
+### BentoGrid
+
+<PropsTable
+  props={[
+    { name: 'className', type: 'string', description: 'Grid layout classes (default: 1 col mobile, 3 col md).' },
+    { name: 'children', type: 'ReactNode', description: 'BentoGridItem instances.' },
+  ]}
+/>
+
+### BentoGridItem
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'string', description: 'Card heading.' },
+    { name: 'description', type: 'string', description: 'Supporting copy below the title.' },
+    { name: 'header', type: 'ReactNode', description: 'Optional visual area above the text (image, gradient, skeleton).' },
+    { name: 'icon', type: 'ReactNode', description: 'Optional icon rendered in a brand-tinted chip.' },
+    { name: 'className', type: 'string', description: 'Cell span and surface overrides (e.g. md:col-span-2).' },
+  ]}
+/>
+
+## Accessibility
+
+- Cards use semantic heading (`h3`) and paragraph text — screen readers get the full content immediately.
+- Entrance stagger and hover lift are disabled under `prefers-reduced-motion`; cards render statically with no motion.
+- Hover shadow transition uses `motion-reduce:transition-none` as a CSS fallback.

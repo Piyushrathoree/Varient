@@ -1,0 +1,50 @@
+---
+title: Typewriter Text
+description: Characters type on one at a time with a blinking cursor.
+---
+
+<ComponentPreview name="typewriter-text" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/typewriter-text/` into your project.
+
+```bash
+bun add clsx tailwind-merge motion
+```
+
+## Usage
+
+```tsx
+import { TypewriterText } from '@/components/animated/typewriter-text';
+
+export function Example() {
+  return (
+    <h1 className="text-3xl font-semibold text-foreground">
+      Built for{' '}
+      <TypewriterText
+        text={['designers', 'developers', 'teams']}
+        className="text-brand"
+      />
+    </h1>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'text', type: 'string | string[]', description: 'Required — plain text or phrases to cycle (type → pause → delete → next).' },
+    { name: 'typeSpeed', type: 'number', defaultValue: '60', description: 'Milliseconds per character while typing.' },
+    { name: 'deleteSpeed', type: 'number', defaultValue: '35', description: 'Milliseconds per character while deleting.' },
+    { name: 'pauseDuration', type: 'number', defaultValue: '1800', description: 'Milliseconds to pause after a phrase is fully typed.' },
+    { name: 'showCursor', type: 'boolean', defaultValue: 'true', description: 'Whether to show a blinking cursor pipe after the text.' },
+    { name: 'isLooping', type: 'boolean', defaultValue: 'true', description: 'When `text` is an array, loop through phrases after the last one. The final phrase stays on screen when false.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+The animating span (typed characters and cursor) is `aria-hidden` — a rapidly updating string is not something a screen reader should narrate character by character. The wrapper exposes the full intended message through `aria-label` (all phrases joined when `text` is an array). When `prefers-reduced-motion` is set, the first phrase renders immediately with no typing, deleting, or cursor blink animation. Timeouts are cleared on unmount so cycling never leaks timers.

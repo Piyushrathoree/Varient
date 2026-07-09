@@ -156,10 +156,12 @@ export function TooltipDemo() {
 
 export function TooltipPreviewCompact() {
   return (
-    <Tooltip content="This is a tooltip">
-      <Button variant="outline" size="sm">
-        Hover me
-      </Button>
-    </Tooltip>
+    <div className="flex items-center justify-center">
+      <Tooltip content="This is a tooltip">
+        <Button variant="outline" size="sm">
+          Hover me
+        </Button>
+      </Tooltip>
+    </div>
   );
 }

@@ -293,7 +293,7 @@ function ChevronDownIcon({ className }: { className?: string }) {
       stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.75}
       viewBox="0 0 24 24"
     >
       <path d="m6 9 6 6 6-6" />

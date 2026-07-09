@@ -1,0 +1,53 @@
+---
+title: Particles
+description: Interactive floating particle field rendered on a canvas layer.
+---
+
+<ComponentPreview name="particles" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/particles/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Place `Particles` inside a `relative overflow-hidden` container. The canvas
+fills the container as a decorative background layer:
+
+```tsx
+import { Particles } from '@/components/animated/particles';
+
+export function Example() {
+  return (
+    <div className="relative h-64 overflow-hidden rounded-xl border border-border bg-card">
+      <Particles />
+      <h3 className="relative z-10 flex h-full items-center justify-center text-lg font-semibold">
+        Your headline
+      </h3>
+    </div>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'quantity', type: 'number', defaultValue: '60', description: 'Number of particles to render.' },
+    { name: 'color', type: 'string', description: 'Particle fill color — defaults to foreground at low alpha, read from CSS at mount.' },
+    { name: 'size', type: 'number', defaultValue: '1.5', description: 'Particle radius in CSS pixels.' },
+    { name: 'ease', type: 'number', defaultValue: '50', description: 'Mouse repel strength — higher values push particles farther from the pointer.' },
+    { name: 'staticity', type: 'number', defaultValue: '50', description: 'How quickly particles settle after mouse influence — higher values feel more static.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(). Applied to the canvas element.' },
+  ]}
+/>
+
+## Accessibility
+
+- The canvas is decorative and marked `aria-hidden` — content layered above carries the accessible name.
+- Under `prefers-reduced-motion`, static scattered dots are drawn once with no animation loop and no pointer tracking.
+- The canvas uses `pointer-events-none` so foreground content remains fully interactive; pointer position is read from the parent container.

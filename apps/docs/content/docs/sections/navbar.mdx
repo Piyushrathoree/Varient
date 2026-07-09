@@ -1,0 +1,68 @@
+---
+title: Navbar
+description: Floating pill navigation bar with desktop links, optional GitHub icon, CTA, and a mobile slide-down menu.
+---
+
+<ComponentPreview name="navbar" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/navbar/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Navbar } from '@/components/sections/navbar';
+
+export function SiteShell() {
+  return (
+    <Navbar
+      brandName="Varient"
+      isSticky={false}
+      items={[
+        { label: 'Components', href: '/components' },
+        { label: 'Docs', href: '/docs' },
+        { label: 'Sections', href: '/docs/sections/hero' },
+      ]}
+      githubHref="https://github.com/piyush/varient"
+      cta={{ label: 'Get started', href: '/docs/getting-started/installation' }}
+    />
+  );
+}
+```
+
+## Anatomy
+
+Per the app shell spec: a sticky top wrapper with an inner floating pill (`rounded-full border border-border bg-background/80 backdrop-blur-xl`). Left to right — two-tone wordmark (or custom `logo`), nav links, then optional GitHub icon and CTA button. Below `md`, links collapse behind a hamburger that toggles a slide-down panel animated with height and opacity.
+
+Pass `logo` to replace the default two-tone wordmark. Set `isSticky={false}` when embedding inside a docs preview frame.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'brandName', type: 'string', defaultValue: "'Varient'", description: 'Wordmark text when `logo` is omitted — first segment in foreground, last three characters in brand color.' },
+    { name: 'logo', type: 'ReactNode', description: 'Custom logo node — replaces the default two-tone wordmark.' },
+    { name: 'items', type: '{ label: string; href: string }[]', defaultValue: '(see source)', description: 'Center nav links rendered on desktop and in the mobile panel.' },
+    { name: 'githubHref', type: 'string', description: 'Optional GitHub profile or repo URL — renders an icon link on the right.' },
+    { name: 'cta', type: '{ label: string; href: string }', description: 'Optional primary CTA button on the right — uses the foundation Button.' },
+    { name: 'isSticky', type: 'boolean', defaultValue: 'true', description: 'When true, pins the bar with `sticky top-0 z-50`.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root header.' },
+  ]}
+/>
+
+## Accessibility
+
+The root is a `<header>`. Desktop links sit in a `<nav aria-label="Main">`. The mobile menu button exposes `aria-expanded` and `aria-controls`; the panel is labelled `aria-label="Mobile"`. Press `Escape` to close the mobile menu.
+
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift + Tab` | Moves focus through the wordmark, nav links, GitHub icon, CTA, and menu button. |
+| `Enter` / `Space` | Activates the focused link or button. |
+| `Escape` | Closes the mobile menu when open. |
+
+Slide-down panel animation respects `prefers-reduced-motion` — reduced-motion users get an instant open/close without height or opacity transitions.

@@ -9,9 +9,8 @@ export function DialogDemo() {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   return (
-    <div className="flex w-full max-w-sm flex-col gap-8">
-      <div className="flex flex-col gap-3">
-        <p className="text-sm font-medium text-muted-foreground">Edit profile</p>
+    <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
         <Dialog isOpen={isEditOpen} onOpenChange={setIsEditOpen}>
           <Dialog.Trigger asChild>
             <Button variant="outline" leftIcon={<Pencil className="size-4" strokeWidth={1.75} />}>
@@ -41,10 +40,10 @@ export function DialogDemo() {
             </Dialog.Footer>
           </Dialog.Content>
         </Dialog>
+        <span className="text-xs font-medium text-muted-foreground">Edit profile</span>
       </div>
 
-      <div className="flex flex-col gap-3">
-        <p className="text-sm font-medium text-muted-foreground">Destructive confirm</p>
+      <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
         <Dialog isOpen={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
           <Dialog.Trigger asChild>
             <Button
@@ -73,6 +72,7 @@ export function DialogDemo() {
             </Dialog.Footer>
           </Dialog.Content>
         </Dialog>
+        <span className="text-xs font-medium text-muted-foreground">Destructive confirm</span>
       </div>
     </div>
   );
@@ -82,28 +82,30 @@ export function DialogPreviewCompact() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Dialog isOpen={isOpen} onOpenChange={setIsOpen}>
-      <Dialog.Trigger asChild>
-        <Button variant="outline" size="sm">
-          Open dialog
-        </Button>
-      </Dialog.Trigger>
-      <Dialog.Content>
-        <Dialog.Header>
-          <Dialog.Title>Edit profile</Dialog.Title>
-          <Dialog.Description>Make changes to your profile here.</Dialog.Description>
-        </Dialog.Header>
-        <Dialog.Footer>
-          <Dialog.Close asChild>
-            <Button variant="outline" size="sm">
-              Cancel
-            </Button>
-          </Dialog.Close>
-          <Button variant="primary" size="sm" onClick={() => setIsOpen(false)}>
-            Save
+    <div className="flex items-center justify-center">
+      <Dialog isOpen={isOpen} onOpenChange={setIsOpen}>
+        <Dialog.Trigger asChild>
+          <Button variant="outline" size="sm">
+            Open dialog
           </Button>
-        </Dialog.Footer>
-      </Dialog.Content>
-    </Dialog>
+        </Dialog.Trigger>
+        <Dialog.Content>
+          <Dialog.Header>
+            <Dialog.Title>Edit profile</Dialog.Title>
+            <Dialog.Description>Make changes to your profile here.</Dialog.Description>
+          </Dialog.Header>
+          <Dialog.Footer>
+            <Dialog.Close asChild>
+              <Button variant="outline" size="sm">
+                Cancel
+              </Button>
+            </Dialog.Close>
+            <Button variant="primary" size="sm" onClick={() => setIsOpen(false)}>
+              Save
+            </Button>
+          </Dialog.Footer>
+        </Dialog.Content>
+      </Dialog>
+    </div>
   );
 }

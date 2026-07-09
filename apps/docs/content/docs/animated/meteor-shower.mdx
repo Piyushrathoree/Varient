@@ -1,0 +1,48 @@
+---
+title: Meteor Shower
+description: Diagonal meteor streaks that loop across a surface — a pointer-events-none background layer.
+---
+
+<ComponentPreview name="meteor-shower" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/meteors/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+`Meteors` is a decorative layer. Wrap your content in a `relative overflow-hidden` container and keep interactive elements above the effect with `relative z-10`:
+
+```tsx
+import { Meteors } from '@/components/animated/meteors';
+
+export function Example() {
+  return (
+    <div className="relative overflow-hidden rounded-xl bg-foreground px-6 py-16">
+      <Meteors number={20} />
+      <h2 className="relative z-10 text-center text-lg font-semibold text-background">
+        Meteor shower
+      </h2>
+    </div>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'number', type: 'number', defaultValue: '20', description: 'Count of meteor streaks to render.' },
+    { name: 'className', type: 'string', description: 'Additional classes merged onto the absolute inset-0 layer via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- The layer is `pointer-events-none` and `aria-hidden` on each meteor — it never intercepts clicks or receives focus.
+- Decorative only; do not rely on motion to convey information.
+- Under `prefers-reduced-motion` the animation loop is disabled and a few static meteors are rendered instead, preserving the look without perpetual motion.

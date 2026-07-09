@@ -1,0 +1,62 @@
+---
+title: Floating Navbar
+description: Pill navbar that hides on scroll down and reveals on scroll up.
+---
+
+<ComponentPreview name="floating-navbar" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/floating-navbar/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Pass nav links and an optional CTA. By default the bar is `fixed` to the viewport; set
+`isFixed={false}` and pass `scrollContainerRef` when embedding inside a scrollable panel
+(docs preview frame):
+
+```tsx
+import { useRef } from 'react';
+import { FloatingNavbar } from '@/components/animated/floating-navbar';
+
+export function Example() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div ref={scrollRef} className="relative h-96 overflow-y-auto">
+      <FloatingNavbar
+        isFixed={false}
+        scrollContainerRef={scrollRef}
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Docs', href: '/docs' },
+        ]}
+        cta={{ label: 'Get started', href: '/start' }}
+      />
+      {/* tall page content */}
+    </div>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'items', type: '{ label: string; href: string; icon?: ReactNode }[]', description: 'Navigation links rendered left-to-right inside the pill.' },
+    { name: 'cta', type: '{ label: string; href: string }', description: 'Optional brand-gradient call-to-action link at the end of the pill.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+    { name: 'scrollContainerRef', type: 'RefObject<HTMLElement | null>', description: 'Scroll container to track. Defaults to window scroll when omitted.' },
+    { name: 'isFixed', type: 'boolean', defaultValue: 'true', description: 'When false, uses absolute positioning for in-frame demos or nested scroll areas.' },
+  ]}
+/>
+
+## Accessibility
+
+- Renders a `<nav>` with `aria-label="Main navigation"`.
+- Links are real `<a>` elements — keyboard focus and visible focus rings work out of the box.
+- Under `prefers-reduced-motion` the navbar stays visible at all times; hide/show animation is disabled entirely.

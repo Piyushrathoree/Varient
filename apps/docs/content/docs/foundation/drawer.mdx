@@ -1,0 +1,147 @@
+---
+title: Drawer
+description: Edge-anchored panel that slides in for supplementary content, built on Radix Dialog with directional motion.
+---
+
+<ComponentPreview name="drawer" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/drawer/` into your project.
+
+```bash
+bun add @radix-ui/react-dialog motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Drawer, Button } from '@/components/foundation/drawer';
+
+export function Example() {
+  return (
+    <Drawer>
+      <Drawer.Trigger asChild>
+        <Button variant="outline">Open drawer</Button>
+      </Drawer.Trigger>
+
+      <Drawer.Content side="right" size="md">
+        <Drawer.Header>
+          <Drawer.Title>Filters</Drawer.Title>
+          <Drawer.Description>Refine the list with the options below.</Drawer.Description>
+        </Drawer.Header>
+
+        {/* panel content */}
+      </Drawer.Content>
+    </Drawer>
+  );
+}
+```
+
+For controlled usage, pass `isOpen` and `onOpenChange` to `Drawer` instead of relying on `Drawer.Trigger` — useful when a save action or async flow should close the drawer programmatically.
+
+```tsx
+const [isOpen, setIsOpen] = useState(false);
+
+<Drawer isOpen={isOpen} onOpenChange={setIsOpen}>
+  <Drawer.Trigger asChild>
+    <Button variant="outline">Settings</Button>
+  </Drawer.Trigger>
+  <Drawer.Content side="left">{/* ... */}</Drawer.Content>
+</Drawer>;
+```
+
+## Variants
+
+`Drawer.Content` accepts `side` and `size` props:
+
+- **`side`** — `'right'` (default), `'left'`, `'top'`, or `'bottom'`. Controls which edge the panel slides in from.
+- **`size`** — `'sm'`, `'md'` (default), `'lg'`, or `'full'`. Sets width for left/right drawers or height for top/bottom drawers.
+
+Set `showCloseButton={false}` on `Drawer.Content` to hide the built-in X and supply your own via `Drawer.Close`.
+
+## Props
+
+<PropsTable
+  props={[
+    {
+      name: 'isOpen',
+      type: 'boolean',
+      description:
+        'Controlled open state — pair with onOpenChange. Omit for uncontrolled usage (Drawer root).',
+    },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean) => void',
+      description:
+        'Called whenever the open state should change — trigger click, Esc, overlay click, or Drawer.Close (Drawer root).',
+    },
+    {
+      name: 'defaultOpen',
+      type: 'boolean',
+      defaultValue: 'false',
+      description: 'Initial open state for uncontrolled usage (Drawer root).',
+    },
+    {
+      name: 'modal',
+      type: 'boolean',
+      defaultValue: 'true',
+      description:
+        'Traps focus and disables outside pointer events while open. Passed through to Radix (Drawer root).',
+    },
+    {
+      name: 'Drawer.Trigger asChild',
+      type: 'boolean',
+      defaultValue: 'false',
+      description: 'Merges onto the child element instead of rendering its own <button>.',
+    },
+    {
+      name: 'Drawer.Content side',
+      type: "'right' | 'left' | 'top' | 'bottom'",
+      defaultValue: "'right'",
+      description: 'Edge the panel slides in from.',
+    },
+    {
+      name: 'Drawer.Content size',
+      type: "'sm' | 'md' | 'lg' | 'full'",
+      defaultValue: "'md'",
+      description: 'Panel width (left/right) or height (top/bottom).',
+    },
+    {
+      name: 'Drawer.Content showCloseButton',
+      type: 'boolean',
+      defaultValue: 'true',
+      description: 'Renders the built-in top-right X button. Set false to omit it entirely.',
+    },
+    {
+      name: 'Drawer.Content className',
+      type: 'string',
+      description: 'Additional Tailwind classes merged via cn(), applied to the panel.',
+    },
+    {
+      name: 'Drawer.Close asChild',
+      type: 'boolean',
+      defaultValue: 'false',
+      description:
+        'Merges onto the child element — pair with a Button to dismiss on click.',
+    },
+    {
+      name: 'Drawer.Header',
+      type: 'HTMLAttributes<HTMLDivElement>',
+      description: 'Layout slot for title and description — standard div props.',
+    },
+    {
+      name: 'Drawer.Title / Description',
+      type: 'HTMLAttributes<HTMLHeadingElement> / <HTMLParagraphElement>',
+      description: "Renders Radix's Title (h2) / Description (p) for automatic aria wiring.",
+    },
+  ]}
+/>
+
+## Accessibility
+
+- Built on `@radix-ui/react-dialog` for focus trap, portal rendering, and dismiss handling.
+- **Esc** closes the drawer; clicking the overlay closes it too (unless `modal={false}` changes outside-interaction behavior).
+- Focus moves into the panel on open and returns to the trigger on close — Tab is trapped inside the panel while it's open.
+- `Drawer.Title` renders Radix's `Title` primitive, which wires `aria-labelledby` on the panel automatically. `Drawer.Description` does the same for `aria-describedby`. Always include a `Drawer.Title` — if you want to hide it visually, wrap it with a visually-hidden utility rather than omitting it.
+- All entrance/exit motion respects `prefers-reduced-motion` — reduced-motion users get an instant, un-animated state change instead of the slide/fade transition.

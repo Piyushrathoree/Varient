@@ -1,0 +1,67 @@
+---
+title: Input OTP
+description: Segmented one-time-code input with group and separator composition, built on input-otp.
+---
+
+<ComponentPreview name="input-otp" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/input-otp/` into your project.
+
+```bash
+bun add input-otp clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { useState } from 'react';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from '@/components/foundation/input-otp';
+
+export function Example() {
+  const [code, setCode] = useState('');
+
+  return (
+    <InputOTP length={6} value={code} onChange={setCode}>
+      <InputOTPGroup>
+        <InputOTPSlot index={0} />
+        <InputOTPSlot index={1} />
+        <InputOTPSlot index={2} />
+      </InputOTPGroup>
+      <InputOTPSeparator />
+      <InputOTPGroup>
+        <InputOTPSlot index={3} />
+        <InputOTPSlot index={4} />
+        <InputOTPSlot index={5} />
+      </InputOTPGroup>
+    </InputOTP>
+  );
+}
+```
+
+## Props
+
+<PropsTable props={[
+  { name: 'length', type: 'number', description: 'Total number of OTP slots (InputOTP root).' },
+  { name: 'value', type: 'string', description: 'Controlled OTP value (InputOTP root).' },
+  { name: 'onChange', type: '(value: string) => void', description: 'Called on every character change (InputOTP root).' },
+  { name: 'onComplete', type: '(value: string) => void', description: 'Fired once all slots are filled (InputOTP root).' },
+  { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables input and dims the container (InputOTP root).' },
+  { name: 'isInvalid', type: 'boolean', defaultValue: 'false', description: 'Applies destructive border styling to slots (InputOTP root).' },
+  { name: 'InputOTPSlot index', type: 'number', description: 'Zero-based slot index — must match a position within length.' },
+  { name: 'InputOTPGroup', type: 'HTMLAttributes<"div">', description: 'Groups adjacent slots — use between separators for visual chunking.' },
+  { name: 'InputOTPSeparator', type: 'HTMLAttributes<"div">', description: 'Visual divider between slot groups.' },
+]} />
+
+## Accessibility
+
+- Built on `input-otp` — a single hidden input drives all slots for screen readers and mobile OTP autofill (`autocomplete="one-time-code"`).
+- Supports iOS/Android paste, cut, and SMS code retrieval.
+- Active slot shows a brand focus ring; invalid state sets `aria-invalid` on slots.
+- Caret blink uses `motion-reduce:animate-none` for reduced-motion users.

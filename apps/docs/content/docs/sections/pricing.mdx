@@ -1,0 +1,101 @@
+---
+title: Pricing
+description: A three-tier pricing section with monthly/annual billing toggle and an emphasized popular plan.
+---
+
+<ComponentPreview name="pricing" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/pricing/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Pricing } from '@/components/sections/pricing';
+
+export function LandingPage() {
+  return (
+    <Pricing
+      eyebrow="Pricing"
+      title={
+        <>
+          Simple plans for{' '}
+          <span className="text-brand">every stage</span>
+        </>
+      }
+      description="Start free, upgrade when you need more."
+      defaultBillingPeriod="monthly"
+      annualSavingsLabel="Save 20%"
+      plans={[
+        {
+          id: 'starter',
+          name: 'Starter',
+          description: 'For side projects.',
+          monthlyPrice: 0,
+          annualPrice: 0,
+          features: ['Foundation components', 'Dark mode'],
+          ctaLabel: 'Get started',
+        },
+        {
+          id: 'pro',
+          name: 'Pro',
+          description: 'For production teams.',
+          monthlyPrice: 29,
+          annualPrice: 24,
+          isPopular: true,
+          features: ['Animated layer', 'Section blocks'],
+          ctaLabel: 'Start trial',
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'eyebrow', type: 'string', defaultValue: "'Pricing'", description: 'Small brand-colored label above the section title.' },
+    { name: 'title', type: 'ReactNode', description: 'Section headline — defaults to a title with a brand-colored span.' },
+    { name: 'description', type: 'string', description: 'One-line supporting copy below the title.' },
+    { name: 'plans', type: 'PricingPlan[]', description: 'Pricing tiers — compose Card, Button, and Badge internally.' },
+    { name: 'defaultBillingPeriod', type: "'monthly' | 'annual'", defaultValue: "'monthly'", description: 'Initial billing period for the toggle.' },
+    { name: 'annualSavingsLabel', type: 'string', defaultValue: "'Save 20%'", description: 'Badge label shown beside the annual option.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
+  ]}
+/>
+
+### PricingPlan
+
+<PropsTable
+  props={[
+    { name: 'id', type: 'string', description: 'Unique plan identifier.' },
+    { name: 'name', type: 'string', description: 'Plan name shown in the card title.' },
+    { name: 'description', type: 'string', description: 'Short plan summary below the name.' },
+    { name: 'monthlyPrice', type: 'number | string', description: 'Price when billing is monthly — 0 renders as "Free".' },
+    { name: 'annualPrice', type: 'number | string', description: 'Price when billing is annual.' },
+    { name: 'priceSuffix', type: 'string', defaultValue: "'/mo'", description: 'Suffix after the price (hidden for free plans).' },
+    { name: 'features', type: 'string[]', description: 'Bullet list rendered with inline check icons.' },
+    { name: 'ctaLabel', type: 'string', defaultValue: "'Get started'", description: 'Button label at the bottom of the card.' },
+    { name: 'isPopular', type: 'boolean', defaultValue: 'false', description: 'Adds brand ring, "Most popular" badge, and primary CTA styling.' },
+  ]}
+/>
+
+## Accessibility
+
+The billing toggle uses the Foundation `Switch` (`role="switch"`, `aria-checked`).
+Each plan card exposes its feature list as a `<ul>` with an `aria-label`.
+CTA buttons are real `<button>` elements with visible focus rings.
+
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift + Tab` | Moves focus between the billing switch and plan CTAs. |
+| `Enter` / `Space` | Toggles the billing switch when focused. |
+
+Price transitions and scroll-reveal animations respect `prefers-reduced-motion`.

@@ -1,0 +1,42 @@
+---
+title: Flip Words
+description: 3D flip transition between rotating words.
+---
+
+<ComponentPreview name="flip-words" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/flip-words/` into your project.
+
+```bash
+bun add clsx tailwind-merge motion
+```
+
+## Usage
+
+```tsx
+import { FlipWords } from '@/components/animated/flip-words';
+
+export function Example() {
+  return (
+    <h1 className="text-3xl font-semibold text-foreground">
+      Ship with <FlipWords words={['React', 'Motion', 'Tailwind']} />
+    </h1>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'words', type: 'string[]', description: 'Required — words rotated with a 3D flip transition, one at a time.' },
+    { name: 'duration', type: 'number', defaultValue: '2500', description: 'Milliseconds between word flips.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(). Defaults include `text-brand` and perspective.' },
+  ]}
+/>
+
+## Accessibility
+
+The outer wrapper is `aria-live="polite"` and `aria-atomic="true"`, so each word change is announced without interrupting the user. This live-region approach is preferred over hiding the animation and duplicating the word list in a static `sr-only` span — the visible word is the meaningful content, and polite live regions announce updates at natural intervals. When `prefers-reduced-motion` is set, words still rotate on the same interval but swap instantly with no `rotateX` transform. Only `transform` and `opacity` animate in the default motion path.

@@ -103,18 +103,18 @@
   --warning: #d97706;
   --sidebar-accent: var(--color-smooth-200);
 
-  --color-smooth-50: oklch(0.99 0 0);
-  --color-smooth-100: oklch(0.98 0 0);
-  --color-smooth-200: oklch(0.96 0 0);
-  --color-smooth-300: oklch(0.95 0 0);
-  --color-smooth-400: oklch(0.93 0 0);
+  --color-smooth-50: oklch(1 0 0);
+  --color-smooth-100: oklch(0.985 0 0);
+  --color-smooth-200: oklch(0.97 0 0);
+  --color-smooth-300: oklch(0.955 0 0);
+  --color-smooth-400: oklch(0.935 0 0);
   --color-smooth-500: oklch(0.91 0 0);
-  --color-smooth-600: oklch(0.89 0 0);
-  --color-smooth-700: oklch(0.83 0 0);
-  --color-smooth-800: oklch(0.65 0 0);
-  --color-smooth-900: oklch(0.62 0 0);
-  --color-smooth-950: oklch(0.54 0 0);
-  --color-smooth-1000: oklch(0.2 0 0);
+  --color-smooth-600: oklch(0.88 0 0);
+  --color-smooth-700: oklch(0.82 0 0);
+  --color-smooth-800: oklch(0.62 0 0);
+  --color-smooth-900: oklch(0.58 0 0);
+  --color-smooth-950: oklch(0.48 0 0);
+  --color-smooth-1000: oklch(0.15 0 0);
   --border: var(--color-smooth-300);
   --text-primary: var(--color-smooth-200);
   --text-quaternary: var(--color-smooth-1000);
@@ -125,23 +125,23 @@
 
 .dark {
   --shadow-custom:
-    0px -1px 0px 0px hsla(0, 0%, 100%, 0.06),
-    0px 0px 0px 1px hsla(0, 0%, 100%, 0.06), 0px 0px 0px 1px #27272a,
-    0px 1px 2px 0px rgba(0, 0, 0, 0.32), 0px 2px 4px 0px rgba(0, 0, 0, 0.32);
+    0px -1px 0px 0px hsla(0, 0%, 100%, 0.04),
+    0px 0px 0px 1px hsla(0, 0%, 100%, 0.05), 0px 0px 0px 1px oklch(0.22 0 0),
+    0px 1px 2px 0px rgba(0, 0, 0, 0.4), 0px 2px 4px 0px rgba(0, 0, 0, 0.36);
   --lines-page: url('/lines-w.png');
 
-  --color-smooth-50: oklch(20.02% 0 0);
-  --color-smooth-100: oklch(22.64% 0 0);
-  --color-smooth-200: oklch(25.62% 0 0);
-  --color-smooth-300: oklch(27.68% 0 0);
-  --color-smooth-400: oklch(30.12% 0 0);
-  --color-smooth-500: oklch(32.5% 0 0);
-  --color-smooth-600: oklch(36.39% 0 0);
-  --color-smooth-700: oklch(43.13% 0 0);
-  --color-smooth-800: oklch(54.52% 0 0);
-  --color-smooth-900: oklch(59.31% 0 0);
-  --color-smooth-950: oklch(70.58% 0 0);
-  --color-smooth-1000: oklch(94.61% 0 0);
+  --color-smooth-50: oklch(0.13 0 0);
+  --color-smooth-100: oklch(0.145 0 0);
+  --color-smooth-200: oklch(0.165 0 0);
+  --color-smooth-300: oklch(0.185 0 0);
+  --color-smooth-400: oklch(0.205 0 0);
+  --color-smooth-500: oklch(0.24 0 0);
+  --color-smooth-600: oklch(0.28 0 0);
+  --color-smooth-700: oklch(0.36 0 0);
+  --color-smooth-800: oklch(0.5 0 0);
+  --color-smooth-900: oklch(0.58 0 0);
+  --color-smooth-950: oklch(0.7 0 0);
+  --color-smooth-1000: oklch(0.94 0 0);
   --border: var(--color-smooth-300);
   --text-primary: var(--color-smooth-200);
   --text-quaternary: var(--color-smooth-1000);
@@ -181,7 +181,7 @@
 }
 
 ::selection {
-  @apply bg-brand-secondary/20 text-brand;
+  @apply bg-smooth-200 text-brand;
 }
 
 .shiki {
@@ -304,10 +304,10 @@
   @apply font-semibold text-foreground tracking-tight;
 }
 .prose :where(h1):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply -tracking-wide font-bold text-3xl;
+  @apply font-bold text-3xl tracking-tighter;
 }
 .prose :where(h2):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply font-semibold text-lg;
+  @apply font-semibold text-lg tracking-tight;
 }
 .prose :where(h3):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
   @apply font-semibold text-base;
@@ -392,10 +392,10 @@
 
 :root {
   --accent-contrast: #ffffff;
-  --accent-soft: rgb(255 90 31 / 0.1);
+  --accent-soft: rgb(0 0 0 / 0.04);
   --accent-gradient: linear-gradient(135deg, #ff5a1f, #ff8a3d);
   --shadow-theme: 0 1px 2px 0 rgb(0 0 0 / 0.04);
-  --glow-theme: 0 0 0 3px rgb(255 90 31 / 0.16);
+  --glow-theme: 0 0 0 3px rgb(255 90 31 / 0.12);
   --skeleton-shimmer: rgb(0 0 0 / 0.06);
   --motion-duration: 180ms;
   --motion-duration-slow: 260ms;
@@ -404,11 +404,11 @@
 }
 
 .dark {
-  --accent-contrast: #1a0f08;
-  --accent-soft: rgb(255 90 31 / 0.12);
+  --accent-contrast: #ffffff;
+  --accent-soft: rgb(255 255 255 / 0.04);
   --accent-gradient: linear-gradient(135deg, #ff5a1f, #ff9e6b);
   --shadow-theme: inset 0 1px 0 0 rgb(255 255 255 / 0.03);
-  --glow-theme: 0 0 0 1px rgb(255 90 31 / 0.3), 0 0 18px -2px rgb(255 90 31 / 0.22);
+  --glow-theme: 0 0 0 1px rgb(255 90 31 / 0.22), 0 0 12px -2px rgb(255 90 31 / 0.14);
   --skeleton-shimmer: rgb(255 255 255 / 0.06);
 }
 
@@ -523,10 +523,35 @@ html > body[data-scroll-locked] {
 
 /* ─── Grid lattice — quiet structural texture behind hero/preview frames ─── */
 .bg-grid-lines {
+  --grid-line-color: color-mix(in oklch, var(--color-foreground) 4%, transparent);
   background-image:
-    linear-gradient(to right, rgb(255 246 238 / 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(255 246 238 / 0.045) 1px, transparent 1px);
+    linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line-color) 1px, transparent 1px);
   background-size: 48px 48px;
+}
+
+.bg-grid-fine {
+  --grid-line-color: color-mix(in oklch, var(--color-foreground) 3.5%, transparent);
+  background-image:
+    linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line-color) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bg-dot-grid {
+  --dot-color: color-mix(in oklch, var(--color-foreground) 6%, transparent);
+  background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.mask-fade-radial {
+  mask-image: radial-gradient(ellipse 70% 55% at 50% 50%, black 25%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 55% at 50% 50%, black 25%, transparent 72%);
+}
+
+.mask-fade-radial-top {
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 20%, transparent 70%);
 }
 
 /* ─── Cursor spotlight surface — spotlight-card.tsx ─── */
@@ -543,7 +568,7 @@ html > body[data-scroll-locked] {
   transition: opacity 220ms ease;
   background: radial-gradient(
     circle 220px at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
-    var(--accent-soft),
+    color-mix(in oklch, var(--color-foreground) 8%, transparent),
     transparent 68%
   );
 }
@@ -573,8 +598,9 @@ html > body[data-scroll-locked] {
 [data-active='true'].fd-sidebar-item,
 .fd-sidebar nav a[aria-current='page'],
 .fd-sidebar nav [data-active] {
-  background-color: rgb(255 90 31 / 0.12) !important;
+  background-color: var(--color-smooth-200) !important;
   color: var(--color-brand) !important;
+  box-shadow: inset 2px 0 0 var(--color-brand) !important;
 }
 
 .fd-prose h1,
@@ -583,7 +609,7 @@ html > body[data-scroll-locked] {
 .fd-prose h4 {
   font-family: var(--font-display) !important;
   font-weight: 700 !important;
-  letter-spacing: -0.02em !important;
+  letter-spacing: -0.03em !important;
 }
 
 .fd-prose pre,
@@ -613,4 +639,5 @@ html > body[data-scroll-locked] {
 .fd-toc a[data-active='true'],
 .fd-toc a[aria-current] {
   color: var(--color-brand) !important;
+  background-color: var(--color-smooth-200) !important;
 }

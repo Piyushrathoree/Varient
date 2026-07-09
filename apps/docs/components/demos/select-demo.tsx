@@ -186,15 +186,17 @@ export function SelectDemo() {
 
 export function SelectPreviewCompact() {
   return (
-    <Select defaultValue="next">
-      <Select.Trigger size="sm" className="max-w-xs" aria-label="Framework">
-        <Select.Value />
-      </Select.Trigger>
-      <Select.Content>
-        <Select.Item value="next">Next.js</Select.Item>
-        <Select.Item value="react">React</Select.Item>
-        <Select.Item value="svelte">Svelte</Select.Item>
-      </Select.Content>
-    </Select>
+    <div className="flex w-full items-center justify-center">
+      <Select defaultValue="next">
+        <Select.Trigger size="sm" className="w-[200px]" aria-label="Framework">
+          <Select.Value />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Item value="next">Next.js</Select.Item>
+          <Select.Item value="react">React</Select.Item>
+          <Select.Item value="svelte">Svelte</Select.Item>
+        </Select.Content>
+      </Select>
+    </div>
   );
 }

@@ -1,0 +1,59 @@
+---
+title: Sparkles
+description: Ambient twinkling star particles over headlines, buttons, or any surface.
+---
+
+<ComponentPreview name="sparkles" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/sparkles/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Wrap content to decorate it, or use `className` alone for a standalone sparkle
+layer:
+
+```tsx
+import { Sparkles } from '@/components/animated/sparkles';
+
+export function Example() {
+  return (
+    <Sparkles className="rounded-xl border border-border px-8 py-12">
+      <div className="flex flex-col items-center gap-3 text-center">
+        <h2 className="text-2xl font-semibold">
+          Make it <span className="text-brand">Sparkling</span>
+        </h2>
+        <button type="button">Shine on</button>
+      </div>
+    </Sparkles>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: 'Content to decorate — sparkles render in an overlay above the background.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+    { name: 'density', type: 'number', defaultValue: '12', description: 'Maximum concurrent sparkle particles.' },
+    { name: 'size', type: '{ min?: number; max?: number }', defaultValue: '{ min: 6, max: 12 }', description: 'Pixel size range for each sparkle star.' },
+    { name: 'color', type: 'string', defaultValue: 'var(--color-brand)', description: 'Sparkle fill color.' },
+    { name: 'sparkleDuration', type: 'number', defaultValue: '2200', description: 'Lifecycle duration for each sparkle in milliseconds.' },
+  ]}
+/>
+
+## Accessibility
+
+- Sparkle particles are decorative — the overlay uses `aria-hidden="true"`
+  and `pointer-events-none`, so they never intercept clicks or focus.
+- Wrapped content stays fully interactive in a `relative z-10` layer.
+- Under `prefers-reduced-motion`, no animated sparkles spawn. When `children`
+  are present, only the content renders. Standalone layers show a few static
+  faint stars instead of the twinkle loop.
+- The spawn interval and particle pool are cleared on unmount.

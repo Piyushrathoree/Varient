@@ -1,0 +1,61 @@
+---
+title: Blur Fade
+description: Wrapper that fades, de-blurs, and slides children into view on scroll.
+---
+
+<ComponentPreview name="blur-fade" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/blur-fade/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Wrap any content to reveal it with a blur-fade entrance. Stagger siblings with
+incremental `delay` values:
+
+```tsx
+import { BlurFade } from '@/components/animated/blur-fade';
+
+export function Example() {
+  return (
+    <div className="grid gap-4">
+      <BlurFade delay={0}>
+        <div className="rounded-xl border border-border bg-card p-6">First</div>
+      </BlurFade>
+      <BlurFade delay={0.1}>
+        <div className="rounded-xl border border-border bg-card p-6">Second</div>
+      </BlurFade>
+    </div>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: 'Content to reveal.' },
+    { name: 'delay', type: 'number', defaultValue: '0', description: 'Delay before the reveal starts, in seconds.' },
+    { name: 'duration', type: 'number', defaultValue: '0.4', description: 'Reveal duration in seconds.' },
+    { name: 'yOffset', type: 'number', defaultValue: '24', description: 'Slide distance in pixels along the chosen axis.' },
+    { name: 'blur', type: 'string', defaultValue: "'6px'", description: 'Initial blur amount applied before the reveal.' },
+    { name: 'inView', type: 'boolean', defaultValue: 'true', description: 'When true, reveal triggers once the wrapper scrolls into view.' },
+    { name: 'direction', type: "'up' | 'down' | 'left' | 'right'", defaultValue: "'up'", description: 'Slide direction for the entrance.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- Content is always present in the DOM — only opacity, blur, and transform animate.
+  Screen readers can access children regardless of animation state.
+- Under `prefers-reduced-motion`, children render immediately with no blur or
+  slide transform.
+- When `inView` is true (default), the animation runs once via `useInView` with
+  `once: true` and a `-80px` margin — refresh the page to replay. Set
+  `inView={false}` to reveal on mount instead of scroll.

@@ -31,7 +31,7 @@
   --accent: var(--ember-500);
   --accent-hover: var(--ember-600);
   --accent-contrast: #ffffff;
-  --accent-soft: rgb(255 90 31 / 0.1);
+  --accent-soft: rgb(0 0 0 / 0.04);
   --accent-gradient: linear-gradient(135deg, var(--ember-500), var(--ember-400));
 
   --radius-theme: 10px;
@@ -69,8 +69,8 @@
 
   --accent: var(--ember-500);
   --accent-hover: var(--ember-400);
-  --accent-contrast: #1a0f08;
-  --accent-soft: rgb(255 90 31 / 0.12);
+  --accent-contrast: #ffffff;
+  --accent-soft: rgb(255 255 255 / 0.04);
   --accent-gradient: linear-gradient(135deg, var(--ember-500), var(--ember-300));
 
   --shadow-theme: inset 0 1px 0 0 rgb(255 255 255 / 0.03);

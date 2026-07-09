@@ -1,0 +1,30 @@
+{
+  "title": "Sections",
+  "pages": [
+    "404-page",
+    "announcement-banner",
+    "auth-page",
+    "bento-features",
+    "blog-grid",
+    "changelog",
+    "comparison-table",
+    "contact-form",
+    "cta",
+    "faq",
+    "features",
+    "footer",
+    "hero",
+    "hero-grid",
+    "hero-showcase",
+    "hero-spotlight",
+    "integration-grid",
+    "logo-cloud",
+    "navbar",
+    "newsletter-signup",
+    "pricing",
+    "stats-band",
+    "team-grid",
+    "testimonials",
+    "timeline"
+  ]
+}

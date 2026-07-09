@@ -5,7 +5,12 @@ import { AnchorProvider, TOCItem } from 'fumadocs-core/toc';
 import { Check, ChevronRight, Code2, Eye, Package, Terminal } from 'lucide-react';
 import { Badge, Tabs, cn } from '@varient/ui';
 import type { ComponentEntry } from '@/lib/components/registry';
-import { layerLabels } from '@/lib/components/registry';
+import {
+  getAdjacentInCategory,
+  getCategoryHref,
+  getComponentHref,
+  layerLabels,
+} from '@/lib/components/registry';
 import { getDemo } from '@/lib/components/demos';
 import { PreviewFrame } from '@/components/preview/preview-frame';
 import {
@@ -292,6 +297,9 @@ export function ComponentDetail({ entry }: ComponentDetailProps) {
   const content = contentBySlug[entry.slug];
   const usage =
     usageBySlug[entry.slug] ?? `import { ${entry.name} } from '@varient/ui'\n\n<${entry.name} />\n`;
+  const { prev, next } = getAdjacentInCategory(entry.slug);
+  const categoryHref = getCategoryHref(entry.layer, entry.category);
+  const isSection = entry.layer === 'sections';
 
   const varientCommand = `npx varient add ${entry.slug}`;
   const shadcnCommand = `npx shadcn@latest add @varient/${entry.slug}`;
@@ -314,12 +322,19 @@ export function ComponentDetail({ entry }: ComponentDetailProps) {
     <div className="mx-auto flex w-full max-w-5xl gap-10 px-6 py-14 xl:px-8">
       <article className="min-w-0 flex-1">
         {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="mb-8 flex items-center gap-1.5 text-sm text-muted-foreground">
+        <nav aria-label="Breadcrumb" className="mb-8 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
           <Link
             href="/components"
             className={cn('rounded-lg transition-colors duration-150 hover:text-foreground', focusRing)}
           >
             Components
+          </Link>
+          <ChevronRight className="size-3.5" strokeWidth={1.75} aria-hidden />
+          <Link
+            href={categoryHref}
+            className={cn('rounded-lg transition-colors duration-150 hover:text-foreground', focusRing)}
+          >
+            {entry.category}
           </Link>
           <ChevronRight className="size-3.5" strokeWidth={1.75} aria-hidden />
           <span className="text-foreground">{entry.name}</span>
@@ -329,6 +344,9 @@ export function ComponentDetail({ entry }: ComponentDetailProps) {
         <div className="mb-5 flex flex-wrap items-center gap-2">
           <Badge variant="secondary" size="sm">
             {layerLabels[entry.layer]}
+          </Badge>
+          <Badge variant="outline" size="sm">
+            {entry.category}
           </Badge>
           <Badge variant="primary" size="sm">
             Shipped
@@ -363,7 +381,11 @@ export function ComponentDetail({ entry }: ComponentDetailProps) {
               </div>
 
               <Tabs.Content value="preview">
-                <PreviewFrame minHeight="lg" className="rounded-none border-0">
+                <PreviewFrame
+                  minHeight={isSection ? 'xl' : 'lg'}
+                  alignTop={isSection}
+                  className="rounded-none border-0"
+                >
                   {Demo ? (
                     <Demo />
                   ) : (
@@ -487,18 +509,57 @@ export function ComponentDetail({ entry }: ComponentDetailProps) {
           </section>
         )}
 
-        {/* Footer nav */}
-        <div className="mt-6 flex items-center gap-3 border-t border-border pt-6">
+        {/* Footer nav — prev/next within category */}
+        <div className="mt-8 flex flex-col gap-4 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
+          {prev && getComponentHref(prev) ? (
+            <Link
+              href={getComponentHref(prev)!}
+              className={cn(
+                'group inline-flex max-w-xs flex-col gap-0.5 rounded-xl border border-border bg-card px-4 py-3 transition-[border-color,transform] duration-200 hover:border-brand/40 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0',
+                focusRing,
+              )}
+            >
+              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                <ChevronRight className="size-3 rotate-180" strokeWidth={1.75} aria-hidden />
+                Previous
+              </span>
+              <span className="truncate font-medium text-foreground group-hover:text-brand">
+                {prev.name}
+              </span>
+            </Link>
+          ) : (
+            <div />
+          )}
+
           <Link
-            href="/components"
+            href={categoryHref}
             className={cn(
               'inline-flex items-center gap-1.5 rounded-lg text-sm text-muted-foreground transition-colors duration-150 hover:text-foreground',
               focusRing,
             )}
           >
-            <ChevronRight className="size-3.5 rotate-180" strokeWidth={1.75} aria-hidden />
-            All components
+            Back to {entry.category}
           </Link>
+
+          {next && getComponentHref(next) ? (
+            <Link
+              href={getComponentHref(next)!}
+              className={cn(
+                'group inline-flex max-w-xs flex-col items-end gap-0.5 rounded-xl border border-border bg-card px-4 py-3 text-right transition-[border-color,transform] duration-200 hover:border-brand/40 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0',
+                focusRing,
+              )}
+            >
+              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                Next
+                <ChevronRight className="size-3" strokeWidth={1.75} aria-hidden />
+              </span>
+              <span className="truncate font-medium text-foreground group-hover:text-brand">
+                {next.name}
+              </span>
+            </Link>
+          ) : (
+            <div />
+          )}
         </div>
       </article>
 

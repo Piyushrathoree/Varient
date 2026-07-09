@@ -1,0 +1,17 @@
+export {
+  Sidebar,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarNav,
+  SidebarNavItem,
+  SidebarSection,
+  SidebarToggle,
+  useSidebar,
+  type SidebarFooterProps,
+  type SidebarHeaderProps,
+  type SidebarNavItemProps,
+  type SidebarNavProps,
+  type SidebarProps,
+  type SidebarSectionProps,
+  type SidebarToggleProps,
+} from './sidebar';

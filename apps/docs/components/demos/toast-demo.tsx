@@ -64,9 +64,11 @@ function ToastButtons() {
 
 export function ToastDemo() {
   return (
-    <ToastProvider>
-      <ToastButtons />
-    </ToastProvider>
+    <div className="flex w-full flex-col items-center justify-center rounded-xl border border-border bg-card p-6">
+      <ToastProvider>
+        <ToastButtons />
+      </ToastProvider>
+    </div>
   );
 }
 
@@ -74,19 +76,21 @@ export function ToastDemo() {
 // inside the gallery's card frame instead of escaping to document.body.
 export function ToastPreviewCompact() {
   return (
-    <div className="flex w-full max-w-[356px] items-start gap-3 rounded-xl border border-border bg-popover p-4 shadow-xl">
-      <CheckCircle className="mt-0.5 size-5 shrink-0 text-emerald-500" strokeWidth={2} />
-      <div className="flex flex-1 flex-col gap-1">
-        <p className="text-sm font-medium text-popover-foreground">Changes saved</p>
-        <p className="text-sm text-muted-foreground">Your profile has been updated.</p>
+    <div className="flex w-full items-center justify-center">
+      <div className="flex w-full max-w-[260px] items-start gap-3 rounded-xl border border-border bg-popover p-3 shadow-xl">
+        <CheckCircle className="mt-0.5 size-5 shrink-0 text-success" strokeWidth={1.75} />
+        <div className="flex flex-1 flex-col gap-1">
+          <p className="text-sm font-medium text-popover-foreground">Changes saved</p>
+          <p className="line-clamp-2 text-sm text-muted-foreground">Your profile has been updated.</p>
+        </div>
+        <button
+          type="button"
+          aria-label="Dismiss notification"
+          className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        >
+          <X className="size-4" strokeWidth={1.75} />
+        </button>
       </div>
-      <button
-        type="button"
-        aria-label="Dismiss notification"
-        className="shrink-0 rounded-md p-1 text-muted-foreground"
-      >
-        <X className="size-4" strokeWidth={2} />
-      </button>
     </div>
   );
 }

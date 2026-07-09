@@ -1,0 +1,93 @@
+---
+title: Pagination
+description: Controlled page navigation with previous/next controls, numbered page buttons, and ellipsis truncation for long page ranges.
+---
+
+<ComponentPreview name="pagination" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/pagination/` into your project.
+
+```bash
+bun add clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { Pagination } from '@/components/foundation/pagination';
+
+export function Example() {
+  const [page, setPage] = useState(1);
+
+  return (
+    <Pagination
+      page={page}
+      pageCount={12}
+      onPageChange={setPage}
+      siblingCount={1}
+      showEdges
+    />
+  );
+}
+```
+
+The component is fully controlled — pass `page`, `pageCount`, and `onPageChange`. Previous and Next disable automatically at the first and last page.
+
+## Props
+
+<PropsTable
+  props={[
+    {
+      name: 'page',
+      type: 'number',
+      description: 'Current page — 1-based.',
+    },
+    {
+      name: 'pageCount',
+      type: 'number',
+      description: 'Total number of pages.',
+    },
+    {
+      name: 'onPageChange',
+      type: '(page: number) => void',
+      description: 'Called when the user selects a page or clicks Previous/Next.',
+    },
+    {
+      name: 'siblingCount',
+      type: 'number',
+      defaultValue: '1',
+      description: 'How many page numbers to show on each side of the current page.',
+    },
+    {
+      name: 'showEdges',
+      type: 'boolean',
+      defaultValue: 'true',
+      description: 'When truncating, always include the first and last page with ellipsis gaps.',
+    },
+    {
+      name: 'className',
+      type: 'string',
+      description: 'Additional Tailwind classes merged via cn(), applied to the root nav.',
+    },
+  ]}
+/>
+
+## Accessibility
+
+- Root renders `<nav aria-label="pagination">` so screen readers announce it as a navigation landmark.
+- The active page button sets `aria-current="page"`.
+- Previous and Next buttons include `aria-label` values ("Go to previous page", "Go to next page").
+- Numbered buttons use `aria-label="Go to page N"` for clear context.
+- Ellipsis indicators are `aria-hidden` with sr-only "More pages" text.
+- Disabled Previous/Next at boundaries use the native `disabled` attribute.
+- All controls receive a visible focus ring via `focus-visible:ring-ring`.
+
+| Key | Action |
+| --- | ------ |
+| `Tab` / `Shift + Tab` | Moves focus between pagination controls |
+| `Enter` / `Space` | Activates the focused page or navigation button |

@@ -1,0 +1,49 @@
+---
+title: Hero Showcase
+description: Split hero with copy and CTAs on the left, and a tilted floating product frame with a media slot on the right.
+---
+
+<ComponentPreview name="hero-showcase" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/hero-showcase/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { HeroShowcase } from '@/components/sections/hero-showcase';
+
+export function LandingPage() {
+  return (
+    <HeroShowcase
+      title="Showcase your product with depth"
+      subtitle="Split hero with a tilted product frame on the right."
+      primaryCta={{ label: 'Get started', href: '#start' }}
+      secondaryCta={{ label: 'Live preview', href: '#preview' }}
+      media={<img src="/dashboard.png" alt="Product screenshot" className="w-full" />}
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'string', defaultValue: '(see source)', description: 'Display headline — rendered as the page h1.' },
+    { name: 'subtitle', type: 'string', defaultValue: '(see source)', description: 'One-paragraph subhead below the title.' },
+    { name: 'primaryCta', type: '{ label: string; href: string }', defaultValue: '(see source)', description: 'Primary brand button.' },
+    { name: 'secondaryCta', type: '{ label: string; href: string }', defaultValue: '(see source)', description: 'Secondary outline button.' },
+    { name: 'media', type: 'ReactNode', description: 'Slot for screenshot, mock UI, or any media inside the framed panel. Defaults to a built-in dashboard mock.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+The root is a `<section>` labelled by the h1. The product frame composes `TiltCard` — tilt and float animations are disabled under `prefers-reduced-motion`, falling back to a static perspective frame with hover shadow only.

@@ -1,0 +1,53 @@
+---
+title: Dock
+description: macOS-style dock where icons magnify based on cursor proximity, powered by motion springs.
+---
+
+<ComponentPreview name="dock" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/dock/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Dock, DockIcon } from '@/components/animated/dock';
+import { Home, Settings } from 'lucide-react';
+
+export function Example() {
+  return (
+    <Dock iconSize={44} magnification={72} distance={140}>
+      <DockIcon label="Home">
+        <Home className="size-5" />
+      </DockIcon>
+      <DockIcon label="Settings">
+        <Settings className="size-5" />
+      </DockIcon>
+    </Dock>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: '`DockIcon` instances to render in the row.' },
+    { name: 'iconSize', type: 'number', defaultValue: '44', description: 'Base icon size in pixels when the pointer is far away.' },
+    { name: 'magnification', type: 'number', defaultValue: '72', description: 'Peak icon size at the cursor focal point.' },
+    { name: 'distance', type: 'number', defaultValue: '140', description: 'Horizontal influence radius in pixels.' },
+    { name: 'label', type: 'string', description: 'On `DockIcon` — accessible name and `title` tooltip.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- The dock root uses `role="toolbar"`.
+- Each `DockIcon` sets `aria-label` from `label` and exposes a native `title` tooltip.
+- Magnification is disabled under `prefers-reduced-motion` — icons render at a fixed `iconSize` with no pointer tracking.

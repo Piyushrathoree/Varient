@@ -1,0 +1,55 @@
+---
+title: Separator
+description: Horizontal or vertical divider with an optional centered label and hairlines on both sides.
+---
+
+<ComponentPreview name="separator" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/separator/` into your project.
+
+```bash
+bun add @radix-ui/react-separator clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Separator } from '@/components/foundation/separator';
+
+export function Example() {
+  return (
+    <div className="flex flex-col gap-4">
+      <p>Sign in with email</p>
+      <Separator label="or continue with" />
+      <p>Social providers</p>
+    </div>
+  );
+}
+```
+
+Vertical divider:
+
+```tsx
+<div className="flex h-12 items-center gap-4">
+  <span>Left</span>
+  <Separator orientation="vertical" />
+  <span>Right</span>
+</div>
+```
+
+## Props
+
+<PropsTable props={[
+  { name: 'orientation', type: "'horizontal' | 'vertical'", defaultValue: "'horizontal'", description: 'Divider direction (Separator root).' },
+  { name: 'label', type: 'string', description: 'Centered text with hairlines on both sides — horizontal only.' },
+  { name: 'decorative', type: 'boolean', defaultValue: 'true', description: 'When true, the separator is purely visual (Separator root).' },
+  { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+]} />
+
+## Accessibility
+
+- Built on `@radix-ui/react-separator` — sets `role="separator"` when not decorative.
+- Defaults to `decorative={true}` for visual-only dividers; set `decorative={false}` when the separator conveys meaningful structure.
+- Labelled horizontal variant uses `role="none"` on the wrapper so assistive tech focuses on content sections, not the divider text.

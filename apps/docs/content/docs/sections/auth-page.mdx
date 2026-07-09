@@ -1,0 +1,92 @@
+---
+title: Auth Page
+description: Split login and signup page with form validation, social auth buttons, and a testimonial aside panel.
+---
+
+<ComponentPreview name="auth-page" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/auth-page/` into your project.
+
+```bash
+bun add @radix-ui/react-checkbox motion clsx tailwind-merge
+```
+
+Also copy the Foundation dependencies it composes: `button`, `input`, and `checkbox` from `packages/ui/src/components/foundation/`.
+
+## Usage
+
+```tsx
+import { AuthPage, type AuthPageFormData } from '@/components/sections/auth-page';
+
+export function LoginPage() {
+  const handleSubmit = async (data: AuthPageFormData) => {
+    if (data.variant === 'login') {
+      // Sign in with data.email, data.password, data.rememberMe
+    }
+  };
+
+  return (
+    <AuthPage
+      headline="Welcome back"
+      description="Sign in to your account to continue."
+      variant="login"
+      onSubmit={handleSubmit}
+      onSocialAuth={(provider) => console.log(provider)}
+    />
+  );
+}
+```
+
+## Layout
+
+The section uses a split layout: a form panel on the left (full width on mobile) and an optional aside on the right that hides below the `lg` breakpoint. Pass `aside` to replace the default dot-grid testimonial panel.
+
+## Variants
+
+Switch between login and signup with the `variant` prop:
+
+```tsx
+<AuthPage variant="signup" onSubmit={handleSubmit} />
+```
+
+- **`login`** — email, password, remember-me checkbox, and forgot-password link.
+- **`signup`** — full name, email, password, and terms checkbox.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'variant', type: "'login' | 'signup'", defaultValue: "'login'", description: 'Form mode — controls visible fields and submit payload shape.' },
+    { name: 'headline', type: 'ReactNode', description: 'Primary heading above the form. Defaults per variant.' },
+    { name: 'description', type: 'ReactNode', description: 'Supporting copy below the headline.' },
+    { name: 'onSubmit', type: '(data: AuthPageFormData) => void | Promise<void>', description: 'Called with validated form data. Payload is a discriminated union on `variant`.' },
+    { name: 'onSocialAuth', type: "(provider: 'github' | 'google') => void", description: 'Optional callback when a social auth button is clicked.' },
+    { name: 'forgotPasswordHref', type: 'string', defaultValue: "'#forgot-password'", description: 'Href for the forgot-password link (login only).' },
+    { name: 'forgotPasswordLabel', type: 'string', defaultValue: "'Forgot password?'", description: 'Label for the forgot-password link.' },
+    { name: 'aside', type: 'ReactNode', description: 'Right panel content on large screens. Defaults to a dot-grid testimonial quote.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section wrapper.' },
+  ]}
+/>
+
+### AuthPageFormData
+
+| Field | Type | When |
+| --- | --- | --- |
+| `variant` | `'login' \| 'signup'` | Always |
+| `email` | `string` | Always |
+| `password` | `string` | Always — minimum 8 characters |
+| `rememberMe` | `boolean` | Login only |
+| `name` | `string` | Signup only |
+| `agreedToTerms` | `boolean` | Signup only |
+
+## Accessibility
+
+Every field uses Foundation label association. Validation errors render through each field's `errorText` prop. The terms checkbox error uses a separate `role="alert"` message. Panel entrance animations are gated behind `prefers-reduced-motion`.
+
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift + Tab` | Moves focus through fields, links, checkboxes, and buttons. |
+| `Space` | Toggles the focused checkbox. |
+| `Enter` | Submits the form from the primary button. |

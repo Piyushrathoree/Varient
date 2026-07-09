@@ -5,7 +5,8 @@ import { PreviewFrame } from './preview-frame';
 
 interface ComponentPreviewProps {
   name: string;
-  minHeight?: 'sm' | 'md' | 'lg' | 'xl';
+  minHeight?: 'sm' | 'md' | 'lg' | 'xl' | 'section';
+  alignTop?: boolean;
 }
 
 /**
@@ -13,19 +14,23 @@ interface ComponentPreviewProps {
  * Shared by the component detail page and inline MDX docs content
  * (`<ComponentPreview name="button" />` — see components/mdx.tsx).
  */
-export function ComponentPreview({ name, minHeight = 'lg' }: ComponentPreviewProps) {
+export function ComponentPreview({
+  name,
+  minHeight = 'lg',
+  alignTop = false,
+}: ComponentPreviewProps) {
   const Demo = getDemo(name);
 
   if (!Demo) {
     return (
-      <PreviewFrame minHeight={minHeight}>
+      <PreviewFrame minHeight={minHeight} alignTop={alignTop}>
         <p className="text-sm text-muted-foreground">Preview not available yet.</p>
       </PreviewFrame>
     );
   }
 
   return (
-    <PreviewFrame minHeight={minHeight}>
+    <PreviewFrame minHeight={minHeight} alignTop={alignTop}>
       <Demo />
     </PreviewFrame>
   );

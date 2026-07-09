@@ -28,9 +28,9 @@ const variantIcon: Record<ToastVariant, ComponentType<{ className?: string }> | 
 // stays neutral (foreground) and default shows no status icon at all.
 const variantIconClass: Record<ToastVariant, string> = {
   default: '',
-  success: 'text-emerald-500',
+  success: 'text-success',
   error: 'text-destructive',
-  warning: 'text-amber-500',
+  warning: 'text-warning',
   info: 'text-foreground',
 };
 

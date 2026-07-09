@@ -1,0 +1,86 @@
+---
+title: Slider
+description: Draggable value control with single or range thumbs, built on Radix for full keyboard support.
+---
+
+<ComponentPreview name="slider" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/slider/` into your project.
+
+```bash
+bun add @radix-ui/react-slider motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { useState } from 'react';
+import { Slider } from '@/components/foundation/slider';
+
+export function Example() {
+  const [value, setValue] = useState([40]);
+
+  return (
+    <Slider
+      value={value}
+      onValueChange={setValue}
+      aria-label="Volume"
+    />
+  );
+}
+```
+
+### Range (two thumbs)
+
+Pass two values in the array — one `Thumb` is rendered per entry.
+
+```tsx
+const [range, setRange] = useState([25, 75]);
+
+<Slider value={range} onValueChange={setRange} aria-label="Price range" />
+```
+
+## Sizes
+
+Three track/thumb scales via the `size` prop — `sm`, `md` (default), and `lg`.
+
+```tsx
+<Slider defaultValue={[50]} size="sm" aria-label="Small slider" />
+<Slider defaultValue={[50]} size="md" aria-label="Medium slider" />
+<Slider defaultValue={[50]} size="lg" aria-label="Large slider" />
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'value', type: 'number[]', description: 'Controlled value(s) — one number for a single thumb, two for a range.' },
+    { name: 'defaultValue', type: 'number[]', description: 'Uncontrolled initial value(s). Defaults to a single thumb at min.' },
+    { name: 'min', type: 'number', defaultValue: '0', description: 'Minimum value the slider can reach.' },
+    { name: 'max', type: 'number', defaultValue: '100', description: 'Maximum value the slider can reach.' },
+    { name: 'step', type: 'number', defaultValue: '1', description: 'Increment between valid values.' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables interaction and dims the control.' },
+    { name: 'onValueChange', type: '(value: number[]) => void', description: 'Called continuously while a thumb is dragged or moved via keyboard.' },
+    { name: 'size', type: 'SliderSize', defaultValue: "'md'", description: 'Track thickness and thumb diameter — sm, md, or lg.' },
+    { name: 'orientation', type: "'horizontal' | 'vertical'", defaultValue: "'horizontal'", description: 'Layout direction of the track.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root.' },
+  ]}
+/>
+
+## Accessibility
+
+Built on `@radix-ui/react-slider` for correct roles, focus management, and pointer/keyboard interaction.
+
+| Key | Action |
+| --- | --- |
+| `Arrow Left` / `Arrow Down` | Decrease the focused thumb by one step. |
+| `Arrow Right` / `Arrow Up` | Increase the focused thumb by one step. |
+| `Home` | Move the focused thumb to the minimum value. |
+| `End` | Move the focused thumb to the maximum value. |
+| `Page Down` | Decrease the focused thumb by a larger step. |
+| `Page Up` | Increase the focused thumb by a larger step. |
+| `Tab` / `Shift + Tab` | Move focus to the next / previous focusable element. |
+
+Each thumb exposes `role="slider"` with `aria-valuemin`, `aria-valuemax`, and `aria-valuenow`. Thumb hover/active scale animations drop to instant when `prefers-reduced-motion` is set.

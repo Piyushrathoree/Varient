@@ -1,0 +1,49 @@
+---
+title: Lamp
+description: Glowing horizontal light bar with conic gradient cones for hero headlines.
+---
+
+<ComponentPreview name="lamp" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/lamp/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Place headlines below the lamp glow — the bar widens on entrance:
+
+```tsx
+import { Lamp } from '@/components/animated/lamp';
+
+export function Example() {
+  return (
+    <Lamp className="px-6 py-12">
+      <div className="text-center">
+        <h1 className="text-3xl font-semibold">Build faster</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Ember conic cones frame your hero copy.</p>
+      </div>
+    </Lamp>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: 'Headline or hero content below the lamp glow.' },
+    { name: 'accentColor', type: 'string', defaultValue: 'var(--color-brand)', description: 'Horizontal bar and cone glow color.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- All glow layers are decorative (`aria-hidden`) and use `pointer-events-none`.
+- Content in the children slot is fully readable and interactive.
+- Under `prefers-reduced-motion`, the lamp renders in a fully lit static state with no entrance animation.

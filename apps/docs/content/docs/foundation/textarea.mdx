@@ -1,0 +1,69 @@
+---
+title: Textarea
+description: Multiline text input with label, helper text, error states, and resize control.
+---
+
+<ComponentPreview name="textarea" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/textarea/` into your project.
+
+```bash
+bun add clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Textarea } from '@/components/foundation/textarea';
+
+export function Example() {
+  return (
+    <Textarea
+      label="Bio"
+      placeholder="Tell us about yourself"
+      helperText="Keep it under 280 characters."
+      rows={4}
+      isRequired
+    />
+  );
+}
+```
+
+## Variants
+
+- **Default** — a bordered surface at rest; focus swaps the border to the accent color and adds a soft, low-opacity glow.
+- **Filled** — a quiet `bg-muted` fill with no visible border until focus, when it lifts to `bg-background` with the same accent border + soft glow.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'label', type: 'string', description: 'Label text rendered above the textarea.' },
+    { name: 'placeholder', type: 'string', description: 'Placeholder text inside the textarea.' },
+    { name: 'helperText', type: 'string', description: 'Helper text shown below the textarea when there is no error.' },
+    { name: 'errorText', type: 'string', description: 'Error message — triggers error styling and takes over from helperText.' },
+    { name: 'variant', type: "TextareaVariant", defaultValue: "'default'", description: "'default' is a bordered surface, 'filled' is a soft bg-muted surface with no visible border until focus." },
+    { name: 'resize', type: "'none' | 'vertical' | 'both'", defaultValue: "'vertical'", description: 'Controls the native resize handle — none, vertical only, or both axes.' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the textarea.' },
+    { name: 'isReadOnly', type: 'boolean', defaultValue: 'false', description: 'Makes the textarea read-only.' },
+    { name: 'isRequired', type: 'boolean', defaultValue: 'false', description: 'Marks the field as required.' },
+    { name: 'size', type: 'TextareaSize', defaultValue: "'md'", description: 'Min-height and padding preset — sm, md, or lg.' },
+    { name: 'rows', type: 'number', defaultValue: '4', description: 'Native rows attribute for initial height.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root wrapper.' },
+  ]}
+/>
+
+## Accessibility
+
+The textarea is a native `<textarea>` element with associated label and description wiring.
+
+| Attribute / element | Purpose |
+| ------------------- | ------- |
+| `<label htmlFor>` | Associates the visible label with the textarea for screen readers and click-to-focus. |
+| `aria-invalid` | Set when `errorText` is present so assistive tech announces the invalid state. |
+| `aria-describedby` | Points to helper or error text below the field. |
+| `role="alert"` on error | Error message is announced when it appears. |
+
+Keyboard users tab to the field and type normally. Focus is indicated by the container’s accent border and soft glow (same pattern as Input). Disabled fields are skipped in the tab order.

@@ -1,0 +1,54 @@
+---
+title: Globe
+description: Rotating 3D WebGL globe with city markers, drag-to-spin, and theme-aware colors.
+---
+
+<ComponentPreview name="globe" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/globe/` into your project.
+
+```bash
+bun add cobe clsx tailwind-merge
+```
+
+## Usage
+
+The globe fills its container width and keeps a square aspect ratio. Pair it
+with adjacent text so the interaction is described for screen readers:
+
+```tsx
+import { Globe } from '@/components/animated/globe';
+
+export function Example() {
+  return (
+    <div className="max-w-md rounded-xl border border-border bg-card p-6">
+      <Globe className="mx-auto w-full max-w-[320px]" />
+      <p className="mt-4 text-center text-sm text-muted-foreground">
+        Drag to rotate
+      </p>
+    </div>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'markers', type: '{ location: [number, number]; size: number }[]', defaultValue: '5 world cities', description: 'Marker pins on the globe. Location is [latitude, longitude]; size is relative pin radius.' },
+    { name: 'isInteractive', type: 'boolean', defaultValue: 'true', description: 'Allow drag-to-spin via pointer on the canvas.' },
+    { name: 'speed', type: 'number', defaultValue: '0.003', description: 'Auto-rotation speed in radians per frame. Paused under reduced motion.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- The canvas is decorative and marked `aria-hidden` — describe the globe and
+  drag interaction with adjacent visible text (e.g. "Drag to rotate").
+- Auto-rotation stops under `prefers-reduced-motion`; drag-to-spin still
+  works when `isInteractive` is true so users can explore manually.
+- No keyboard rotation is provided — the globe is supplementary decoration,
+  not a primary navigation control.

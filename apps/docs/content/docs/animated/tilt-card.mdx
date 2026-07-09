@@ -1,0 +1,60 @@
+---
+title: Tilt Card
+description: Single-card 3D pointer-tracking tilt with an optional moving specular glare overlay.
+---
+
+<ComponentPreview name="tilt-card" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/tilt-card/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Wrap any card or surface — `TiltCard` applies perspective and spring-smoothed
+rotate transforms driven by pointer position:
+
+```tsx
+import { Card } from '@/components/foundation/card';
+import { TiltCard } from '@/components/animated/tilt-card';
+
+export function Example() {
+  return (
+    <TiltCard className="max-w-sm">
+      <Card>
+        <Card.Header>
+          <Card.Title>Studio Pro</Card.Title>
+          <Card.Description>Pointer-tracking 3D depth.</Card.Description>
+        </Card.Header>
+      </Card>
+    </TiltCard>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: 'Card content rendered inside the tilt container.' },
+    { name: 'maxTilt', type: 'number', defaultValue: '12', description: 'Maximum tilt angle in degrees on each axis.' },
+    { name: 'scale', type: 'number', defaultValue: '1.02', description: 'Scale applied while the pointer is over the card.' },
+    { name: 'isGlareEnabled', type: 'boolean', defaultValue: 'true', description: 'Show a moving specular glare overlay that follows the pointer.' },
+    { name: 'perspective', type: 'number', defaultValue: '800', description: 'CSS perspective distance in pixels.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- Tilt and glare only engage for fine pointers (`hover: hover` and
+  `pointer: fine`) — touch devices render a static card with no pointer
+  listeners attached.
+- Under `prefers-reduced-motion`, tilt, scale, and glare are disabled;
+  the card keeps a plain hover shadow instead.
+- `TiltCard` is a non-interactive wrapper — ensure nested content exposes
+  its own focus and activation semantics when clickable.

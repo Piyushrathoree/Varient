@@ -1,0 +1,61 @@
+---
+title: 404 Page
+description: A centered not-found page with a gradient status code, copy, and a way back home.
+---
+
+<ComponentPreview name="404-page" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/not-found-page/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge @radix-ui/react-slot
+```
+
+## Usage
+
+```tsx
+import { NotFoundPage } from '@/components/sections/not-found-page';
+
+export function NotFound() {
+  return (
+    <NotFoundPage
+      code="404"
+      title="Page not found"
+      description="The page you're looking for doesn't exist or has been moved."
+      homeHref="/"
+      homeLabel="Back to home"
+      secondaryAction={{ label: 'Browse components', href: '/docs' }}
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'code', type: 'string', defaultValue: "'404'", description: 'Large display code — rendered with a subtle brand gradient.' },
+    { name: 'title', type: 'string', defaultValue: "'Page not found'", description: 'Primary heading below the code.' },
+    { name: 'description', type: 'string', defaultValue: "'The page you're looking for doesn't exist or has been moved.'", description: 'Supporting copy under the title.' },
+    { name: 'homeHref', type: 'string', defaultValue: "'/'", description: 'Destination for the primary CTA link.' },
+    { name: 'homeLabel', type: 'string', defaultValue: "'Back to home'", description: 'Label for the primary CTA button.' },
+    { name: 'secondaryAction', type: '{ label: string; href: string }', description: 'Optional ghost button rendered beside the primary CTA.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
+  ]}
+/>
+
+## Accessibility
+
+The root is a `<section>` with `aria-labelledby` pointing at the `<h1>` title.
+The status code is visible text — screen readers announce it before the title.
+Primary and secondary actions render as real `<a>` elements via `Button asChild`, preserving native link semantics and keyboard activation.
+Focus rings follow the shared Button focus-visible styles.
+
+Entrance animation is a single fade-and-rise on the content column, gated behind `prefers-reduced-motion` — reduced-motion users see the layout immediately with no motion.
+
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift + Tab` | Moves focus between the primary and secondary action links. |
+| `Enter` | Activates the focused link. |

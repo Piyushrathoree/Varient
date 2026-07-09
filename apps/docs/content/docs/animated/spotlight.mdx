@@ -1,0 +1,56 @@
+---
+title: Spotlight
+description: Radial light that follows the cursor over a surface, fading in on hover.
+---
+
+<ComponentPreview name="spotlight" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/spotlight/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Place `Spotlight` inside a `relative` container. Content sits above the glow with
+`relative z-10`:
+
+```tsx
+import { Spotlight } from '@/components/animated/spotlight';
+
+export function Example() {
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-border bg-foreground p-8">
+      <Spotlight />
+      <div className="relative z-10">
+        <h3 className="text-lg font-semibold text-background">Hover the card</h3>
+      </div>
+    </div>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'size', type: 'number', defaultValue: '350', description: 'Radius of the radial glow in pixels.' },
+    { name: 'color', type: 'string', defaultValue: 'brand at ~18% alpha', description: 'Spotlight tint via CSS color (defaults to brand at low alpha).' },
+    { name: 'fill', type: 'string', description: 'Optional override for the gradient fill color; takes precedence over `color`.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- The overlay is decorative — it is marked `aria-hidden="true"` and uses
+  `pointer-events-none`, so it never intercepts clicks or focus.
+- Parent content remains fully interactive; stack content above the glow with
+  `relative z-10`.
+- Under `prefers-reduced-motion`, pointer tracking and hover fade are disabled.
+  A static, centered soft glow is shown instead with no cursor follow.
+- Tracking listeners attach to the parent element only when motion is allowed,
+  and are removed on unmount.

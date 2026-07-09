@@ -1,0 +1,68 @@
+---
+title: FAQ
+description: Landing FAQ block with a section header and a single-open Accordion list.
+---
+
+<ComponentPreview name="faq" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/faq/` into your project. It composes the Foundation `Accordion` — copy that too if you do not already have it.
+
+```bash
+bun add @radix-ui/react-accordion motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Faq } from '@/components/sections/faq';
+
+export function Example() {
+  return (
+    <Faq
+      eyebrow="FAQ"
+      title="Frequently asked questions"
+      description="Quick answers about copying components and theming."
+      items={[
+        {
+          question: 'Is Varient free?',
+          answer: 'Yes — MIT licensed with no paid tier.',
+        },
+        {
+          question: 'Do I install a package?',
+          answer: 'No. Copy the source from the docs and it lives in your project.',
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'eyebrow', type: 'string', defaultValue: "'FAQ'", description: 'Small label rendered above the section title in brand color.' },
+    { name: 'title', type: 'string', defaultValue: "'Frequently asked questions'", description: 'Section headline.' },
+    { name: 'description', type: 'string', description: 'One-line supporting copy under the title.' },
+    { name: 'items', type: '{ question: string; answer: string }[]', description: 'Question and answer pairs rendered in the accordion. Defaults to six Varient-themed FAQs.' },
+    { name: 'defaultOpenIndex', type: 'number', defaultValue: '0', description: 'Zero-based index of the item open on first render.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
+  ]}
+/>
+
+## Accessibility
+
+Composes the Foundation `Accordion`, which is built on `@radix-ui/react-accordion` for correct roles and keyboard behavior.
+
+| Key | Action |
+| --- | --- |
+| `Enter` / `Space` | Toggles the focused item open or closed. |
+| `Tab` / `Shift + Tab` | Moves focus to the next / previous focusable element. |
+| `Arrow Down` | Moves focus to the next trigger. |
+| `Arrow Up` | Moves focus to the previous trigger. |
+| `Home` | Moves focus to the first trigger. |
+| `End` | Moves focus to the last trigger. |
+
+The section header uses scroll-triggered motion that collapses to an instant reveal when `prefers-reduced-motion` is enabled.

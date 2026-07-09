@@ -1,0 +1,52 @@
+---
+title: Aurora Background
+description: Slow-drifting ember gradient mesh backdrop with optional radial fade.
+---
+
+<ComponentPreview name="aurora-background" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/aurora-background/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Wrap any content — the aurora sits behind with `relative z-10` on children:
+
+```tsx
+import { AuroraBackground } from '@/components/animated/aurora-background';
+
+export function Example() {
+  return (
+    <AuroraBackground className="min-h-64 rounded-xl border border-border">
+      <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+        <h2 className="text-2xl font-semibold">Aurora backdrop</h2>
+        <p className="text-sm text-muted-foreground">Soft ember blobs drift behind your copy.</p>
+      </div>
+    </AuroraBackground>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: 'Content rendered above the aurora layer.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+    { name: 'showRadialGradient', type: 'boolean', defaultValue: 'true', description: 'When true, a radial mask fades the aurora toward the center and bottom.' },
+  ]}
+/>
+
+## Accessibility
+
+- Decorative gradient blobs are marked `aria-hidden="true"` and use
+  `pointer-events-none`, so they never intercept clicks or focus.
+- Content stays fully interactive when stacked above the layer with
+  `relative z-10` (applied automatically to `children`).
+- Under `prefers-reduced-motion`, animated blobs collapse into a static
+  gradient wash — no translate or rotate loops run.

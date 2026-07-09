@@ -60,7 +60,7 @@ const colorRoleByVariant: Record<BadgeVariant, ColorRole> = {
 const appearanceStyles: Record<BadgeAppearance, Record<ColorRole, string>> = {
   soft: {
     neutral: 'border-transparent bg-muted text-foreground',
-    brand: 'border-transparent bg-brand/10 text-brand',
+    brand: 'border-transparent bg-muted text-brand',
     secondary: 'border-transparent bg-secondary text-secondary-foreground',
     success: 'border-transparent bg-success/10 text-success',
     warning: 'border-transparent bg-warning/10 text-warning',
@@ -82,11 +82,10 @@ const appearanceStyles: Record<BadgeAppearance, Record<ColorRole, string>> = {
     warning: 'border-warning/40 bg-transparent text-warning',
     destructive: 'border-destructive/40 bg-transparent text-destructive',
   },
-  // Color moves to the dot; label text stays neutral so it always reads
-  // clean against the same subtle wash `soft` uses.
+  // Color moves to the dot; label text stays neutral on a muted surface.
   dot: {
     neutral: 'border-transparent bg-muted text-foreground',
-    brand: 'border-transparent bg-brand/10 text-foreground',
+    brand: 'border-transparent bg-muted text-foreground',
     secondary: 'border-transparent bg-secondary text-foreground',
     success: 'border-transparent bg-success/10 text-foreground',
     warning: 'border-transparent bg-warning/10 text-foreground',

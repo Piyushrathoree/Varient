@@ -1,0 +1,58 @@
+---
+title: Line Draw
+description: SVG stroke-drawing animation with decorative presets and scroll-triggered pathLength reveals.
+---
+
+<ComponentPreview name="line-draw" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/line-draw/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Pick a built-in preset or pass custom path data. Drawing triggers when the SVG scrolls into view:
+
+```tsx
+import { LineDraw } from '@/components/animated/line-draw';
+
+export function Example() {
+  return (
+    <div className="space-y-6">
+      <LineDraw preset="underline" className="h-6 w-full" duration={1.2} />
+      <LineDraw preset="arrow" className="h-12 w-48" isLooping />
+      <LineDraw
+        path="M 0 50 L 100 50"
+        viewBox="0 0 100 100"
+        className="size-24"
+      />
+    </div>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'preset', type: "'underline' | 'scribble' | 'arrow'", defaultValue: "'underline'", description: 'Built-in decorative path when path is omitted.' },
+    { name: 'path', type: 'string', description: 'Custom SVG path d attribute — overrides preset.' },
+    { name: 'duration', type: 'number', defaultValue: '1.2', description: 'Draw duration in seconds.' },
+    { name: 'delay', type: 'number', defaultValue: '0', description: 'Delay before drawing starts, in seconds.' },
+    { name: 'strokeWidth', type: 'number', defaultValue: '2', description: 'Stroke width in pixels.' },
+    { name: 'isLooping', type: 'boolean', defaultValue: 'false', description: 'When true, the draw animation repeats after completing.' },
+    { name: 'stroke', type: 'string', defaultValue: 'var(--color-brand)', description: 'Stroke color for preset/path mode.' },
+    { name: 'children', type: 'ReactNode', description: 'Custom SVG children — path elements are animated automatically.' },
+    { name: 'className', type: 'string', description: 'Size and layout classes on the root SVG.' },
+  ]}
+/>
+
+## Accessibility
+
+- Decorative SVGs are marked `aria-hidden` — pair with visible text when the path conveys meaning.
+- Under `prefers-reduced-motion`, paths render fully drawn with no stroke animation.
+- Presets use `strokeLinecap="round"` for smoother decorative strokes at small sizes.

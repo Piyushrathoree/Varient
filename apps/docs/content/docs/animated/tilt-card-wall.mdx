@@ -1,0 +1,78 @@
+---
+title: Tilt Card Wall
+description: Fanned testimonial cards that straighten, lift, and come forward on hover or focus.
+---
+
+<ComponentPreview name="tilt-card-wall" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/tilt-card-wall/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Pass an array of testimonial items. Each card fans from the center at rest and
+springs upright when hovered or focused:
+
+```tsx
+import { TiltCardWall } from '@/components/animated/tilt-card-wall';
+
+const items = [
+  {
+    quote: 'A small tool with a big payoff for our design workflow.',
+    name: 'Sarah Chen',
+    role: 'Product Hunt review',
+    rating: 5.0,
+    source: 'Product Hunt',
+  },
+  {
+    quote: 'Crisp overlay, fast, and never gets in the way.',
+    name: 'Marcus Webb',
+    role: 'Frontend Developer',
+    rating: 5.0,
+    source: 'Chrome Web Store',
+  },
+];
+
+export function Example() {
+  return <TiltCardWall items={items} maxRotation={12} />;
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'items', type: 'TiltCardItem[]', description: 'Testimonials to render in the fan. Each item supports quote, name, role, avatarSrc, rating, and source.' },
+    { name: 'maxRotation', type: 'number', defaultValue: '12', description: 'Maximum rotation in degrees for the outermost cards in the fan.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn() on the container.' },
+  ]}
+/>
+
+### TiltCardItem
+
+<PropsTable
+  props={[
+    { name: 'quote', type: 'string', description: 'The testimonial body text.' },
+    { name: 'name', type: 'string', description: 'Reviewer name shown in the card footer.' },
+    { name: 'role', type: 'string', description: 'Optional subtitle — job title, review source label, etc.' },
+    { name: 'avatarSrc', type: 'string', description: 'Optional image URL for the reviewer avatar.' },
+    { name: 'rating', type: 'number', description: 'Optional star rating (e.g. 5.0) shown beside a source badge.' },
+    { name: 'source', type: 'string', description: 'Optional review source label (Product Hunt, Chrome Web Store, etc.).' },
+  ]}
+/>
+
+## Accessibility
+
+- Each card is a focusable `<article>` with a visible focus ring. Keyboard
+  focus triggers the same straighten-and-lift interaction as hover.
+- Neighboring cards dim slightly when one card is active so the focused card
+  reads clearly.
+- Under `prefers-reduced-motion`, the fan layout stays static and hover/focus
+  only adjusts opacity and shadow — no rotation, scale, or lift animation.
+- On viewports below `640px`, cards stack vertically with no fan rotation so
+  the wall stays readable at 375px.

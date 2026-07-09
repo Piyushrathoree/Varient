@@ -1,0 +1,56 @@
+---
+title: Scroll Progress Bar
+description: Thin bar that tracks scroll position with a smooth spring-driven fill.
+---
+
+<ComponentPreview name="scroll-progress-bar" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/scroll-progress-bar/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Place at the top or bottom of the viewport (or inside a scroll container for demos):
+
+```tsx
+import { useRef } from 'react';
+import { ScrollProgressBar } from '@/components/animated/scroll-progress-bar';
+
+export function Example() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <>
+      <ScrollProgressBar />
+      {/* or, for a contained scroll area: */}
+      <div ref={scrollRef} className="relative h-96 overflow-y-auto">
+        <ScrollProgressBar isFixed={false} scrollContainerRef={scrollRef} />
+        {/* content */}
+      </div>
+    </>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes on the track wrapper.' },
+    { name: 'color', type: 'string', defaultValue: 'bg-gradient-to-r from-brand-secondary to-brand', description: 'Tailwind classes for the fill bar.' },
+    { name: 'height', type: 'number', defaultValue: '3', description: 'Bar thickness in pixels.' },
+    { name: 'position', type: "'top' | 'bottom'", defaultValue: 'top', description: 'Anchors the bar to the top or bottom edge.' },
+    { name: 'scrollContainerRef', type: 'RefObject<HTMLElement | null>', description: 'Scroll container to track. Defaults to window scroll when omitted.' },
+    { name: 'isFixed', type: 'boolean', defaultValue: 'true', description: 'When false, uses absolute positioning inside a relative scroll frame.' },
+  ]}
+/>
+
+## Accessibility
+
+- Exposes `role="progressbar"` with `aria-valuemin`, `aria-valuemax`, and a live `aria-valuenow` synced to scroll percentage.
+- Under `prefers-reduced-motion` the fill binds directly to scroll position (no spring smoothing) — the bar remains functional because it conveys reading progress, not decoration.

@@ -115,12 +115,14 @@ export function InputDemo() {
 
 export function InputPreviewCompact() {
   return (
-    <div className="w-full max-w-xs">
-      <Input
-        placeholder="Enter your email"
-        leftAddon={<Mail className="size-4" strokeWidth={1.75} />}
-        size="sm"
-      />
+    <div className="flex w-full items-center justify-center">
+      <div className="w-full max-w-[220px]">
+        <Input
+          placeholder="Enter your email"
+          leftAddon={<Mail className="size-4" strokeWidth={1.75} />}
+          size="sm"
+        />
+      </div>
     </div>
   );
 }

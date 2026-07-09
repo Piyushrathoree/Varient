@@ -1,0 +1,102 @@
+---
+title: Comparison Table
+description: A feature-by-feature plan comparison table with highlighted columns, category groups, and inline check/cross icons.
+---
+
+<ComponentPreview name="comparison-table" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/comparison-table/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { ComparisonTable } from '@/components/sections/comparison-table';
+
+export function PricingPage() {
+  return (
+    <ComparisonTable
+      eyebrow="Compare plans"
+      title={
+        <>
+          Pick the plan that{' '}
+          <span className="text-brand">fits your team</span>
+        </>
+      }
+      description="See exactly what each tier includes before you commit."
+      plans={[
+        { name: 'Starter', price: 'Free', cta: { label: 'Get started' } },
+        {
+          name: 'Pro',
+          price: '$29/mo',
+          isHighlighted: true,
+          cta: { label: 'Start trial' },
+        },
+        { name: 'Enterprise', price: 'Custom', cta: { label: 'Contact sales' } },
+      ]}
+      rows={[
+        { category: 'Core', feature: 'Foundation components', values: [true, true, true] },
+        { feature: 'Animated layer', values: [false, true, true] },
+        { feature: 'Team members', values: ['1', '10', 'Unlimited'] },
+      ]}
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'eyebrow', type: 'string', defaultValue: "'Compare plans'", description: 'Small brand-colored label above the section title.' },
+    { name: 'title', type: 'ReactNode', description: 'Section headline — defaults to a title with a brand-colored span.' },
+    { name: 'description', type: 'string', description: 'One-line supporting copy below the title.' },
+    { name: 'plans', type: 'ComparisonPlan[]', description: '2–3 pricing tiers shown as table columns with optional CTAs.' },
+    { name: 'rows', type: 'ComparisonRow[]', description: 'Feature rows — boolean values render as check/cross icons, strings as text.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
+  ]}
+/>
+
+### ComparisonPlan
+
+<PropsTable
+  props={[
+    { name: 'name', type: 'string', description: 'Plan name shown in the column header.' },
+    { name: 'price', type: 'string', description: 'Optional price label below the plan name.' },
+    { name: 'isHighlighted', type: 'boolean', defaultValue: 'false', description: 'Adds brand top border and bg-brand/5 column tint.' },
+    { name: 'cta.label', type: 'string', description: 'Button label in the column header.' },
+    { name: 'cta.href', type: 'string', description: 'Optional href — renders the CTA as a link via Button asChild.' },
+  ]}
+/>
+
+### ComparisonRow
+
+<PropsTable
+  props={[
+    { name: 'feature', type: 'string', description: 'Feature name in the first column.' },
+    { name: 'category', type: 'string', description: 'Optional group label — renders a full-width category row when the category changes.' },
+    { name: 'values', type: '(boolean | string)[]', description: 'Cell values aligned with plans — booleans become check/cross icons.' },
+  ]}
+/>
+
+## Accessibility
+
+The table uses proper `scope` attributes: `scope="col"` on plan headers and
+`scope="row"` on feature names. Boolean values expose screen-reader text
+("Included" / "Not included"). The table wrapper scrolls horizontally on
+narrow viewports via `overflow-x-auto`.
+
+| Element | Attribute | Purpose |
+| --- | --- | --- |
+| Feature column header | `scope="col"` | Identifies the features column for assistive tech. |
+| Plan column headers | `scope="col"` | Associates each data cell with its plan. |
+| Feature name cells | `scope="row"` | Associates each value cell with its feature. |
+| Check/cross icons | `sr-only` label | Announces inclusion state for boolean values. |
+
+CTA buttons are real `<button>` elements (or `<a>` via `asChild`) with visible
+focus rings. Scroll-reveal on the section header respects `prefers-reduced-motion`.

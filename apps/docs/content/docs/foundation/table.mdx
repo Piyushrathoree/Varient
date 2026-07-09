@@ -1,0 +1,117 @@
+---
+title: Table
+description: Semantic compound table for structured data — bordered wrapper, muted header row, row dividers, and hover states on body rows.
+---
+
+<ComponentPreview name="table" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/table/` into your project.
+
+```bash
+bun add clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Table } from '@/components/foundation/table';
+
+export function Example() {
+  return (
+    <Table>
+      <Table.Caption>A list of your recent invoices.</Table.Caption>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>Invoice</Table.Head>
+          <Table.Head>Status</Table.Head>
+          <Table.Head className="text-right">Amount</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        <Table.Row>
+          <Table.Cell className="font-medium">INV-001</Table.Cell>
+          <Table.Cell>Paid</Table.Cell>
+          <Table.Cell className="text-right">$250.00</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell className="font-medium">INV-002</Table.Cell>
+          <Table.Cell>Pending</Table.Cell>
+          <Table.Cell className="text-right">$150.00</Table.Cell>
+        </Table.Row>
+      </Table.Body>
+    </Table>
+  );
+}
+```
+
+Use `Table.Footer` for summary rows and set `scope="row"` on `Table.Head` when labelling row headers.
+
+```tsx
+<Table.Row>
+  <Table.Head scope="row">Total</Table.Head>
+  <Table.Cell colSpan={2}>$400.00</Table.Cell>
+</Table.Row>
+```
+
+## Props
+
+<PropsTable
+  props={[
+    {
+      name: 'Table',
+      type: 'HTMLAttributes<HTMLDivElement>',
+      description: 'Root wrapper — rounded-xl border, overflow-x-auto, and a full-width table inside.',
+    },
+    {
+      name: 'Table.Header',
+      type: 'HTMLAttributes<HTMLTableSectionElement>',
+      description: '`<thead>` section — header cells use bg-muted/50.',
+    },
+    {
+      name: 'Table.Body',
+      type: 'HTMLAttributes<HTMLTableSectionElement>',
+      description: '`<tbody>` section — rows get hover:bg-muted/30 and hairline dividers.',
+    },
+    {
+      name: 'Table.Footer',
+      type: 'HTMLAttributes<HTMLTableSectionElement>',
+      description: '`<tfoot>` section — muted background for totals or summary rows.',
+    },
+    {
+      name: 'Table.Row',
+      type: 'HTMLAttributes<HTMLTableRowElement>',
+      description: 'Table row — border-b border-border divider between rows.',
+    },
+    {
+      name: 'Table.Head',
+      type: 'ThHTMLAttributes<HTMLTableCellElement>',
+      description: 'Header cell — defaults to scope="col", text-muted-foreground, font-medium, text-left.',
+    },
+    {
+      name: 'Table.Cell',
+      type: 'TdHTMLAttributes<HTMLTableCellElement>',
+      description: 'Data cell — px-4 py-3 padding with align-middle.',
+    },
+    {
+      name: 'Table.Caption',
+      type: 'HTMLAttributes<HTMLTableCaptionElement>',
+      description: 'Table caption — describes the table for assistive tech; renders below the table.',
+    },
+  ]}
+/>
+
+## Accessibility
+
+- Use `Table.Caption` to provide a concise description of the table contents.
+- Set `scope="col"` on column headers (the default on `Table.Head`) and `scope="row"` on row headers.
+- Pair header cells with data cells using `id` on headers and `headers` on cells when relationships are non-trivial.
+- The root wrapper uses `overflow-x-auto` so wide tables scroll horizontally on narrow viewports without breaking layout.
+
+| Element | Purpose |
+| ------- | ------- |
+| `<caption>` | Summarizes the table for screen readers |
+| `scope="col"` | Associates a header cell with its column |
+| `scope="row"` | Associates a header cell with its row |
+| `headers` | Links a data cell to one or more header cell ids |

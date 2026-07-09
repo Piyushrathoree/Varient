@@ -1,0 +1,46 @@
+---
+title: Browser Frame
+description: Browser window mockup with traffic-light chrome, URL bar, and a composable content slot.
+---
+
+<ComponentPreview name="browser-frame" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/browser-frame/` into your project.
+
+```bash
+bun add clsx tailwind-merge motion lucide-react
+```
+
+## Usage
+
+```tsx
+import { BrowserFrame } from '@/components/animated/browser-frame';
+
+export function Example() {
+  return (
+    <BrowserFrame url="https://varient.dev/docs">
+      <div className="px-6 py-8 text-center">
+        <p className="font-semibold text-foreground">Your preview here</p>
+      </div>
+    </BrowserFrame>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'url', type: 'string', defaultValue: 'https://varient.dev', description: 'URL shown in the address bar.' },
+    { name: 'isDark', type: 'boolean', defaultValue: 'false', description: 'When true, chrome uses dark smooth tokens; otherwise light chrome.' },
+    { name: 'isAnimated', type: 'boolean', defaultValue: 'true', description: 'Whether the frame plays a subtle float/tilt entrance when scrolled into view.' },
+    { name: 'children', type: 'ReactNode', description: 'Content rendered inside the browser viewport.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+The frame is a presentational mockup — traffic lights and the globe icon in the URL bar are `aria-hidden`. Content passed as `children` retains its own semantics. When `prefers-reduced-motion` is set, or when `isAnimated` is false, the frame renders statically with no transform animation. Only `opacity` and `transform` animate in the default motion path.

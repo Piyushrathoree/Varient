@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { PanelLeftOpen, X } from 'lucide-react';
 import { cn } from '@varient/ui';
 import { ComponentsSidebar } from '@/components/site/components-sidebar';
+import { GalleryNavProvider } from '@/components/site/gallery-nav-context';
 
 const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background';
@@ -48,8 +49,9 @@ export default function ComponentsSectionLayout({ children }: { children: ReactN
   }, [open]);
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl">
-      <ComponentsSidebar />
+    <GalleryNavProvider>
+      <div className="mx-auto flex w-full max-w-[90rem]">
+        <ComponentsSidebar />
 
       {/* Mobile trigger — the hamburger fallback for the sidebar SmoothUI
           hides below `lg`. */}
@@ -111,7 +113,8 @@ export default function ComponentsSectionLayout({ children }: { children: ReactN
         </div>
       </div>
 
-      <div className="min-w-0 flex-1">{children}</div>
-    </div>
+        <div className="min-w-0 flex-1">{children}</div>
+      </div>
+    </GalleryNavProvider>
   );
 }

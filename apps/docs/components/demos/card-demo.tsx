@@ -42,7 +42,7 @@ export function CardDemo() {
           variant="outline"
           isClickable
           onClick={() => setIsSelected((prev) => !prev)}
-          className={cn(isSelected && 'border-brand/60 ring-2 ring-brand/15')}
+          className={cn(isSelected && 'border-brand ring-2 ring-ring')}
         >
           <Card.Header>
             <div className="flex items-center justify-between gap-2">
@@ -72,11 +72,13 @@ export function CardDemo() {
 
 export function CardPreviewCompact() {
   return (
-    <Card className="w-full max-w-[220px]" isHoverable>
-      <Card.Header>
-        <Card.Title>Card</Card.Title>
-        <Card.Description>Grouped content and actions.</Card.Description>
-      </Card.Header>
-    </Card>
+    <div className="flex w-full items-center justify-center">
+      <Card className="w-full max-w-[220px]" isHoverable>
+        <Card.Header>
+          <Card.Title>Card</Card.Title>
+          <Card.Description>Grouped content and actions.</Card.Description>
+        </Card.Header>
+      </Card>
+    </div>
   );
 }

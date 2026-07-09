@@ -1,0 +1,96 @@
+---
+title: Breadcrumb
+description: Semantic navigation trail for hierarchical pages — compound nav with links, current page, separators, and ellipsis.
+---
+
+<ComponentPreview name="breadcrumb" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/breadcrumb/` into your project.
+
+```bash
+bun add clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Breadcrumb } from '@/components/foundation/breadcrumb';
+
+export function Example() {
+  return (
+    <Breadcrumb>
+      <Breadcrumb.List>
+        <Breadcrumb.Item>
+          <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+          <Breadcrumb.Link href="/components">Components</Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+          <Breadcrumb.Page>Breadcrumb</Breadcrumb.Page>
+        </Breadcrumb.Item>
+      </Breadcrumb.List>
+    </Breadcrumb>
+  );
+}
+```
+
+Use `Breadcrumb.Ellipsis` to collapse long trails, and pass children to `Breadcrumb.Separator` for a custom divider.
+
+```tsx
+<Breadcrumb.Separator>/</Breadcrumb.Separator>
+```
+
+## Props
+
+<PropsTable
+  props={[
+    {
+      name: 'Breadcrumb',
+      type: 'HTMLAttributes<HTMLElement>',
+      description: 'Root `<nav aria-label="breadcrumb">` wrapper.',
+    },
+    {
+      name: 'Breadcrumb.List',
+      type: 'HTMLAttributes<HTMLOListElement>',
+      description: 'Ordered list container — flex row with wrapping.',
+    },
+    {
+      name: 'Breadcrumb.Item',
+      type: 'LiHTMLAttributes<HTMLLIElement>',
+      description: 'List item wrapping a link, page, or ellipsis.',
+    },
+    {
+      name: 'Breadcrumb.Link',
+      type: 'AnchorHTMLAttributes<HTMLAnchorElement>',
+      description: 'Navigable ancestor link — muted at rest, foreground on hover.',
+    },
+    {
+      name: 'Breadcrumb.Page',
+      type: 'HTMLAttributes<HTMLSpanElement>',
+      description: 'Current page label — renders with aria-current="page".',
+    },
+    {
+      name: 'Breadcrumb.Separator',
+      type: 'LiHTMLAttributes<HTMLLIElement>',
+      description: 'Visual divider between items — defaults to a chevron; pass children to override.',
+    },
+    {
+      name: 'Breadcrumb.Ellipsis',
+      type: 'HTMLAttributes<HTMLSpanElement>',
+      description: 'Collapsed-trail indicator with sr-only "More" text.',
+    },
+  ]}
+/>
+
+## Accessibility
+
+- Root renders `<nav aria-label="breadcrumb">` so screen readers announce it as a navigation landmark.
+- `Breadcrumb.Page` sets `aria-current="page"` on the current segment.
+- `Breadcrumb.Separator` uses `role="presentation"` and `aria-hidden="true"` so dividers are skipped by assistive tech.
+- `Breadcrumb.Ellipsis` includes visually hidden "More" text for screen readers.
+- Links receive a visible focus ring via `focus-visible:ring-ring`.

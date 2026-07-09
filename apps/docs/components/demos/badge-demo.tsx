@@ -27,7 +27,7 @@ export function BadgeDemo() {
             </Badge>
           </div>
           <span className="text-xs font-medium text-muted-foreground">
-            Soft — tinted wash (default)
+            Soft — muted surface (default)
           </span>
         </div>
 

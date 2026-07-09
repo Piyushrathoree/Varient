@@ -1,0 +1,67 @@
+---
+title: Hero Highlight
+description: Interactive dot-grid hero with cursor reveal and scroll-triggered text highlights.
+---
+
+<ComponentPreview name="hero-highlight" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/hero-highlight/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Use `HeroHighlight` as the container and `Highlight` inline for swept text accents:
+
+```tsx
+import { HeroHighlight, Highlight } from '@/components/animated/hero-highlight';
+
+export function Example() {
+  return (
+    <HeroHighlight className="rounded-xl border border-border px-6 py-16">
+      <div className="mx-auto max-w-lg text-center">
+        <h1 className="text-3xl font-semibold">
+          Ship with <Highlight>confidence</Highlight>
+        </h1>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Dots brighten near your cursor.
+        </p>
+      </div>
+    </HeroHighlight>
+  );
+}
+```
+
+## Props
+
+### HeroHighlight
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: 'Hero content rendered above the dot grid.' },
+    { name: 'dotSpacing', type: 'number', defaultValue: '20', description: 'Dot grid spacing in pixels.' },
+    { name: 'dotRadius', type: 'number', defaultValue: '1', description: 'Dot radius in pixels.' },
+    { name: 'spotlightSize', type: 'number', defaultValue: '180', description: 'Cursor reveal spotlight radius in pixels.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+### Highlight
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: 'Inline text to highlight.' },
+    { name: 'color', type: 'string', defaultValue: 'color-mix(in oklab, var(--color-brand) 22%, transparent)', description: 'Highlight bar color behind the text.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes on the wrapper span.' },
+  ]}
+/>
+
+## Accessibility
+
+- Dot grid layers are decorative (`aria-hidden`) and use `pointer-events-none` — pointer tracking listens on the container only.
+- `Highlight` text remains in the normal document flow and is fully readable by screen readers.
+- Under `prefers-reduced-motion`, the dot grid is static with no pointer tracking; `Highlight` renders with a fully visible bar and no scale animation.

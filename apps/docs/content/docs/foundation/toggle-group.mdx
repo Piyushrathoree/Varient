@@ -1,0 +1,93 @@
+---
+title: Toggle Group
+description: A set of two-state buttons for single or multiple selection, with segmented and outline styles.
+---
+
+<ComponentPreview name="toggle-group" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/toggle/` into your project.
+
+```bash
+bun add @radix-ui/react-toggle-group motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { ToggleGroup } from '@/components/foundation/toggle';
+
+export function Example() {
+  return (
+    <ToggleGroup defaultValue="left" variant="segmented">
+      <ToggleGroup.Item value="left" aria-label="Align left">
+        Left
+      </ToggleGroup.Item>
+      <ToggleGroup.Item value="center" aria-label="Align center">
+        Center
+      </ToggleGroup.Item>
+      <ToggleGroup.Item value="right" aria-label="Align right">
+        Right
+      </ToggleGroup.Item>
+    </ToggleGroup>
+  );
+}
+```
+
+## Variants
+
+Two visual styles on the root — items share the same compound API either way.
+
+```tsx
+<ToggleGroup isMultiple value={['bold']} onValueChange={setFormat} variant="outline">
+  <ToggleGroup.Item value="bold">Bold</ToggleGroup.Item>
+  <ToggleGroup.Item value="italic">Italic</ToggleGroup.Item>
+</ToggleGroup>
+```
+
+- **`segmented`** — an enclosed track (`bg-muted rounded-lg p-1`) with a neutral raised chip (`bg-background shadow-sm`) behind the active item. In single-select mode the chip slides between items via a shared `layoutId` spring — same mechanic as Tabs segmented. Multi-select gives each active item its own static chip instead.
+- **`outline`** — standalone bordered toggles in a row, reusing the Toggle outline recipe. Good for formatting toolbars where each control should read as its own button.
+
+Pass `isMultiple` to allow several items pressed at once; omit it (default `false`) for radio-like single selection.
+
+## Props
+
+### ToggleGroup
+
+<PropsTable
+  props={[
+    { name: 'isMultiple', type: 'boolean', defaultValue: 'false', description: 'Allows more than one item pressed at once. false keeps it single-select.' },
+    { name: 'value', type: 'string | string[]', description: 'Controlled value — a string in single mode, a string[] in multiple mode.' },
+    { name: 'defaultValue', type: 'string | string[]', description: 'Uncontrolled initial value.' },
+    { name: 'onValueChange', type: '(value: string | string[]) => void', description: 'Called with the next value(s) when an item is toggled.' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables every item in the group.' },
+    { name: 'variant', type: "'segmented' | 'outline'", defaultValue: "'segmented'", description: 'Visual style — enclosed segmented track or bordered outline toggles.' },
+    { name: 'size', type: "'sm' | 'md' | 'lg'", defaultValue: "'md'", description: 'Item height and padding.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root.' },
+  ]}
+/>
+
+### ToggleGroup.Item
+
+<PropsTable
+  props={[
+    { name: 'value', type: 'string', description: 'Required — a unique id for the item, matched against the group value(s).' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables this item independently of the group-level isDisabled.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+Built on `@radix-ui/react-toggle-group` with roving focus and correct `aria-pressed` on each item.
+
+| Key           | Action                                             |
+| ------------- | --------------------------------------------------- |
+| `Enter` / `Space` | Toggles the focused item.                       |
+| `Tab` / `Shift + Tab` | Moves focus into/out of the group.            |
+| `Arrow Right` / `Arrow Left` | Moves focus between items (roving tabindex). |
+| `Home`        | Moves focus to the first item.                      |
+| `End`         | Moves focus to the last item.                       |
+
+Each item is a `<button>` with `aria-pressed` reflecting whether its `value` is in the group's current selection. The segmented sliding indicator is decorative (`aria-hidden`) — selection state is conveyed through `aria-pressed` and text color, not color alone. The layout animation collapses to an instant snap when `prefers-reduced-motion` is set.

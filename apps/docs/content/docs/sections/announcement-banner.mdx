@@ -1,0 +1,81 @@
+---
+title: Announcement Banner
+description: Slim top-of-page banner with optional link, dismiss control, and brand or neutral styling.
+---
+
+<ComponentPreview name="announcement-banner" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/announcement-banner/` into your project.
+
+```bash
+bun add motion lucide-react clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { AnnouncementBanner } from '@/components/sections/announcement-banner';
+
+export function SiteLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <AnnouncementBanner
+        variant="brand"
+        message="Varient v1.2 is live — 12 new animated components."
+        link={{ label: 'Read the changelog', href: '/changelog' }}
+      />
+      {children}
+    </>
+  );
+}
+```
+
+## Variants
+
+Two surface styles via the `variant` prop:
+
+```tsx
+<AnnouncementBanner variant="neutral" message="Scheduled maintenance Saturday 02:00 UTC." />
+```
+
+- **`neutral`** — muted neutral surface with standard link styling.
+- **`brand`** — same neutral surface with a brand dot indicator and brand-colored link text. No orange background wash.
+
+## Dismiss behavior
+
+Uncontrolled by default — clicking dismiss hides the banner locally. For controlled usage, pass `isDismissed` and `onDismiss`:
+
+```tsx
+const [isDismissed, setIsDismissed] = useState(false);
+
+<AnnouncementBanner
+  isDismissed={isDismissed}
+  onDismiss={() => setIsDismissed(true)}
+  message="This banner stays in sync with your app state."
+/>
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'message', type: 'ReactNode', description: 'Primary banner copy.' },
+    { name: 'link', type: '{ label: string; href: string }', description: 'Optional inline link appended after the message.' },
+    { name: 'variant', type: "'neutral' | 'brand'", defaultValue: "'neutral'", description: 'Visual style — brand adds a dot indicator and brand link color.' },
+    { name: 'isDismissed', type: 'boolean', description: 'Controlled dismiss state. Omit for uncontrolled behavior.' },
+    { name: 'onDismiss', type: '() => void', description: 'Called when the dismiss button is clicked.' },
+    { name: 'isAnimated', type: 'boolean', defaultValue: 'true', description: 'Slide-down entrance on mount. Disabled when prefers-reduced-motion is active.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root banner wrapper.' },
+  ]}
+/>
+
+## Accessibility
+
+The banner is a `role="region"` labelled by the message paragraph. The dismiss control has an explicit `aria-label`. Entrance and exit animations respect `prefers-reduced-motion`.
+
+| Key | Action |
+| --- | --- |
+| `Tab` | Moves focus to the optional link and dismiss button. |
+| `Enter` / `Space` | Activates the focused control. |

@@ -1,0 +1,48 @@
+---
+title: Avatar Circles
+description: Overlapping avatar row with ring-background borders, staggered pop-in, and a +N overflow chip.
+---
+
+<ComponentPreview name="avatar-circles" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/avatar-circles/` into your project.
+
+```bash
+bun add clsx tailwind-merge motion
+```
+
+## Usage
+
+```tsx
+import { AvatarCircles } from '@/components/animated/avatar-circles';
+
+const avatars = [
+  { alt: 'Alex Chen', fallback: 'AC' },
+  { alt: 'Jordan Lee', fallback: 'JL' },
+  { alt: 'Sam Rivera', fallback: 'SR' },
+  { alt: 'Taylor Kim', fallback: 'TK' },
+  { alt: 'Morgan Patel', fallback: 'MP' },
+  { alt: 'Casey Wu', fallback: 'CW' },
+];
+
+export function Example() {
+  return <AvatarCircles avatars={avatars} maxVisible={4} />;
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'avatars', type: 'AvatarCircleItem[]', description: 'Required — avatar entries with optional `src`, `alt`, and `fallback` initials.' },
+    { name: 'maxVisible', type: 'number', defaultValue: '5', description: 'Maximum avatars shown before a `+N` overflow chip.' },
+    { name: 'size', type: "'sm' | 'md' | 'lg'", defaultValue: 'md', description: 'Avatar diameter preset.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+The row is grouped with `role="group"` and an `aria-label` describing the total count (and overflow when applicable). Individual initials spans are `aria-hidden` when an `alt` name is provided — the image `alt` carries the accessible name when `src` is set. When `prefers-reduced-motion` is set, all avatars render immediately with no scale animation. The overflow chip is decorative and `aria-hidden`.

@@ -1,0 +1,50 @@
+---
+title: Background Beams
+description: Full-bleed curved SVG paths with animated ember gradient strokes.
+---
+
+<ComponentPreview name="background-beams" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/background-beams/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Wrap hero or section content — beams sit behind with `relative z-10` on children:
+
+```tsx
+import { BackgroundBeams } from '@/components/animated/background-beams';
+
+export function Example() {
+  return (
+    <BackgroundBeams className="min-h-64 rounded-xl border border-border">
+      <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+        <h2 className="text-2xl font-semibold">Background beams</h2>
+        <p className="text-sm text-muted-foreground">Gradient strokes travel along faint curved paths.</p>
+      </div>
+    </BackgroundBeams>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: 'Content rendered above the beam layer.' },
+    { name: 'pathCount', type: 'number', defaultValue: '6', description: 'Number of curved beam paths (1–12).' },
+    { name: 'accentColor', type: 'string', defaultValue: 'var(--color-brand)', description: 'Stroke color for animated gradient highlights.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- SVG paths are decorative and marked `aria-hidden` — they do not affect accessible structure.
+- Under `prefers-reduced-motion`, paths render as static faint strokes with no gradient travel.
+- Children remain fully interactive; the beam layer uses `pointer-events-none`.

@@ -1,0 +1,58 @@
+---
+title: Logo Cloud
+description: A row of partner or customer logos with optional infinite marquee scroll and hand-drawn placeholder marks.
+---
+
+<ComponentPreview name="logo-cloud" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/logo-cloud/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { LogoCloud } from '@/components/sections/logo-cloud';
+
+export function LandingPage() {
+  return (
+    <LogoCloud
+      title="Trusted by teams at"
+      logos={[
+        { name: 'Acme' },
+        { name: 'Northwind' },
+        { name: 'Vertex' },
+      ]}
+    />
+  );
+}
+```
+
+## Marquee
+
+Pass `isMarquee` to wrap the row in a self-contained CSS translate loop. Under `prefers-reduced-motion`, the row stays static regardless of this flag.
+
+```tsx
+<LogoCloud isMarquee title="Powering products worldwide" />
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'string', defaultValue: "'Trusted by teams at'", description: 'Small centered eyebrow above the logo row — `text-sm text-muted-foreground`.' },
+    { name: 'logos', type: '{ name: string; icon?: ReactNode }[]', defaultValue: '(6 placeholder wordmarks)', description: 'Partner logos — each renders an inline SVG mark plus name when `icon` is omitted.' },
+    { name: 'isMarquee', type: 'boolean', defaultValue: 'false', description: 'When true, scrolls the row in an infinite CSS translate loop. Falls back to a static row under reduced motion.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
+  ]}
+/>
+
+## Accessibility
+
+The root is a `<section>` with `aria-label` from the title (or a generic partner label when title is omitted). Decorative SVG marks are `aria-hidden`. Logo names are visible text — no image-only logos without accompanying text.
+
+Marquee animation is disabled under `prefers-reduced-motion`. The duplicated marquee track is marked `aria-hidden` so screen readers do not hear logos twice.

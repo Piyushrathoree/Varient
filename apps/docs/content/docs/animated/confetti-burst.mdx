@@ -1,0 +1,69 @@
+---
+title: Confetti Burst
+description: Celebratory particle burst on click, built on canvas-confetti with brand-colored particles.
+---
+
+<ComponentPreview name="confetti-burst" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/confetti-burst/` into your project.
+
+```bash
+bun add canvas-confetti motion clsx tailwind-merge
+```
+
+Also install TypeScript types for canvas-confetti:
+
+```bash
+bun add -d @types/canvas-confetti
+```
+
+## Usage
+
+`ConfettiBurst` renders a styled button that fires confetti from its center on
+click. Use `fireConfetti()` or `useConfetti()` for imperative bursts elsewhere:
+
+```tsx
+import { ConfettiBurst, fireConfetti } from '@/components/animated/confetti-burst';
+
+export function Example() {
+  return (
+    <>
+      <ConfettiBurst onFire={() => console.log('fired!')}>
+        Celebrate
+      </ConfettiBurst>
+
+      <button type="button" onClick={() => fireConfetti({ originX: 0.5, originY: 0.5 })}>
+        Fire from center
+      </button>
+    </>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: 'Button label or trigger content.' },
+    { name: 'particleCount', type: 'number', defaultValue: '80', description: 'Number of confetti particles per burst.' },
+    { name: 'spread', type: 'number', defaultValue: '70', description: 'Spread angle in degrees.' },
+    { name: 'colors', type: 'string[]', description: 'Particle colors. Defaults to brand CSS variables read at fire-time.' },
+    { name: 'variant', type: 'ButtonVariant', defaultValue: "'primary'", description: 'Button visual variant (same map as Button).' },
+    { name: 'size', type: 'ButtonSize', defaultValue: "'md'", description: 'Button size (same map as Button).' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the trigger button.' },
+    { name: 'onFire', type: '() => void', description: 'Callback fired after a successful burst (before reduced-motion check skips particles).' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- Renders a real `<button>` element with keyboard focus, `Enter`/`Space`
+  activation, and the standard visible focus ring.
+- Under `prefers-reduced-motion` no confetti particles are emitted — the
+  click handler and `onFire` callback still run, but the visual burst is
+  skipped entirely. `useConfetti().fire()` is also a no-op in this mode.
+- `canvas-confetti` is configured with `disableForReducedMotion: true` as an
+  additional safeguard for imperative calls.

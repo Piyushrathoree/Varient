@@ -1,0 +1,44 @@
+---
+title: Shimmer Button
+description: Brand-gradient button with a continuous shimmer highlight sweeping across its surface.
+---
+
+<ComponentPreview name="shimmer-button" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/shimmer-button/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { ShimmerButton } from '@/components/animated/shimmer-button';
+
+export function Example() {
+  return <ShimmerButton size="lg">Get started</ShimmerButton>;
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'shimmerColor', type: 'string', defaultValue: 'color-mix(in oklab, white 55%, transparent)', description: 'CSS color for the moving highlight overlay.' },
+    { name: 'shimmerDuration', type: 'number', defaultValue: '3', description: 'Duration of one shimmer sweep, in seconds.' },
+    { name: 'background', type: 'string', defaultValue: 'brand candy gradient', description: 'Button fill — any CSS background value. Defaults to the brand gradient from DESIGN-DNA.' },
+    { name: 'size', type: "'sm' | 'md' | 'lg'", defaultValue: "'md'", description: 'Button height and padding scale.' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables interaction and dims the button.' },
+    { name: 'children', type: 'ReactNode', description: 'Button label or content.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- Renders a real `<button>` element — keyboard focus, `Enter`/`Space` activation, and the visible focus ring work without extra markup.
+- Press feedback uses `active:scale-[0.97]` with a transform-only transition, matching the house button chassis.
+- Under `prefers-reduced-motion` the shimmer loop is not mounted; the button remains a fully functional static CTA with the same disabled and focus behavior.

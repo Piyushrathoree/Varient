@@ -1,0 +1,62 @@
+---
+title: Stats Band
+description: A responsive grid of animated key metrics powered by NumberTicker, with optional section header.
+---
+
+<ComponentPreview name="stats-band" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/stats-band/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { StatsBand } from '@/components/sections/stats-band';
+
+export function LandingPage() {
+  return (
+    <StatsBand
+      title="By the numbers"
+      description="Real usage across the component library and docs site."
+      stats={[
+        { value: 75, suffix: '+', label: 'Components shipped' },
+        { value: 12, suffix: 'k', label: 'Weekly copies' },
+        { value: 100, suffix: '%', label: 'Open source' },
+        { value: 25, label: 'Foundation primitives' },
+      ]}
+    />
+  );
+}
+```
+
+## Anatomy
+
+Optional centered header (`title` + `description`), then a `grid grid-cols-2 lg:grid-cols-4` of stats. Each cell renders a large NumberTicker (`text-3xl/4xl font-semibold`) with a muted label below. On `lg`, hairline left dividers separate columns after the first.
+
+NumberTicker handles scroll-triggered count-up and reduced-motion fallbacks — this section does not duplicate that logic.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'stats', type: '{ value: number; prefix?: string; suffix?: string; label: string; decimalPlaces?: number }[]', defaultValue: '(4 default metrics)', description: 'Metrics to display — each value animates via NumberTicker when scrolled into view.' },
+    { name: 'title', type: 'string', description: 'Optional section heading — rendered as an h2.' },
+    { name: 'description', type: 'string', description: 'Optional one-line description below the title.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
+  ]}
+/>
+
+## Accessibility
+
+The root is a `<section>` labelled by the h2 when `title` is provided. The animated digits are `aria-hidden` inside NumberTicker; screen readers hear the final value via a visually hidden span.
+
+| Key | Action |
+| --- | --- |
+| `Tab` | Moves focus through any interactive elements on the page — this section is presentational. |
+
+Count-up animation respects `prefers-reduced-motion` via NumberTicker — reduced-motion users see the final value immediately.

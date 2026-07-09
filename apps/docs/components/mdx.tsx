@@ -86,7 +86,7 @@ export function getMDXComponents(components?: MDXComponents) {
     blockquote: ({ className, ...props }: HTMLAttributes<HTMLQuoteElement>) => (
       <blockquote
         className={cn(
-          'my-6 rounded-xl border-l-4 border-brand/50 bg-brand/5 px-6 py-4 text-muted-foreground',
+          'my-6 rounded-xl border-l-4 border-brand bg-muted/40 px-6 py-4 text-muted-foreground',
           className,
         )}
         {...props}

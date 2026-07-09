@@ -1,0 +1,81 @@
+---
+title: Blog Grid
+description: A card grid of blog post previews with category badges, excerpts, and author metadata.
+---
+
+<ComponentPreview name="blog-grid" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/blog-grid/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge @radix-ui/react-avatar
+```
+
+## Usage
+
+```tsx
+import { BlogGrid } from '@/components/sections/blog-grid';
+
+export function BlogPage() {
+  return (
+    <BlogGrid
+      eyebrow="Blog"
+      title="Latest from the team"
+      description="Guides and notes on copy-paste components and design tokens."
+      posts={[
+        {
+          title: 'Why copy-paste beats npm installs',
+          excerpt: 'Owning the source means you ship fixes the same day.',
+          href: '/blog/copy-paste',
+          category: 'Product',
+          date: 'Jun 12, 2026',
+          readingTime: '5 min read',
+          author: { name: 'Maya Chen', avatarSrc: 'https://i.pravatar.cc/150?img=1' },
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'eyebrow', type: 'string', defaultValue: "'Blog'", description: 'Small brand-colored label above the section title.' },
+    { name: 'title', type: 'string', defaultValue: "'Latest from the team'", description: 'Section headline.' },
+    { name: 'description', type: 'string', description: 'One-line supporting copy below the title.' },
+    { name: 'posts', type: 'BlogPost[]', description: 'Preview cards — each needs title, excerpt, href, and date; category, readingTime, and author are optional.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
+  ]}
+/>
+
+### BlogPost
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'string', description: 'Post headline — brightens to brand color on card hover.' },
+    { name: 'excerpt', type: 'string', description: 'Short summary, clamped to two lines.' },
+    { name: 'href', type: 'string', description: 'Destination URL — the entire card is wrapped in a link.' },
+    { name: 'category', type: 'string', description: 'Optional category label rendered as a brand Badge.' },
+    { name: 'date', type: 'string', description: 'Publication date shown in the card footer.' },
+    { name: 'readingTime', type: 'string', description: 'Optional reading duration (e.g. "5 min read").' },
+    { name: 'author', type: '{ name: string; avatarSrc?: string }', description: 'Optional author name and avatar in the footer.' },
+  ]}
+/>
+
+## Accessibility
+
+The section uses a semantic `<section>` with `aria-labelledby` pointing at the heading.
+Each post is a single focusable link wrapping the card — keyboard users tab to the whole card, not nested controls.
+The gradient header is decorative (`aria-hidden`).
+
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift + Tab` | Moves focus between post card links. |
+| `Enter` | Follows the focused post link. |
+
+Scroll-reveal animations are gated behind `prefers-reduced-motion` — reduced-motion users see content immediately without stagger or fade.
+Hover border and shadow transitions respect `motion-reduce:transition-none` on the underlying Card primitive.

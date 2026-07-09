@@ -1,0 +1,48 @@
+---
+title: Kbd
+description: Keyboard key chip with mono styling and a KbdGroup helper for modifier combos.
+---
+
+<ComponentPreview name="kbd" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/kbd/` into your project.
+
+```bash
+bun add clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Kbd, KbdGroup } from '@/components/foundation/kbd';
+
+export function Example() {
+  return (
+    <p className="text-sm text-muted-foreground">
+      Press <KbdGroup keys={['⌘', 'K']} size="sm" /> to search.
+    </p>
+  );
+}
+```
+
+Single keys:
+
+```tsx
+<Kbd>Esc</Kbd>
+```
+
+## Props
+
+<PropsTable props={[
+  { name: 'size', type: "'sm' | 'md'", defaultValue: "'md'", description: 'Height and font size preset (Kbd / KbdGroup).' },
+  { name: 'KbdGroup keys', type: 'ReactNode[]', description: 'Array of key labels — rendered with + separators between them.' },
+  { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+]} />
+
+## Accessibility
+
+- Renders semantic `<kbd>` elements for individual keys.
+- `KbdGroup` wraps keys in a `role="group"` container; + separators are `aria-hidden`.
+- Use alongside visible instructions — shortcuts alone are not sufficient context for all users.

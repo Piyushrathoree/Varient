@@ -1,0 +1,76 @@
+---
+title: Footer
+description: Site footer with brand wordmark, link columns, social icons, status pill, and SmoothUI credit line.
+---
+
+<ComponentPreview name="footer" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/footer/` into your project.
+
+```bash
+bun add clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Footer } from '@/components/sections/footer';
+
+export function Example() {
+  return (
+    <Footer
+      tagline="Copy-paste React components. You own the code."
+      statusText="All systems operational"
+      columns={[
+        {
+          title: 'Library',
+          links: [
+            { label: 'Components', href: '/components' },
+            { label: 'Foundation', href: '/components?layer=foundation' },
+          ],
+        },
+        {
+          title: 'Guide',
+          links: [{ label: 'Introduction', href: '/docs/getting-started/introduction' }],
+        },
+        {
+          title: 'Project',
+          links: [{ label: 'GitHub', href: 'https://github.com/example', isExternal: true }],
+        },
+      ]}
+      socialLinks={[
+        { label: 'GitHub', href: 'https://github.com/example', platform: 'github' },
+        { label: 'X', href: 'https://x.com/example', platform: 'x' },
+      ]}
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'tagline', type: 'string', description: 'One-liner under the two-tone wordmark.' },
+    { name: 'columns', type: 'FooterColumn[]', description: 'Three link columns beside the brand block. Each column has a title and an array of { label, href, isExternal? } links.' },
+    { name: 'socialLinks', type: 'FooterSocialLink[]', description: 'GitHub and X profile links rendered as inline SVG icons beside the tagline.' },
+    { name: 'statusText', type: 'string', defaultValue: "'All systems operational'", description: 'Label inside the live status pill in the bottom bar.' },
+    { name: 'copyrightName', type: 'string', defaultValue: "'Varient'", description: 'Name used in the copyright line.' },
+    { name: 'creditHref', type: 'string', defaultValue: "'https://smoothui.dev'", description: 'Destination for the required SmoothUI credit link.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root footer.' },
+  ]}
+/>
+
+## Accessibility
+
+| Element | Behavior |
+| --- | --- |
+| Wordmark link | `aria-label` identifies the home link; visible focus ring on keyboard focus. |
+| Link columns | Each column is a `<nav>` with an `aria-label` matching the column title. |
+| Social icons | Each icon link has a descriptive `aria-label`; decorative SVGs are `aria-hidden`. |
+| Status pill | Decorative ping animation is `aria-hidden`; the label text is readable by assistive tech. |
+| Credit line | External SmoothUI link opens in a new tab with `rel="noopener noreferrer"`. |
+
+External links use `target="_blank"` with `rel="noopener noreferrer"`. The status ping respects `prefers-reduced-motion` via `motion-reduce:animate-none`.

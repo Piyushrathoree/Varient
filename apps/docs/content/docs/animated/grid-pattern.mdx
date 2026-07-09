@@ -1,0 +1,54 @@
+---
+title: Grid Pattern
+description: SVG grid-line background texture with optional highlighted cells and slow pan animation.
+---
+
+<ComponentPreview name="grid-pattern" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/grid-pattern/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Place `GridPattern` inside a `relative overflow-hidden` container — it renders
+`absolute inset-0` and fills the parent:
+
+```tsx
+import { GridPattern } from '@/components/animated/grid-pattern';
+
+export function Example() {
+  return (
+    <div className="relative h-56 overflow-hidden rounded-xl border border-border bg-background">
+      <GridPattern squares={[[2, 1], [4, 3]]} />
+      <p className="relative z-10 p-4 font-semibold">Your content</p>
+    </div>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'width', type: 'number', defaultValue: '40', description: 'Cell width in pixels.' },
+    { name: 'height', type: 'number', defaultValue: '40', description: 'Cell height in pixels.' },
+    { name: 'x', type: 'number', defaultValue: '-1', description: 'Horizontal pattern offset.' },
+    { name: 'y', type: 'number', defaultValue: '-1', description: 'Vertical pattern offset.' },
+    { name: 'strokeDasharray', type: 'string', description: 'Optional dash array for grid strokes.' },
+    { name: 'squares', type: '[number, number][]', defaultValue: '[]', description: 'Grid cells to highlight as [col, row] tuples.' },
+    { name: 'isAnimated', type: 'boolean', defaultValue: 'true', description: 'Highlighted squares pulse in sequence; without highlights the grid pans slowly.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- Decorative SVG layer is `aria-hidden` with `pointer-events-none` so content
+  above stays fully interactive.
+- Under `prefers-reduced-motion`, animation is disabled: highlighted cells
+  render as static fills and the grid does not pan.

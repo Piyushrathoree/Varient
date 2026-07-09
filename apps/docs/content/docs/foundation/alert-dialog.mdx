@@ -1,0 +1,127 @@
+---
+title: Alert Dialog
+description: Interruptive confirmation overlay for destructive or irreversible actions, built on Radix with spring-scale motion.
+---
+
+<ComponentPreview name="alert-dialog" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/alert-dialog/` into your project.
+
+```bash
+bun add @radix-ui/react-alert-dialog motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { AlertDialog, Button } from '@/components/foundation/alert-dialog';
+
+export function Example() {
+  return (
+    <AlertDialog>
+      <AlertDialog.Trigger asChild>
+        <Button variant="outline">Delete project</Button>
+      </AlertDialog.Trigger>
+
+      <AlertDialog.Content>
+        <AlertDialog.Title>Delete project?</AlertDialog.Title>
+        <AlertDialog.Description>
+          This permanently deletes the project and all associated data. This action
+          cannot be undone.
+        </AlertDialog.Description>
+
+        <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+          <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+          <AlertDialog.Action variant="destructive">Delete project</AlertDialog.Action>
+        </div>
+      </AlertDialog.Content>
+    </AlertDialog>
+  );
+}
+```
+
+For controlled usage, pass `isOpen` and `onOpenChange` to `AlertDialog` — useful when the confirm action should close the dialog programmatically after an async operation.
+
+```tsx
+const [isOpen, setIsOpen] = useState(false);
+
+<AlertDialog isOpen={isOpen} onOpenChange={setIsOpen}>
+  <AlertDialog.Trigger asChild>
+    <Button variant="outline">Sign out</Button>
+  </AlertDialog.Trigger>
+  <AlertDialog.Content>{/* ... */}</AlertDialog.Content>
+</AlertDialog>;
+```
+
+## Variants
+
+`AlertDialog.Action` accepts a `variant` prop:
+
+- **`default`** — brand primary button styling for neutral confirmations.
+- **`destructive`** — red gradient styling for irreversible actions.
+
+`AlertDialog.Cancel` is pre-styled as an outline button. Pass `asChild` to merge onto your own `Button` if you need a different look.
+
+## Props
+
+<PropsTable
+  props={[
+    {
+      name: 'isOpen',
+      type: 'boolean',
+      description:
+        'Controlled open state — pair with onOpenChange. Omit for uncontrolled usage (AlertDialog root).',
+    },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean) => void',
+      description:
+        'Called whenever the open state should change — trigger click, Esc, or AlertDialog.Cancel/Action (AlertDialog root).',
+    },
+    {
+      name: 'defaultOpen',
+      type: 'boolean',
+      defaultValue: 'false',
+      description: 'Initial open state for uncontrolled usage (AlertDialog root).',
+    },
+    {
+      name: 'AlertDialog.Trigger asChild',
+      type: 'boolean',
+      defaultValue: 'false',
+      description: 'Merges onto the child element instead of rendering its own <button>.',
+    },
+    {
+      name: 'AlertDialog.Content className',
+      type: 'string',
+      description: 'Additional Tailwind classes merged via cn(), applied to the panel.',
+    },
+    {
+      name: 'AlertDialog.Action variant',
+      type: "'default' | 'destructive'",
+      defaultValue: "'default'",
+      description: 'Visual style for the confirm button — use destructive for irreversible actions.',
+    },
+    {
+      name: 'AlertDialog.Action / Cancel asChild',
+      type: 'boolean',
+      defaultValue: 'false',
+      description: 'Merges onto the child element instead of rendering a styled <button>.',
+    },
+    {
+      name: 'AlertDialog.Title / Description',
+      type: 'HTMLAttributes<HTMLHeadingElement> / <HTMLParagraphElement>',
+      description: "Renders Radix's Title (h2) / Description (p) for automatic aria wiring.",
+    },
+  ]}
+/>
+
+## Accessibility
+
+- Built on `@radix-ui/react-alert-dialog` for focus trap, portal rendering, and modal semantics.
+- **Esc** closes the dialog via `AlertDialog.Cancel` behavior; clicking the overlay does **not** dismiss — the user must explicitly choose Cancel or Action.
+- Focus moves into the panel on open and returns to the trigger on close — Tab is trapped inside the panel while it's open.
+- `AlertDialog.Title` wires `aria-labelledby` on the panel automatically. `AlertDialog.Description` wires `aria-describedby`. Always include a `AlertDialog.Title` — if you want to hide it visually, wrap it with a visually-hidden utility rather than omitting it.
+- `AlertDialog.Action` and `AlertDialog.Cancel` map to Radix's Action/Cancel primitives, which handle the correct dismiss semantics.
+- All entrance/exit motion respects `prefers-reduced-motion` — reduced-motion users get an instant, un-animated state change instead of the scale/fade transition.

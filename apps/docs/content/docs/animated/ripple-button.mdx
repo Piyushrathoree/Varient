@@ -1,0 +1,55 @@
+---
+title: Ripple Button
+description: Button with an expanding ripple emanating from the click point.
+---
+
+<ComponentPreview name="ripple-button" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/ripple-button/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+`RippleButton` is a drop-in animated button — pass `variant` and `size` the
+same way as the Foundation `Button`:
+
+```tsx
+import { RippleButton } from '@/components/animated/ripple-button';
+
+export function Example() {
+  return (
+    <RippleButton variant="primary" rippleColor="color-mix(in oklab, white 40%, transparent)">
+      Click me
+    </RippleButton>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: 'Button content.' },
+    { name: 'rippleColor', type: 'string', defaultValue: 'brand mix', description: 'CSS color for the ripple circle overlay.' },
+    { name: 'duration', type: 'number', defaultValue: '0.6', description: 'Ripple expansion duration in seconds.' },
+    { name: 'variant', type: 'ButtonVariant', defaultValue: "'default'", description: 'Button visual variant (same map as Button).' },
+    { name: 'size', type: 'ButtonSize', defaultValue: "'md'", description: 'Button size (same map as Button).' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the button and suppresses ripples.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- Renders a real `<button>` element with keyboard focus, `Enter`/`Space`
+  activation, and the standard visible focus ring.
+- Under `prefers-reduced-motion` the expanding ripple is replaced by a brief
+  background flash — the button remains fully functional with no motion
+  circles rendered.
+- Ripple overlays are `aria-hidden` and do not interfere with screen reader
+  announcements of the button label.

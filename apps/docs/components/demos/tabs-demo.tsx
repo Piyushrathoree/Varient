@@ -91,17 +91,13 @@ export function TabsDemo() {
 
 export function TabsPreviewCompact() {
   return (
-    <Tabs defaultValue="overview" variant="pills">
-      <Tabs.List>
-        <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
-        <Tabs.Trigger value="usage">Usage</Tabs.Trigger>
-      </Tabs.List>
-      <Tabs.Content value="overview">
-        <p className="text-sm text-muted-foreground">Overview panel.</p>
-      </Tabs.Content>
-      <Tabs.Content value="usage">
-        <p className="text-sm text-muted-foreground">Usage panel.</p>
-      </Tabs.Content>
-    </Tabs>
+    <div className="flex w-full items-center justify-center">
+      <Tabs defaultValue="overview" variant="pills" className="w-full max-w-[220px]">
+        <Tabs.List className="w-full">
+          <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+          <Tabs.Trigger value="usage">Usage</Tabs.Trigger>
+        </Tabs.List>
+      </Tabs>
+    </div>
   );
 }

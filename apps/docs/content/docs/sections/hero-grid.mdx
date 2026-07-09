@@ -1,0 +1,53 @@
+---
+title: Hero Grid
+description: Hero over a fine line-grid background with radial fade, glow orbs, staggered entrance, and optional stats row.
+---
+
+<ComponentPreview name="hero-grid" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/hero-grid/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { HeroGrid } from '@/components/sections/hero-grid';
+
+export function LandingPage() {
+  return (
+    <HeroGrid
+      title="Precision grids, premium motion"
+      subtitle="Fine line-grid canvas with radial fade and staggered entrance."
+      primaryCta={{ label: 'Start building', href: '#start' }}
+      secondaryCta={{ label: 'See examples', href: '#examples' }}
+      stats={[
+        { value: '75+', label: 'Components' },
+        { value: '3', label: 'Layers' },
+        { value: '0', label: 'Runtime deps' },
+      ]}
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'string', defaultValue: '(see source)', description: 'Display headline — rendered as the page h1.' },
+    { name: 'subtitle', type: 'string', defaultValue: '(see source)', description: 'One-paragraph subhead below the title.' },
+    { name: 'primaryCta', type: '{ label: string; href: string }', defaultValue: '(see source)', description: 'Primary brand button.' },
+    { name: 'secondaryCta', type: '{ label: string; href: string }', defaultValue: '(see source)', description: 'Secondary outline button.' },
+    { name: 'stats', type: '{ value: string; label: string }[]', defaultValue: '(see source)', description: 'Optional metrics row beneath CTAs. Pass `[]` to hide.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+The root is a `<section>` labelled by the h1. Background grid, fade mask, and glow orbs are decorative (`aria-hidden`). Text entrance respects `prefers-reduced-motion` — content renders immediately without stagger when reduced motion is preferred.

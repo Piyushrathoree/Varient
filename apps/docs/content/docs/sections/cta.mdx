@@ -1,0 +1,66 @@
+---
+title: CTA
+description: Centered call-to-action banner with headline, description, and primary action button.
+---
+
+<ComponentPreview name="cta" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/cta/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Cta } from '@/components/sections/cta';
+
+export function PricingPage() {
+  return (
+    <Cta
+      title="Ready to get started"
+      description="Copy components directly into your project. No runtime dependency — you own every line."
+      primaryCta={{ label: 'Browse components', href: '/components' }}
+      secondaryCta={{ label: 'View on GitHub', href: 'https://github.com' }}
+    />
+  );
+}
+```
+
+## Variants
+
+Two surface styles via the `variant` prop:
+
+```tsx
+<Cta variant="brand" title="Add motion to your product" primaryCta={{ label: 'Start building', href: '/components' }} />
+```
+
+- **`default`** — `bg-card` with a hairline border and soft shadow. Neutral, works anywhere on the page.
+- **`brand`** — same card fill with a subtle brand gradient border rim. Use sparingly for high-intent conversion moments.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'string', defaultValue: "'Ready to get started'", description: 'Centered headline inside the banner.' },
+    { name: 'description', type: 'string', defaultValue: '(see source)', description: 'Supporting copy below the title.' },
+    { name: 'primaryCta', type: '{ label: string; href: string }', defaultValue: "'Browse components'", description: 'Primary brand button — always rendered.' },
+    { name: 'secondaryCta', type: '{ label: string; href: string }', description: 'Optional outline button beside the primary CTA.' },
+    { name: 'variant', type: "'default' | 'brand'", defaultValue: "'default'", description: 'Surface style — neutral card or brand gradient border.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section wrapper.' },
+  ]}
+/>
+
+## Accessibility
+
+The root is a `<section>` labelled by the h2 via `aria-labelledby`. Buttons are native anchors inside `Button asChild`.
+
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift + Tab` | Moves focus to the CTA link(s). |
+| `Enter` | Activates the focused link. |
+
+The scroll-reveal animation is gated behind `prefers-reduced-motion` — reduced-motion users see the banner immediately at full opacity.

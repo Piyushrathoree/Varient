@@ -1,0 +1,63 @@
+---
+title: Skeleton Loader
+description: Placeholder shimmer for loading content — compose rectangles and circles into any layout.
+---
+
+<ComponentPreview name="skeleton-loader" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/skeleton/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Skeleton } from '@/components/foundation/skeleton';
+
+export function ProfileSkeleton() {
+  return (
+    <div className="flex items-center gap-3" aria-busy="true" aria-label="Loading profile">
+      <Skeleton shape="circle" className="size-10" />
+      <div className="flex flex-1 flex-col gap-2">
+        <Skeleton className="h-3 w-3/4" />
+        <Skeleton className="h-3 w-1/2" />
+      </div>
+    </div>
+  );
+}
+```
+
+## Variants
+
+- **Shimmer** (default) — a moving highlight sweeps across a `bg-muted` block. Best for content that is actively loading.
+- **Pulse** — the block fades in and out. A quieter alternative when shimmer feels too busy.
+
+Both animations are disabled when `prefers-reduced-motion` is set — the skeleton renders as a static `bg-muted` block.
+
+Size and layout are entirely controlled via `className` (`h-*`, `w-*`, flex/grid parents). Compose multiple `<Skeleton />` nodes to mimic cards, lists, or media placeholders.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'variant', type: "'shimmer' | 'pulse'", defaultValue: "'shimmer'", description: 'Animation style — moving highlight or opacity pulse.' },
+    { name: 'shape', type: "'rect' | 'circle'", defaultValue: "'rect'", description: 'Corner treatment — rounded-md rectangle or rounded-full circle (avatars).' },
+    { name: 'className', type: 'string', description: 'Tailwind classes for size and layout (e.g. h-4 w-full, size-10).' },
+  ]}
+/>
+
+## Accessibility
+
+Individual skeleton nodes are decorative and marked `aria-hidden`. Wrap the loading region in a container that communicates busy state to assistive technology:
+
+| Attribute | Where | Purpose |
+| --------- | ----- | ------- |
+| `aria-busy="true"` | Parent wrapper while loading | Signals that content is not yet available. |
+| `aria-label="Loading …"` | Parent wrapper | Gives context for what is loading (e.g. "Loading profile"). |
+| `aria-hidden` | Each `<Skeleton />` | Prevents empty placeholder nodes from cluttering the accessibility tree. |
+
+Remove `aria-busy` and swap skeletons for real content once data arrives. Under `prefers-reduced-motion`, animation stops automatically — no extra handling required.

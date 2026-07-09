@@ -60,15 +60,13 @@ export function AccordionDemo() {
 
 export function AccordionPreviewCompact() {
   return (
-    <Accordion defaultValue="item-1" className="w-full max-w-[260px]">
-      <Accordion.Item value="item-1">
-        <Accordion.Trigger>Is it free?</Accordion.Trigger>
-        <Accordion.Content>Yes, MIT licensed and free for any project.</Accordion.Content>
-      </Accordion.Item>
-      <Accordion.Item value="item-2">
-        <Accordion.Trigger>Can I customize it?</Accordion.Trigger>
-        <Accordion.Content>The source lives in your project — edit anything.</Accordion.Content>
-      </Accordion.Item>
-    </Accordion>
+    <div className="flex w-full items-center justify-center">
+      <Accordion defaultValue="item-1" className="w-full max-w-[240px]">
+        <Accordion.Item value="item-1">
+          <Accordion.Trigger>Is it free?</Accordion.Trigger>
+          <Accordion.Content>Yes — MIT licensed for any project.</Accordion.Content>
+        </Accordion.Item>
+      </Accordion>
+    </div>
   );
 }

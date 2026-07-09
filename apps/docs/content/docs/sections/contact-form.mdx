@@ -1,0 +1,76 @@
+---
+title: Contact Form
+description: Multi-field contact section with client-side validation, loading state, and an animated success panel.
+---
+
+<ComponentPreview name="contact-form" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/contact-form/` into your project.
+
+```bash
+bun add @radix-ui/react-checkbox motion clsx tailwind-merge
+```
+
+Also copy the Foundation dependencies it composes: `button`, `input`, `textarea`, and `checkbox` from `packages/ui/src/components/foundation/`.
+
+## Usage
+
+```tsx
+import { ContactForm, type ContactFormData } from '@/components/sections/contact-form';
+
+export function ContactPage() {
+  const handleSubmit = async (data: ContactFormData) => {
+    // Your API call here
+    console.log(data);
+  };
+
+  return (
+    <ContactForm
+      title="Get in touch"
+      description="We typically reply within two business days."
+      showCompanyField
+      onSubmit={handleSubmit}
+    />
+  );
+}
+```
+
+## Layout
+
+The form is constrained to `max-w-xl` and centers on the page. Name and email sit in a two-column row on `sm+`; message and privacy checkbox stack below. Pass `showCompanyField` to insert an optional company input between the name/email row and the message field.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'string', description: 'Centered headline above the form.' },
+    { name: 'description', type: 'string', description: 'Supporting copy below the title.' },
+    { name: 'onSubmit', type: '(data: ContactFormData) => void | Promise<void>', description: 'Called with validated form data on submit. If omitted, a ~800ms simulated delay runs before success.' },
+    { name: 'showCompanyField', type: 'boolean', defaultValue: 'false', description: 'Renders an optional company input between the name/email row and the message field.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section wrapper.' },
+  ]}
+/>
+
+### ContactFormData
+
+| Field | Type | Required |
+| --- | --- | --- |
+| `name` | `string` | Yes |
+| `email` | `string` | Yes |
+| `company` | `string` | No — only present when `showCompanyField` is true and the user entered a value |
+| `message` | `string` | Yes — minimum 10 characters |
+| `agreedToPrivacy` | `boolean` | Yes |
+
+## Accessibility
+
+Every text field uses the Foundation label association (`htmlFor` / `id`). Validation errors are announced through each field's `errorText` prop (`role="alert"` on the error paragraph). The privacy checkbox error renders as a separate `role="alert"` message below the control. The status region uses `aria-live="polite"` for loading and success announcements.
+
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift + Tab` | Moves focus through fields, checkbox, and submit button. |
+| `Space` | Toggles the privacy checkbox when focused. |
+| `Enter` | Submits the form when focus is on the submit button. |
+
+On success, the form swaps to a centered `role="status"` panel. All transitions are gated behind `prefers-reduced-motion`.

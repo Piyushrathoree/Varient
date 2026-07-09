@@ -1,0 +1,113 @@
+---
+title: Avatar
+description: User profile image with initials fallback, status indicator, and overlapping group stacks.
+---
+
+<ComponentPreview name="avatar" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/avatar/` into your project.
+
+```bash
+bun add @radix-ui/react-avatar motion clsx tailwind-merge
+```
+
+## Usage
+
+### Simple API
+
+```tsx
+import { Avatar } from '@/components/foundation/avatar';
+
+export function Example() {
+  return (
+    <Avatar
+      size="md"
+      src="https://i.pravatar.cc/150?img=1"
+      alt="Alex Morgan"
+      fallback="Alex Morgan"
+      status="online"
+    />
+  );
+}
+```
+
+### Compound API
+
+```tsx
+import { Avatar } from '@/components/foundation/avatar';
+
+export function Example() {
+  return (
+    <Avatar size="lg" status="away">
+      <Avatar.Image src="https://i.pravatar.cc/150?img=1" alt="Alex Morgan" />
+      <Avatar.Fallback>Alex Morgan</Avatar.Fallback>
+    </Avatar>
+  );
+}
+```
+
+### Avatar group
+
+```tsx
+import { Avatar, AvatarGroup } from '@/components/foundation/avatar';
+
+export function TeamStack() {
+  return (
+    <AvatarGroup max={4} size="md">
+      <Avatar src="https://i.pravatar.cc/150?img=11" alt="Member 1" fallback="Member 1" />
+      <Avatar src="https://i.pravatar.cc/150?img=12" alt="Member 2" fallback="Member 2" />
+      <Avatar src="https://i.pravatar.cc/150?img=13" alt="Member 3" fallback="Member 3" />
+      <Avatar src="https://i.pravatar.cc/150?img=14" alt="Member 4" fallback="Member 4" />
+      <Avatar src="https://i.pravatar.cc/150?img=15" alt="Member 5" fallback="Member 5" />
+    </AvatarGroup>
+  );
+}
+```
+
+## Variants
+
+Four sizes and four status colors — the simple and compound APIs share the same props.
+
+```tsx
+<Avatar size="xl" status="busy" fallback="Busy User" />
+```
+
+- **`sm`** — compact inline avatar (`size-6`).
+- **`md`** — default list/table avatar (`size-8`).
+- **`lg`** — profile headers and cards (`size-10`).
+- **`xl`** — hero or spotlight placements (`size-14`).
+- **`online`** — emerald success dot.
+- **`offline`** — muted dot.
+- **`away`** — amber warning dot.
+- **`busy`** — destructive red dot.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'size', type: "'sm' | 'md' | 'lg' | 'xl'", defaultValue: "'md'", description: 'Diameter of the avatar circle.' },
+    { name: 'src', type: 'string', description: 'Image URL — convenience API only; use Avatar.Image in compound mode.' },
+    { name: 'alt', type: 'string', description: 'Accessible label for the image.' },
+    { name: 'fallback', type: 'string', description: 'Initials string shown when the image is missing or fails to load.' },
+    { name: 'status', type: "'online' | 'offline' | 'away' | 'busy'", description: 'Presence dot rendered at the bottom-right.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root surface.' },
+    { name: 'Avatar.Image', type: 'ImgHTMLAttributes<HTMLImageElement>', description: 'Radix image primitive — fades in on load when motion is allowed.' },
+    { name: 'Avatar.Fallback delayMs', type: 'number', description: 'Optional Radix delay before showing fallback while the image loads.' },
+    { name: 'AvatarGroup max', type: 'number', description: 'Maximum avatars to show before rendering a +N overflow chip.' },
+    { name: 'AvatarGroup size', type: "'sm' | 'md' | 'lg' | 'xl'", defaultValue: "'md'", description: 'Default size applied to children without their own size prop.' },
+  ]}
+/>
+
+## Accessibility
+
+Built on `@radix-ui/react-avatar` for correct image load/fallback coordination.
+
+| Key | Action |
+| --- | --- |
+| — | Avatars are presentational unless given an `alt` or `aria-label`. |
+| — | Status dots are decorative when an image `alt` is provided; otherwise the root gets a combined `aria-label`. |
+| — | `AvatarGroup` exposes `role="group"` with an `aria-label` of "Avatar group". |
+
+Image load and fallback transitions are gated behind `prefers-reduced-motion` — reduced-motion users get instant state changes instead of fade animations.

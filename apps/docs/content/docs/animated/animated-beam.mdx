@@ -1,0 +1,66 @@
+---
+title: Animated Beam
+description: Traveling light beam connecting two elements inside a shared container.
+---
+
+<ComponentPreview name="animated-beam" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/animated-beam/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+`AnimatedBeam` renders an absolute SVG overlay inside a container. Pass refs to
+the container and both endpoint elements — the beam tracks their centers and
+stays in sync on resize:
+
+```tsx
+'use client';
+
+import { useRef } from 'react';
+import { AnimatedBeam } from '@/components/animated/animated-beam';
+
+export function Example() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const fromRef = useRef<HTMLDivElement>(null);
+  const toRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div ref={containerRef} className="relative flex items-center justify-between p-12">
+      <div ref={fromRef} className="size-12 rounded-full border border-border bg-background" />
+      <div ref={toRef} className="size-12 rounded-full border border-border bg-card" />
+      <AnimatedBeam containerRef={containerRef} fromRef={fromRef} toRef={toRef} />
+    </div>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'containerRef', type: 'RefObject<HTMLElement | null>', description: 'Ref to the shared relative container that holds both endpoints and the SVG overlay.' },
+    { name: 'fromRef', type: 'RefObject<HTMLElement | null>', description: 'Ref to the source element — beam starts at its center.' },
+    { name: 'toRef', type: 'RefObject<HTMLElement | null>', description: 'Ref to the target element — beam ends at its center.' },
+    { name: 'curvature', type: 'number', defaultValue: '0', description: 'Quadratic curve offset — 0 draws a straight line.' },
+    { name: 'duration', type: 'number', defaultValue: '5', description: 'Seconds for one gradient pass along the path.' },
+    { name: 'delay', type: 'number', defaultValue: '0', description: 'Delay before the animation starts, in seconds.' },
+    { name: 'pathColor', type: 'string', defaultValue: 'var(--color-border)', description: 'Base path stroke color.' },
+    { name: 'pathWidth', type: 'number', defaultValue: '2', description: 'Base path stroke width in pixels.' },
+    { name: 'gradientStartColor', type: 'string', defaultValue: 'var(--color-brand)', description: 'Traveling gradient start color.' },
+    { name: 'gradientStopColor', type: 'string', defaultValue: 'var(--color-brand-secondary)', description: 'Traveling gradient end color.' },
+    { name: 'isReverse', type: 'boolean', defaultValue: 'false', description: 'Reverse the gradient travel direction.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(). Applied to the SVG overlay.' },
+  ]}
+/>
+
+## Accessibility
+
+- The SVG overlay is decorative and marked `aria-hidden` — it does not affect the accessible name or structure of connected elements.
+- Under `prefers-reduced-motion`, the traveling gradient is disabled and only a static base path is shown.
+- The beam layer uses `pointer-events-none` so endpoint elements remain fully interactive.

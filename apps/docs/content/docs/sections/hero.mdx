@@ -1,0 +1,69 @@
+---
+title: Hero
+description: Two-column landing hero with announcement pill, dual CTAs, and a live component showcase grid.
+---
+
+<ComponentPreview name="hero" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/hero/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Hero } from '@/components/sections/hero';
+
+export function LandingPage() {
+  return (
+    <Hero
+      title="Animated components for web and native"
+      subtitle="Copy-paste React components with real motion built in."
+      announcement={{
+        badge: '25+',
+        label: 'components shipped, more every week',
+        href: '/components',
+      }}
+      primaryCta={{ label: 'Explore components', href: '/components' }}
+      secondaryCta={{ label: 'Read the docs', href: '/docs' }}
+      builtWith={['Next.js', 'React', 'Tailwind CSS', 'Motion']}
+    />
+  );
+}
+```
+
+## Anatomy
+
+Per the landing spec: two columns on `lg` (`lg:grid-cols-2`). The left column carries an announcement pill, display headline, subhead, primary + outline CTAs, and an optional "built with" row. The right column renders a grid of real foundation components (Card, Badge, Switch, Input, NumberTicker) — the product demos itself, not a screenshot.
+
+Pass `visual` to replace the default showcase with your own node. Pass `builtWith={[]}` to hide the tech stack row.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'string', defaultValue: "'Animated components you can copy and own'", description: 'Display headline — rendered as the page h1.' },
+    { name: 'subtitle', type: 'string', defaultValue: '(see source)', description: 'One-paragraph subhead below the title.' },
+    { name: 'announcement', type: '{ badge?: string; label: string; href?: string }', defaultValue: '(see source)', description: 'Announcement pill above the headline. `badge` is the brand-tinted chip; `label` is the trailing copy. `href` makes the pill a link.' },
+    { name: 'primaryCta', type: '{ label: string; href: string }', defaultValue: "'Browse components'", description: 'Primary brand button — top of the CTA pair.' },
+    { name: 'secondaryCta', type: '{ label: string; href: string }', defaultValue: "'Read the docs'", description: 'Secondary outline button beside the primary CTA.' },
+    { name: 'builtWith', type: 'string[]', defaultValue: "['Next.js', 'React', 'Tailwind CSS', 'Motion']", description: 'Tech stack names in the "built with" row. Pass an empty array to hide.' },
+    { name: 'visual', type: 'ReactNode', description: 'Replaces the default right-side component showcase grid.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
+  ]}
+/>
+
+## Accessibility
+
+The root is a `<section>` labelled by the h1 via `aria-labelledby`. CTA links are native anchors inside `Button asChild` so they remain keyboard-focusable with visible focus rings.
+
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift + Tab` | Moves focus through the announcement link, CTA buttons, and interactive elements in the visual grid. |
+| `Enter` / `Space` | Activates the focused link or button. |
+
+Entrance animations respect `prefers-reduced-motion` — reduced-motion users see content immediately without translate or fade delays. The announcement shimmer is omitted when reduced motion is preferred.

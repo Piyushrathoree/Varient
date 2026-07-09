@@ -1,0 +1,91 @@
+---
+title: Timeline
+description: A vertical milestone timeline with brand dots, optional badges, and staggered scroll-reveal animations.
+---
+
+<ComponentPreview name="timeline" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/timeline/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Timeline } from '@/components/sections/timeline';
+
+export function AboutPage() {
+  return (
+    <Timeline
+      eyebrow="Timeline"
+      title={
+        <>
+          How we got{' '}
+          <span className="text-brand">here</span>
+        </>
+      }
+      description="Key milestones on the path from idea to shipped product."
+      items={[
+        {
+          date: 'Jan 2024',
+          title: 'Project kickoff',
+          description: 'Defined the component architecture.',
+          badge: 'Milestone',
+        },
+        {
+          date: 'Jun 2024',
+          title: 'Animated layer launched',
+          description: 'Added motion components with a11y fallbacks.',
+          badge: 'Launch',
+        },
+        {
+          date: 'Dec 2024',
+          title: 'Open source',
+          description: 'Published under MIT.',
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'eyebrow', type: 'string', defaultValue: "'Timeline'", description: 'Small brand-colored label above the section title.' },
+    { name: 'title', type: 'ReactNode', description: 'Section headline — defaults to a title with a brand-colored span.' },
+    { name: 'description', type: 'string', description: 'One-line supporting copy below the title.' },
+    { name: 'items', type: 'TimelineItem[]', description: 'Chronological milestones rendered along a vertical rail.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
+  ]}
+/>
+
+### TimelineItem
+
+<PropsTable
+  props={[
+    { name: 'date', type: 'string', description: 'Date label shown above the title — rendered in a <time> element.' },
+    { name: 'title', type: 'string', description: 'Milestone headline.' },
+    { name: 'description', type: 'string', description: 'Supporting copy for the milestone.' },
+    { name: 'badge', type: 'string', description: 'Optional badge label rendered via Foundation Badge.' },
+  ]}
+/>
+
+## Accessibility
+
+Milestones are an ordered list (`<ol>`) with a left-rail border and brand dots
+marked `aria-hidden` (the text content carries the meaning). Dates use semantic
+`<time>` elements. Optional badges are plain text spans inside the Badge
+component. Scroll-reveal fade+rise per item respects `prefers-reduced-motion`.
+
+| Element | Purpose |
+| --- | --- |
+| `<section aria-labelledby>` | Landmark with a labelled heading. |
+| `<ol>` | Preserves chronological reading order for assistive tech. |
+| `<time>` | Semantic date for each milestone. |
+| Brand dot (`aria-hidden`) | Decorative — title and date convey the milestone. |

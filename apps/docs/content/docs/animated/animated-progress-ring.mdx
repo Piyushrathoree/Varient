@@ -1,0 +1,52 @@
+---
+title: Animated Progress Ring
+description: Circular SVG progress ring with animated sweep and center count-up.
+---
+
+<ComponentPreview name="animated-progress-ring" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/animated-progress-ring/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+Pass a `value` from 0–100. The ring animates once when scrolled into view and
+re-animates whenever `value` changes:
+
+```tsx
+import { AnimatedProgressRing } from '@/components/animated/animated-progress-ring';
+
+export function Example() {
+  return <AnimatedProgressRing value={72} size={120} strokeWidth={8} />;
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'value', type: 'number', description: 'Progress value from 0 to 100.' },
+    { name: 'size', type: 'number', defaultValue: '120', description: 'Outer diameter in pixels.' },
+    { name: 'strokeWidth', type: 'number', defaultValue: '8', description: 'Ring stroke width in pixels.' },
+    { name: 'showValue', type: 'boolean', defaultValue: 'true', description: 'Show an animated percentage count in the center.' },
+    { name: 'color', type: 'string', defaultValue: 'var(--color-brand)', description: 'Progress arc stroke color.' },
+    { name: 'trackColor', type: 'string', defaultValue: 'var(--color-muted)', description: 'Background track stroke color.' },
+    { name: 'duration', type: 'number', defaultValue: '1.2', description: 'Animation duration in seconds.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes on the wrapper.' },
+  ]}
+/>
+
+## Accessibility
+
+- The wrapper exposes `role="progressbar"` with `aria-valuemin={0}`,
+  `aria-valuemax={100}`, and `aria-valuenow` set to the current rounded value.
+- An `aria-label` describes the current progress percentage for screen readers.
+- The animating center digits are `aria-hidden` — the live `aria-valuenow`
+  on the progressbar is the authoritative value for assistive technology.
+- Under `prefers-reduced-motion` the ring and count jump directly to the
+  target value with no sweep animation.

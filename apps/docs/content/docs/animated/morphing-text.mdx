@@ -1,0 +1,44 @@
+---
+title: Morphing Text
+description: Cycles through words with a blur-crossfade morph — opacity, filter blur, and slight vertical shift.
+---
+
+<ComponentPreview name="morphing-text" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/morphing-text/` into your project.
+
+```bash
+bun add clsx tailwind-merge motion
+```
+
+## Usage
+
+```tsx
+import { MorphingText } from '@/components/animated/morphing-text';
+
+export function Example() {
+  return (
+    <h1 className="text-3xl font-semibold text-foreground">
+      Build something{' '}
+      <MorphingText words={['beautiful', 'accessible', 'delightful']} />
+    </h1>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'words', type: 'string[]', description: 'Required — words cycled with a blur-crossfade morph.' },
+    { name: 'interval', type: 'number', defaultValue: '2500', description: 'Milliseconds between word swaps.' },
+    { name: 'isPaused', type: 'boolean', defaultValue: 'false', description: 'When true, cycling pauses on the current word.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(). Defaults include `text-brand`.' },
+  ]}
+/>
+
+## Accessibility
+
+The outer wrapper is `aria-live="polite"` and `aria-atomic="true"`, so each word change is announced without interrupting the user. When `prefers-reduced-motion` is set, words still cycle on the same interval but swap instantly — no blur or translate animation. Distinct from `WordRotate`, which slides vertically rather than morphing with blur.

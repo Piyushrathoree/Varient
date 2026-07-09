@@ -1,0 +1,45 @@
+---
+title: Text Reveal
+description: Scroll-triggered word reveal — each word fades and rises into place with a stagger.
+---
+
+<ComponentPreview name="text-reveal" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/text-reveal/` into your project.
+
+```bash
+bun add clsx tailwind-merge motion
+```
+
+## Usage
+
+```tsx
+import { TextReveal } from '@/components/animated/text-reveal';
+
+export function Example() {
+  return (
+    <TextReveal
+      text="Words reveal as you scroll into view."
+      className="text-2xl font-semibold text-foreground"
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'text', type: 'string', description: 'Plain-text content to reveal. Use `text` or pass a string as `children`.' },
+    { name: 'children', type: 'string', description: 'Alternative to `text` — must be a plain string, not React nodes.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(). Applied to the outer inline wrapper.' },
+    { name: 'delay', type: 'number', defaultValue: '0', description: 'Seconds to wait before the first word animates in.' },
+    { name: 'stagger', type: 'number', defaultValue: '0.05', description: 'Seconds between each word in the stagger sequence.' },
+  ]}
+/>
+
+## Accessibility
+
+Individual animating words are `aria-hidden` — a partially-revealed string is not something screen readers should narrate word-by-word. The complete string is always present through a visually-hidden (`sr-only`) span, so assistive tech reads the full text once, correctly, regardless of animation state. When `prefers-reduced-motion` is set, every word renders immediately at full opacity with no translate. The animation fires once, the first time the block scrolls into view (`useInView` with `once: true` and a `-80px` margin) — it does not replay on later scrolls.

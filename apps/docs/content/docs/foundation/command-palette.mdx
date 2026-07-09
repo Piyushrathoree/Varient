@@ -1,0 +1,73 @@
+---
+title: Command Palette
+description: Searchable command menu in a dialog overlay, built on cmdk with keyboard shortcuts and grouped actions.
+---
+
+<ComponentPreview name="command-palette" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/command-palette/` into your project.
+
+```bash
+bun add cmdk @radix-ui/react-dialog motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { useState } from 'react';
+import { CommandPalette, Button, KbdGroup } from '@/components/foundation/command-palette';
+
+export function Example() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <Button variant="outline" onClick={() => setIsOpen(true)}>
+        Open palette
+      </Button>
+
+      <CommandPalette isOpen={isOpen} onOpenChange={setIsOpen}>
+        <CommandPalette.Input placeholder="Search commands…" />
+        <CommandPalette.List>
+          <CommandPalette.Empty>No results found.</CommandPalette.Empty>
+          <CommandPalette.Group heading="Actions">
+            <CommandPalette.Item
+              shortcut={<KbdGroup keys={['⌘', 'K']} size="sm" />}
+              onSelect={() => setIsOpen(false)}
+            >
+              Search
+            </CommandPalette.Item>
+          </CommandPalette.Group>
+        </CommandPalette.List>
+      </CommandPalette>
+    </>
+  );
+}
+```
+
+## Props
+
+<PropsTable props={[
+  { name: 'isOpen', type: 'boolean', description: 'Controlled open state — pair with onOpenChange (CommandPalette root).' },
+  { name: 'onOpenChange', type: '(open: boolean) => void', description: 'Called when the palette should open or close (CommandPalette root).' },
+  { name: 'defaultOpen', type: 'boolean', defaultValue: 'false', description: 'Initial open state for uncontrolled usage (CommandPalette root).' },
+  { name: 'label', type: 'string', defaultValue: "'Command palette'", description: 'Accessible name wired to cmdk and an sr-only dialog title.' },
+  { name: 'CommandPalette.Input', type: 'ComponentProps<"input">', description: 'Search field — supports placeholder, autoFocus, and cmdk value/onValueChange.' },
+  { name: 'CommandPalette.List', type: 'ComponentProps<"div">', description: 'Scrollable results container.' },
+  { name: 'CommandPalette.Empty', type: 'ComponentProps<"div">', description: 'Shown when filtering yields no matches.' },
+  { name: 'CommandPalette.Group heading', type: 'string', description: 'Non-interactive section heading for related items.' },
+  { name: 'CommandPalette.Item icon', type: 'ReactNode', description: 'Leading icon — accent turns brand when the item is selected.' },
+  { name: 'CommandPalette.Item shortcut', type: 'ReactNode', description: 'Trailing shortcut hint — typically Kbd or KbdGroup.' },
+  { name: 'CommandPalette.Item onSelect', type: '(value: string) => void', description: 'Fired when the item is chosen via click or Enter.' },
+  { name: 'CommandPalette.Footer', type: 'HTMLAttributes<"div">', description: 'Optional bottom bar for navigation hints.' },
+]} />
+
+## Accessibility
+
+- Built on `cmdk` for combobox-style filtering, arrow-key navigation, and typeahead.
+- Rendered inside a Radix dialog overlay for focus trap, Escape dismiss, and portal rendering.
+- **↑ / ↓** — move selection; **Enter** — activate; **Escape** — close and restore focus.
+- Includes an sr-only `Dialog.Title` for screen readers.
+- Overlay and panel entrance/exit respect `prefers-reduced-motion`.

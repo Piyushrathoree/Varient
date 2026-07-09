@@ -1,0 +1,68 @@
+---
+title: Toggle
+description: A two-state pressable button for formatting controls and binary on/off actions.
+---
+
+<ComponentPreview name="toggle" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/toggle/` into your project.
+
+```bash
+bun add @radix-ui/react-toggle motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Toggle } from '@/components/foundation/toggle';
+
+export function Example() {
+  return (
+    <Toggle defaultPressed aria-label="Bold">
+      Bold
+    </Toggle>
+  );
+}
+```
+
+## Variants
+
+Two visual styles, switched with the `variant` prop:
+
+```tsx
+<Toggle variant="outline" aria-label="Italic">
+  Italic
+</Toggle>
+```
+
+- **`default`** — a ghost button that fills with `bg-muted` when pressed. Good for toolbar icon toggles in a low-chrome row.
+- **`outline`** — adds a `border-input` frame and a soft shadow. Reads well when the toggle sits on its own or beside other bordered controls.
+
+Off state is transparent with a `hover:bg-muted` fill; on state is `bg-muted text-foreground` via Radix's `data-[state=on]`. Every press scales down to `0.97` before any async work — gated behind `prefers-reduced-motion` for users who need it.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'isPressed', type: 'boolean', description: 'Controlled pressed state — pass with onPressedChange.' },
+    { name: 'defaultPressed', type: 'boolean', defaultValue: 'false', description: 'Initial pressed state for uncontrolled usage.' },
+    { name: 'onPressedChange', type: '(pressed: boolean) => void', description: 'Called when the pressed state changes.' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the toggle — no pointer events, reduced opacity.' },
+    { name: 'variant', type: "'default' | 'outline'", defaultValue: "'default'", description: 'Visual style — ghost fill or bordered outline.' },
+    { name: 'size', type: "'sm' | 'md' | 'lg'", defaultValue: "'md'", description: 'Height and horizontal padding — matches the Button size scale.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+Built on `@radix-ui/react-toggle` for correct `aria-pressed` semantics and keyboard behavior.
+
+| Key           | Action                                             |
+| ------------- | --------------------------------------------------- |
+| `Enter` / `Space` | Toggles the pressed state.                      |
+| `Tab` / `Shift + Tab` | Moves focus to the next / previous focusable element. |
+
+The root renders a `<button>` with `aria-pressed` reflecting the current state. A visible focus ring (`ring-ring`) appears on keyboard focus. The press scale animation is skipped when `prefers-reduced-motion` is set.

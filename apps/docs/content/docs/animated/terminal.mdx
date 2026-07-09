@@ -1,0 +1,63 @@
+---
+title: Terminal
+description: Dark terminal window mockup with composable lines that type and appear in sequence.
+---
+
+<ComponentPreview name="terminal" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/terminal/` into your project.
+
+```bash
+bun add clsx tailwind-merge motion lucide-react
+```
+
+## Usage
+
+```tsx
+import { Terminal, TerminalLine } from '@/components/animated/terminal';
+
+export function Example() {
+  return (
+    <Terminal title="~/project">
+      <TerminalLine variant="command" delay={0}>
+        bun add @varient/ui
+      </TerminalLine>
+      <TerminalLine variant="output" delay={1.8}>
+        installed 3 packages in 412ms
+      </TerminalLine>
+      <TerminalLine variant="success" delay={3}>
+        Ready on http://localhost:3000
+      </TerminalLine>
+    </Terminal>
+  );
+}
+```
+
+## Props
+
+### Terminal
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'string', defaultValue: 'Terminal', description: 'Title shown in the window chrome.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+    { name: 'children', type: 'ReactNode', description: 'Compose with `TerminalLine` children.' },
+  ]}
+/>
+
+### TerminalLine
+
+<PropsTable
+  props={[
+    { name: 'delay', type: 'number', defaultValue: '0', description: 'Seconds before this line starts appearing.' },
+    { name: 'variant', type: "'command' | 'output' | 'success' | 'error'", defaultValue: 'output', description: 'Line style — command shows a brand `$` prompt and types character-by-character; success/error add status glyphs via semantic tokens.' },
+    { name: 'children', type: 'ReactNode', description: 'Required — line content.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+The terminal chrome is always a dark surface via smooth tokens so it reads consistently in both light and dark site themes. Command-line typing is decorative — the content area uses `aria-live="polite"` with `aria-relevant="additions"` so new lines are announced without interrupting the user. When `prefers-reduced-motion` is set, all lines render instantly with no typing cursor or stagger. Timers are cleared on unmount.
