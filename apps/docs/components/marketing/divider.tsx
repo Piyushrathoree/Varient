@@ -6,10 +6,9 @@ interface DividerProps {
 }
 
 /**
- * Hairline gradient rule — ported from SmoothUI's `components/landing/divider.tsx`
- * verbatim. Sections render one of these as an absolutely-positioned bottom
- * (or side) edge so consecutive sections read as sheets separated by a single
- * fading line, never a hard border.
+ * Hairline gradient rule for section edges. Sections render one of these as an
+ * absolutely-positioned bottom (or side) edge so consecutive sections read as
+ * sheets separated by a single fading line, never a hard border.
  */
 export default function Divider({ orientation = 'horizontal', className }: DividerProps) {
   const isHorizontal = orientation === 'horizontal';

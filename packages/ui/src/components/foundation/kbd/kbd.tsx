@@ -1,5 +1,3 @@
-'use client';
-
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cn } from '../../../lib/utils';
 
@@ -14,7 +12,7 @@ const sizeStyles: Record<KbdSize, string> = {
   md: 'min-h-6 px-2 text-xs leading-none',
 };
 
-// SmoothUI-style key chip — hairline border with a subtle bottom edge for depth.
+// Key chip — hairline border with a subtle bottom edge for depth.
 export const Kbd = forwardRef<HTMLElement, KbdProps>(
   ({ className, size = 'md', children, ...props }, ref) => (
     <kbd

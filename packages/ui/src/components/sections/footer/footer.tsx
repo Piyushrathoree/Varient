@@ -1,4 +1,4 @@
-import { forwardRef, type HTMLAttributes, type SVGProps } from 'react';
+import { forwardRef, type HTMLAttributes, type ReactNode, type SVGProps } from 'react';
 import { cn } from '../../../lib/utils';
 
 export interface FooterLink {
@@ -15,7 +15,9 @@ export interface FooterColumn {
 export interface FooterSocialLink {
   label: string;
   href: string;
-  platform: 'github' | 'x';
+  platform: 'github' | 'x' | 'linkedin' | 'discord' | 'youtube';
+  /** Custom icon overriding the built-in glyph for `platform`. */
+  icon?: ReactNode;
 }
 
 export interface FooterProps extends HTMLAttributes<HTMLElement> {
@@ -23,14 +25,16 @@ export interface FooterProps extends HTMLAttributes<HTMLElement> {
   tagline?: string;
   /** Three link columns rendered beside the brand block. */
   columns?: FooterColumn[];
-  /** GitHub and X profile links with inline SVG icons. */
+  /** Social profile links with inline SVG icons (github, x, linkedin, discord, youtube). */
   socialLinks?: FooterSocialLink[];
   /** Status pill label in the bottom bar. */
   statusText?: string;
   /** Name used in the copyright line. @default 'Varient' */
   copyrightName?: string;
-  /** SmoothUI credit link destination. @default 'https://smoothui.dev' */
-  creditHref?: string;
+  /** Optional privacy/terms row rendered under the copyright line. */
+  legalLinks?: FooterLink[];
+  /** Year shown in the copyright line. Defaults to the current year — pass this to avoid stale SSG copyright. */
+  year?: number;
 }
 
 const DEFAULT_COLUMNS: FooterColumn[] = [
@@ -90,9 +94,42 @@ function XIcon({ className, ...props }: SVGProps<SVGSVGElement>) {
   );
 }
 
-function SocialIcon({ platform, className }: { platform: FooterSocialLink['platform']; className?: string }) {
-  if (platform === 'github') return <GithubIcon className={className} />;
-  return <XIcon className={className} />;
+function LinkedinIcon({ className, ...props }: SVGProps<SVGSVGElement>) {
+  return (
+    <svg aria-hidden className={className} fill="currentColor" viewBox="0 0 24 24" {...props}>
+      <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.86 0-2.15 1.45-2.15 2.94v5.66H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56z" />
+    </svg>
+  );
+}
+
+function DiscordIcon({ className, ...props }: SVGProps<SVGSVGElement>) {
+  return (
+    <svg aria-hidden className={className} fill="currentColor" viewBox="0 0 24 24" {...props}>
+      <path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.38-.45.87-.61 1.26a18.3 18.3 0 0 0-5.48 0 12.6 12.6 0 0 0-.62-1.26.08.08 0 0 0-.08-.04 19.74 19.74 0 0 0-4.89 1.52.07.07 0 0 0-.03.03C.63 9.05-.38 13.58.12 18.06a.08.08 0 0 0 .03.06 19.9 19.9 0 0 0 5.99 3.03.08.08 0 0 0 .09-.03c.46-.63.87-1.3 1.22-2a.08.08 0 0 0-.04-.11 13.1 13.1 0 0 1-1.87-.89.08.08 0 0 1-.01-.13c.13-.09.25-.19.37-.29a.08.08 0 0 1 .08-.01c3.93 1.79 8.18 1.79 12.06 0a.08.08 0 0 1 .08.01c.12.1.24.2.37.29a.08.08 0 0 1-.01.13c-.6.35-1.22.65-1.87.89a.08.08 0 0 0-.04.11c.36.7.77 1.36 1.22 2a.08.08 0 0 0 .09.03 19.83 19.83 0 0 0 6-3.03.08.08 0 0 0 .03-.06c.6-5.19-.99-9.68-4.2-13.66a.06.06 0 0 0-.03-.03zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z" />
+    </svg>
+  );
+}
+
+function YoutubeIcon({ className, ...props }: SVGProps<SVGSVGElement>) {
+  return (
+    <svg aria-hidden className={className} fill="currentColor" viewBox="0 0 24 24" {...props}>
+      <path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.51 3.5 12 3.5 12 3.5s-7.51 0-9.38.55A3.02 3.02 0 0 0 .5 6.19 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.81 3.02 3.02 0 0 0 2.12 2.14C4.49 20.5 12 20.5 12 20.5s7.51 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.81zM9.55 15.57V8.43L15.82 12z" />
+    </svg>
+  );
+}
+
+const SOCIAL_ICON_MAP: Record<FooterSocialLink['platform'], (props: SVGProps<SVGSVGElement>) => ReactNode> = {
+  github: GithubIcon,
+  x: XIcon,
+  linkedin: LinkedinIcon,
+  discord: DiscordIcon,
+  youtube: YoutubeIcon,
+};
+
+function SocialIcon({ social, className }: { social: FooterSocialLink; className?: string }) {
+  if (social.icon) return <>{social.icon}</>;
+  const Icon = SOCIAL_ICON_MAP[social.platform];
+  return <Icon className={className} />;
 }
 
 function FooterLinkItem({ link }: { link: FooterLink }) {
@@ -143,12 +180,13 @@ export const Footer = forwardRef<HTMLElement, FooterProps>(
       socialLinks = DEFAULT_SOCIAL_LINKS,
       statusText = 'All systems operational',
       copyrightName = 'Varient',
-      creditHref = 'https://smoothui.dev',
+      legalLinks,
+      year,
       ...props
     },
     ref,
   ) => {
-    const year = new Date().getFullYear();
+    const displayYear = year ?? new Date().getFullYear();
 
     return (
       <footer
@@ -185,7 +223,7 @@ export const Footer = forwardRef<HTMLElement, FooterProps>(
                       rel="noopener noreferrer"
                       target="_blank"
                     >
-                      <SocialIcon className="size-[18px]" platform={social.platform} />
+                      <SocialIcon className="size-[18px]" social={social} />
                     </a>
                   ))}
                 </div>
@@ -205,9 +243,20 @@ export const Footer = forwardRef<HTMLElement, FooterProps>(
           />
 
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-muted-foreground">
-              &copy; {year} {copyrightName}. All rights reserved.
-            </p>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+              <p className="text-sm text-muted-foreground">
+                &copy; {displayYear} {copyrightName}. All rights reserved.
+              </p>
+              {legalLinks && legalLinks.length > 0 && (
+                <ul className="flex items-center gap-4">
+                  {legalLinks.map((link) => (
+                    <li key={link.href}>
+                      <FooterLinkItem link={link} />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
             <div className="flex items-center gap-2 rounded-full border border-transparent bg-background py-1 pr-3 pl-2 shadow-sm ring-1 ring-border/60">
               <span aria-hidden className="relative flex size-2.5">
@@ -216,23 +265,6 @@ export const Footer = forwardRef<HTMLElement, FooterProps>(
               </span>
               <span className="text-xs text-foreground">{statusText}</span>
             </div>
-
-            <p className="text-sm text-muted-foreground">
-              UI design adapted from{' '}
-              <a
-                className={cn(
-                  'text-foreground underline-offset-4 transition-colors hover:text-brand hover:underline',
-                  focusRing,
-                  'rounded-sm',
-                )}
-                href={creditHref}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                SmoothUI
-              </a>{' '}
-              by Edu Calvo (MIT).
-            </p>
           </div>
         </div>
       </footer>

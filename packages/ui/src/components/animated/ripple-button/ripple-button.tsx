@@ -3,6 +3,8 @@
 import {
   forwardRef,
   useCallback,
+  useEffect,
+  useRef,
   useState,
   type ButtonHTMLAttributes,
   type MouseEvent,
@@ -57,6 +59,15 @@ export const RippleButton = forwardRef<HTMLButtonElement, RippleButtonProps>(
     const shouldReduceMotion = useReducedMotion();
     const [ripples, setRipples] = useState<RippleItem[]>([]);
     const [isFlashing, setIsFlashing] = useState(false);
+    const flashTimeoutRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+
+    useEffect(() => {
+      return () => {
+        if (flashTimeoutRef.current !== null) {
+          window.clearTimeout(flashTimeoutRef.current);
+        }
+      };
+    }, []);
 
     const removeRipple = useCallback((id: number) => {
       setRipples((current) => current.filter((ripple) => ripple.id !== id));
@@ -68,7 +79,13 @@ export const RippleButton = forwardRef<HTMLButtonElement, RippleButtonProps>(
 
       if (shouldReduceMotion) {
         setIsFlashing(true);
-        window.setTimeout(() => setIsFlashing(false), 150);
+        if (flashTimeoutRef.current !== null) {
+          window.clearTimeout(flashTimeoutRef.current);
+        }
+        flashTimeoutRef.current = window.setTimeout(() => {
+          setIsFlashing(false);
+          flashTimeoutRef.current = null;
+        }, 150);
         return;
       }
 

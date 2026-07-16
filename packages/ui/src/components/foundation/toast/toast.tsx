@@ -71,12 +71,12 @@ function ToastCard({ toast, onDismiss }: ToastCardProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  const handleMouseEnter = () => {
+  const handlePause = () => {
     clearTimer();
     remainingRef.current -= Date.now() - startedAtRef.current;
   };
 
-  const handleMouseLeave = () => {
+  const handleResume = () => {
     scheduleTimer(Math.max(remainingRef.current, 0));
   };
 
@@ -93,8 +93,10 @@ function ToastCard({ toast, onDismiss }: ToastCardProps) {
           : { opacity: 0, y: -8, transition: { duration: 0.15 } }
       }
       transition={shouldReduceMotion ? { duration: 0 } : SPRING_DEFAULT}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={handlePause}
+      onMouseLeave={handleResume}
+      onFocus={handlePause}
+      onBlur={handleResume}
       role={variant === 'error' ? 'alert' : 'status'}
       aria-live={variant === 'error' ? 'assertive' : 'polite'}
       className="pointer-events-auto flex w-[356px] max-w-[calc(100vw-2rem)] items-start gap-3 rounded-xl border border-border bg-popover p-4 shadow-xl"
@@ -111,7 +113,7 @@ function ToastCard({ toast, onDismiss }: ToastCardProps) {
               action.onClick();
               onDismiss(id);
             }}
-            className="mt-1 self-start text-sm font-medium text-brand hover:underline"
+            className="mt-1 self-start rounded text-sm font-medium text-brand outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
           >
             {action.label}
           </button>
@@ -122,7 +124,7 @@ function ToastCard({ toast, onDismiss }: ToastCardProps) {
         type="button"
         onClick={() => onDismiss(id)}
         aria-label="Dismiss notification"
-        className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        className="shrink-0 rounded-md p-1 text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
       >
         <CloseIcon className="size-4" />
       </button>

@@ -42,6 +42,21 @@ export function ShimmerButtonDemo() {
       </div>
 
       <div className="flex flex-col gap-3">
+        <p className="text-sm font-medium text-muted-foreground">Sweep width</p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <DemoCard label="Narrow (15%)">
+            <ShimmerButton shimmerWidth="15%">Thin sweep</ShimmerButton>
+          </DemoCard>
+          <DemoCard label="Default (40%)">
+            <ShimmerButton>Default sweep</ShimmerButton>
+          </DemoCard>
+          <DemoCard label="Wide (70%)">
+            <ShimmerButton shimmerWidth="70%">Wide sweep</ShimmerButton>
+          </DemoCard>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-3">
         <p className="text-sm font-medium text-muted-foreground">Sizes</p>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <DemoCard label="Small">

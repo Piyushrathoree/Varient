@@ -113,7 +113,7 @@ export const AlertDialogContent = forwardRef<HTMLDivElement, AlertDialogContentP
           <AlertDialogPrimitive.Portal forceMount>
             <AlertDialogPrimitive.Overlay asChild forceMount>
               <motion.div
-                className="fixed inset-0 z-50 bg-foreground/40 backdrop-blur-[2px]"
+                className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px]"
                 initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}

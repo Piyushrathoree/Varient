@@ -22,7 +22,7 @@ export type ButtonCopySize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  * pill with a "Copy" → "Copying" → "Copied" text label next to the icon. */
 export type ButtonCopyDisplay = 'icon' | 'label';
 
-type CopyState = 'idle' | 'copying' | 'copied';
+type CopyState = 'idle' | 'copying' | 'copied' | 'failed';
 
 // The root element is a motion.button, which redefines these DOM event
 // handlers with its own gesture/animation signatures, so the native React
@@ -92,11 +92,16 @@ const stateLabel: Record<CopyState, string> = {
   idle: 'Copy',
   copying: 'Copying',
   copied: 'Copied',
+  failed: 'Failed',
 };
 
 // Minimum time the spinner stays up, so an instant clipboard write still
 // reads as a deliberate three-step morph instead of a flash.
 const MIN_COPYING_MS = 350;
+
+// How long the "failed" state holds before auto-reverting to idle — brief
+// enough to read as a blip, long enough that the destructive tint registers.
+const FAILED_HOLD_MS = 1200;
 
 // Geometry for the spinner's partial ring — computed once so the arc/gap
 // stay in sync with the circle's radius instead of being hand-tuned magic
@@ -116,6 +121,20 @@ function CopyIcon({ className }: { className?: string }) {
         d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
         stroke="currentColor"
         strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path
+        d="M18 6 6 18M6 6l12 12"
+        stroke="currentColor"
+        strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -168,6 +187,9 @@ function SpinnerIcon({ className, spin }: { className?: string; spin: boolean })
 
 /**
  * Copy button: idle → copying → copied, morphing via AnimatePresence.
+ * If the copy throws (e.g. `navigator.clipboard` denied or unavailable), it
+ * briefly morphs into a "failed" state — an x icon with a destructive tint —
+ * before auto-reverting to idle, instead of silently resetting.
  * Pass `content` for a plain clipboard write, or `onCopy` for custom logic
  * (e.g. copying rendered code) — `onCopy` wins if both are set.
  *
@@ -219,7 +241,11 @@ export const ButtonCopy = forwardRef<HTMLButtonElement, ButtonCopyProps>(
               await navigator.clipboard.writeText(content);
             }
           } catch {
-            setState('idle');
+            const remaining = Math.max(0, MIN_COPYING_MS - (Date.now() - startedAt));
+            timeoutRef.current = setTimeout(() => {
+              setState('failed');
+              timeoutRef.current = setTimeout(() => setState('idle'), FAILED_HOLD_MS);
+            }, remaining);
             return;
           }
 
@@ -235,11 +261,14 @@ export const ButtonCopy = forwardRef<HTMLButtonElement, ButtonCopyProps>(
 
     const iconClassName = iconSizeStyles[size];
     const isCopied = state === 'copied';
+    const isFailed = state === 'failed';
     const icon =
       state === 'idle' ? (
         <CopyIcon className={iconClassName} />
       ) : state === 'copying' ? (
         <SpinnerIcon className={iconClassName} spin={!shouldReduceMotion} />
+      ) : state === 'failed' ? (
+        <XIcon className={cn(iconClassName, 'text-destructive')} />
       ) : (
         // Sanctioned exception to the semantic-token palette — matches the
         // app's own copy-button confirmation color.
@@ -291,7 +320,14 @@ export const ButtonCopy = forwardRef<HTMLButtonElement, ButtonCopyProps>(
           >
             {icon}
             {isLabel && (
-              <span className={cn(isCopied && 'text-emerald-500')}>{stateLabel[state]}</span>
+              <span
+                className={cn(
+                  isCopied && 'text-emerald-500',
+                  isFailed && 'text-destructive',
+                )}
+              >
+                {stateLabel[state]}
+              </span>
             )}
           </motion.span>
         </AnimatePresence>

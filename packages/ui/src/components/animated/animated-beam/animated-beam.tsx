@@ -18,6 +18,7 @@ import {
   useTransform,
 } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 const GRADIENT_SEGMENT = 0.25;
 
@@ -113,6 +114,7 @@ export const AnimatedBeam = forwardRef<SVGSVGElement, AnimatedBeamProps>(
     ref,
   ) => {
     const shouldReduceMotion = useReducedMotion();
+    const isViewportActive = useViewportActive(containerRef);
     const gradientId = useId().replace(/:/g, '');
     const progress = useMotionValue(isReverse ? 1 : 0);
     const coordsRef = useRef<BeamCoords>({
@@ -173,7 +175,7 @@ export const AnimatedBeam = forwardRef<SVGSVGElement, AnimatedBeamProps>(
     }, [containerRef, fromRef, toRef]);
 
     useEffect(() => {
-      if (shouldReduceMotion) return;
+      if (shouldReduceMotion || !isViewportActive) return;
 
       progress.set(isReverse ? 1 : 0);
       const controls = animate(progress, isReverse ? [1, 0] : [0, 1], {
@@ -184,7 +186,7 @@ export const AnimatedBeam = forwardRef<SVGSVGElement, AnimatedBeamProps>(
       });
 
       return () => controls.stop();
-    }, [shouldReduceMotion, duration, delay, isReverse, progress]);
+    }, [shouldReduceMotion, isViewportActive, duration, delay, isReverse, progress]);
 
     const gradientX1 = useTransform(progress, (value) => {
       const { startX, endX } = coordsRef.current;

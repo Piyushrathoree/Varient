@@ -1,8 +1,9 @@
 'use client';
 
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useRef, type HTMLAttributes, type MutableRefObject, type ReactNode } from 'react';
 import { motion, useReducedMotion, type MotionStyle } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 export interface BorderBeamProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
@@ -41,10 +42,16 @@ export const BorderBeam = forwardRef<HTMLDivElement, BorderBeamProps>(
     ref,
   ) => {
     const shouldReduceMotion = useReducedMotion();
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const isViewportActive = useViewportActive(containerRef);
 
     return (
       <div
-        ref={ref}
+        ref={(node) => {
+          containerRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) (ref as MutableRefObject<HTMLDivElement | null>).current = node;
+        }}
         className={cn('relative rounded-[inherit]', className)}
         {...props}
       >
@@ -81,11 +88,18 @@ export const BorderBeam = forwardRef<HTMLDivElement, BorderBeamProps>(
                 } as MotionStyle
               }
               initial={{ offsetDistance: '0%' }}
-              animate={{ offsetDistance: ['0%', '100%'] }}
+              animate={isViewportActive ? { offsetDistance: ['0%', '100%'] } : undefined}
               transition={{
                 repeat: Infinity,
                 ease: 'linear',
                 duration,
+                // Negative delay trick: Motion's `delay` normally *postpones* the
+                // start of a keyframe animation, but a negative value instead
+                // fast-forwards playback by that many seconds — as if the loop
+                // had already been running. This lets multiple BorderBeam
+                // instances with a positive `delay` prop appear phase-offset
+                // (beams starting "mid-loop") without needing a setTimeout or a
+                // deferred mount, and it composes correctly with `repeat: Infinity`.
                 delay: -delay,
               }}
             />

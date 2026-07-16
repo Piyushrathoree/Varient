@@ -3,7 +3,7 @@ title: Auth Page
 description: Split login and signup page with form validation, social auth buttons, and a testimonial aside panel.
 ---
 
-<ComponentPreview name="auth-page" />
+<ComponentPreview name="auth-page" variant="section" />
 
 ## Installation
 
@@ -41,7 +41,20 @@ export function LoginPage() {
 
 ## Layout
 
-The section uses a split layout: a form panel on the left (full width on mobile) and an optional aside on the right that hides below the `lg` breakpoint. Pass `aside` to replace the default dot-grid testimonial panel.
+The section uses a split layout: a form panel on the left (full width on mobile) and an optional aside on the right that hides below the `lg` breakpoint. Pass `aside` to replace the default dot-grid testimonial panel — when you do, the aside is no longer marked `aria-hidden`, since it's no longer purely decorative.
+
+## Social providers
+
+GitHub and Google are built in. Add any additional provider — SSO, Apple, a magic-link button — via `socialProviders`, bringing your own icon:
+
+```tsx
+<AuthPage
+  socialProviders={[
+    { id: 'sso', label: 'SSO', icon: <KeyRoundIcon className="size-4" /> },
+  ]}
+  onSocialAuth={(provider) => console.log(provider)}
+/>
+```
 
 ## Variants
 
@@ -62,10 +75,14 @@ Switch between login and signup with the `variant` prop:
     { name: 'headline', type: 'ReactNode', description: 'Primary heading above the form. Defaults per variant.' },
     { name: 'description', type: 'ReactNode', description: 'Supporting copy below the headline.' },
     { name: 'onSubmit', type: '(data: AuthPageFormData) => void | Promise<void>', description: 'Called with validated form data. Payload is a discriminated union on `variant`.' },
-    { name: 'onSocialAuth', type: "(provider: 'github' | 'google') => void", description: 'Optional callback when a social auth button is clicked.' },
+    { name: 'onSocialAuth', type: "(provider: 'github' | 'google' | string) => void", description: 'Optional callback when a social auth button is clicked. Receives the built-in id or a custom `socialProviders` id.' },
+    { name: 'socialProviders', type: '{ id: string; label: string; icon: ReactNode }[]', description: 'Extra social providers rendered after the built-in GitHub/Google buttons — bring your own icon.' },
     { name: 'forgotPasswordHref', type: 'string', defaultValue: "'#forgot-password'", description: 'Href for the forgot-password link (login only).' },
     { name: 'forgotPasswordLabel', type: 'string', defaultValue: "'Forgot password?'", description: 'Label for the forgot-password link.' },
-    { name: 'aside', type: 'ReactNode', description: 'Right panel content on large screens. Defaults to a dot-grid testimonial quote.' },
+    { name: 'aside', type: 'ReactNode', description: 'Right panel content on large screens. Defaults to a dot-grid testimonial quote. When provided, the aside is no longer `aria-hidden`.' },
+    { name: 'submitLabel', type: 'ReactNode', description: 'Submit button label. Defaults to "Sign in" / "Create account" per variant.' },
+    { name: 'loadingLabel', type: 'ReactNode', description: 'Submit button label shown while the async `onSubmit` is pending.' },
+    { name: 'successLabel', type: 'ReactNode', description: "Submit button label shown briefly (~1.6s) after `onSubmit` resolves successfully." },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section wrapper.' },
   ]}
 />
@@ -83,7 +100,7 @@ Switch between login and signup with the `variant` prop:
 
 ## Accessibility
 
-Every field uses Foundation label association. Validation errors render through each field's `errorText` prop. The terms checkbox error uses a separate `role="alert"` message. Panel entrance animations are gated behind `prefers-reduced-motion`.
+Every field uses Foundation label association. Validation errors render through each field's `errorText` prop. The terms checkbox error uses a separate `role="alert"` message. Panel entrance animations are gated behind `prefers-reduced-motion`. The aside is only `aria-hidden` when it renders the default decorative testimonial panel — a custom `aside` you supply is never hidden from assistive tech.
 
 | Key | Action |
 | --- | --- |

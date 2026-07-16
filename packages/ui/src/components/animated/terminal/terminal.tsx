@@ -7,8 +7,8 @@ import {
   useState,
   type HTMLAttributes,
   type ReactNode,
+  type SVGProps,
 } from 'react';
-import { Check, Terminal as TerminalIcon, X } from 'lucide-react';
 import { motion, useInView, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { DURATION, DURATION_INSTANT, EASE_OUT } from '../../../lib/animation';
@@ -33,12 +33,64 @@ export interface TerminalLineProps {
 
 const TYPE_SPEED_MS = 42;
 
+function CheckGlyph(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M3 8.5 6.2 11.7 13 4.8" />
+    </svg>
+  );
+}
+
+function XGlyph(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M4 4 12 12M12 4 4 12" />
+    </svg>
+  );
+}
+
+function TerminalGlyph(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <rect x="1.5" y="2.5" width="13" height="11" rx="1.5" />
+      <path d="M4 6.5 6.5 8 4 9.5M8 9.5h3.5" />
+    </svg>
+  );
+}
+
 const VARIANT_GLYPH: Record<
   Exclude<TerminalLineVariant, 'command' | 'output'>,
-  typeof Check
+  (props: SVGProps<SVGSVGElement>) => ReactNode
 > = {
-  success: Check,
-  error: X,
+  success: CheckGlyph,
+  error: XGlyph,
 };
 
 const VARIANT_GLYPH_CLASS: Record<
@@ -88,20 +140,16 @@ export const Terminal = forwardRef<HTMLDivElement, TerminalProps>(
       <div
         ref={setRef}
         className={cn(
-          'overflow-hidden rounded-xl border border-smooth-800 bg-smooth-950 shadow-lg',
+          'dark overflow-hidden rounded-xl border border-border bg-background shadow-lg',
           className,
         )}
         {...props}
       >
-        <div className="flex items-center gap-3 border-b border-smooth-800 bg-smooth-900/80 px-3 py-2">
+        <div className="flex items-center gap-3 border-b border-border bg-muted/80 px-3 py-2">
           <TrafficLights />
           <div className="flex min-w-0 flex-1 items-center justify-center gap-1.5">
-            <TerminalIcon
-              className="size-3 shrink-0 text-smooth-500"
-              strokeWidth={1.5}
-              aria-hidden="true"
-            />
-            <span className="truncate font-mono text-xs text-smooth-400">{title}</span>
+            <TerminalGlyph className="size-3 shrink-0 text-muted-foreground" />
+            <span className="truncate font-mono text-xs text-muted-foreground">{title}</span>
           </div>
           <div className="w-[52px]" aria-hidden="true" />
         </div>
@@ -184,10 +232,10 @@ export const TerminalLine = forwardRef<HTMLDivElement, TerminalLineProps>(
         ref={ref}
         className={cn(
           'flex items-start gap-2',
-          variant === 'output' && 'text-smooth-400',
-          variant === 'command' && 'text-smooth-100',
-          variant === 'success' && 'text-smooth-200',
-          variant === 'error' && 'text-smooth-200',
+          variant === 'output' && 'text-muted-foreground',
+          variant === 'command' && 'text-foreground',
+          variant === 'success' && 'text-foreground',
+          variant === 'error' && 'text-foreground',
           className,
         )}
         initial={shouldReduceMotion ? false : { opacity: 0, y: 4 }}

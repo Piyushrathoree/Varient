@@ -55,6 +55,40 @@ export function Example() {
   ]}
 />
 
+## Mobile pattern
+
+On narrow viewports the pill has limited width, so `items` wrap onto a second line inside it
+rather than overflowing — a reasonable fallback, but not ideal for a compact mobile pill. Trim
+the list you pass in below a breakpoint instead of relying on wrap:
+
+```tsx
+import { useEffect, useState } from 'react';
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia('(max-width: 640px)');
+    const update = () => setIsMobile(query.matches);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
+  return isMobile;
+}
+
+const isMobile = useIsMobile();
+
+<FloatingNavbar
+  items={isMobile ? NAV_ITEMS.slice(0, 2) : NAV_ITEMS}
+  cta={{ label: 'Get started', href: '/start' }}
+/>
+```
+
+Keep the CTA visible at every size — it's the primary action — and drop secondary links first.
+The component doesn't collapse labels or add a hamburger/menu affordance itself; link labels are
+user-supplied content, so trimming the array (or swapping to icon-only items with a visually
+hidden `<span className="sr-only">` label) is left to the consumer.
+
 ## Accessibility
 
 - Renders a `<nav>` with `aria-label="Main navigation"`.

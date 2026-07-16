@@ -7,6 +7,9 @@ export {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuGroup,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   type DropdownMenuProps,
   type DropdownMenuTriggerProps,
   type DropdownMenuContentProps,
@@ -15,4 +18,7 @@ export {
   type DropdownMenuSeparatorProps,
   type DropdownMenuShortcutProps,
   type DropdownMenuGroupProps,
+  type DropdownMenuCheckboxItemProps,
+  type DropdownMenuRadioGroupProps,
+  type DropdownMenuRadioItemProps,
 } from './dropdown-menu';

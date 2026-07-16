@@ -46,6 +46,8 @@ export function SliderDemo() {
   const [range, setRange] = useState([25, 75]);
   const [stepped, setStepped] = useState([50]);
   const [liveValue, setLiveValue] = useState([62]);
+  const [labeled, setLabeled] = useState([55]);
+  const [eased, setEased] = useState([20]);
 
   return (
     <div className="flex w-full flex-col gap-8">
@@ -121,6 +123,40 @@ export function SliderDemo() {
             />
           </div>
         </DemoCard>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <p className="text-sm font-medium text-muted-foreground">Show value label</p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <DemoCard label="Floating label on press/focus">
+            <Slider
+              className="w-full max-w-[240px]"
+              value={labeled}
+              onValueChange={setLabeled}
+              showValue
+              aria-label="Zoom"
+            />
+          </DemoCard>
+
+          <DemoCard label="Programmatic jump (eased)">
+            <div className="flex w-full max-w-[240px] flex-col items-center gap-3">
+              <Slider
+                className="w-full"
+                value={eased}
+                onValueChange={setEased}
+                showValue
+                aria-label="Temperature"
+              />
+              <button
+                type="button"
+                onClick={() => setEased([Math.random() > 0.5 ? 80 : 20])}
+                className="rounded-md border border-border bg-card px-2.5 py-1 text-xs font-medium text-foreground transition-colors hover:bg-muted motion-reduce:transition-none"
+              >
+                Jump value
+              </button>
+            </div>
+          </DemoCard>
+        </div>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ title: CTA
 description: Centered call-to-action banner with headline, description, and primary action button.
 ---
 
-<ComponentPreview name="cta" />
+<ComponentPreview name="cta" variant="section" />
 
 ## Installation
 
@@ -21,10 +21,16 @@ import { Cta } from '@/components/sections/cta';
 export function PricingPage() {
   return (
     <Cta
+      eyebrow="Varient Pro"
       title="Ready to get started"
       description="Copy components directly into your project. No runtime dependency — you own every line."
       primaryCta={{ label: 'Browse components', href: '/components' }}
       secondaryCta={{ label: 'View on GitHub', href: 'https://github.com' }}
+      secondaryCtaEmphasis="ghost"
+      socialProof={{
+        avatars: [{ src: '/avatars/1.png' }, { src: '/avatars/2.png' }],
+        text: 'Trusted by 2,400+ engineering teams',
+      }}
     />
   );
 }
@@ -32,31 +38,66 @@ export function PricingPage() {
 
 ## Variants
 
-Two surface styles via the `variant` prop:
+Three surface styles via the `variant` prop:
 
 ```tsx
-<Cta variant="brand" title="Add motion to your product" primaryCta={{ label: 'Start building', href: '/components' }} />
+<Cta variant="minimal" title="Varient 2.0 is here" primaryCta={{ label: 'Read the release notes', href: '/changelog' }} />
 ```
 
 - **`default`** — `bg-card` with a hairline border and soft shadow. Neutral, works anywhere on the page.
 - **`brand`** — same card fill with a subtle brand gradient border rim. Use sparingly for high-intent conversion moments.
+- **`minimal`** — borderless and transparent, no card fill or shadow. Use on pages that already have enough surfaces (e.g. stacked directly on the page background between other sections).
+
+## Secondary CTA emphasis
+
+The secondary action's visual weight is controlled independently via `secondaryCtaEmphasis`:
+
+```tsx
+<Cta
+  primaryCta={{ label: 'Start building', href: '/components' }}
+  secondaryCta={{ label: 'Talk to sales', href: '/contact' }}
+  secondaryCtaEmphasis="link"
+/>
+```
+
+- **`outline`** (default) — bordered button, equal footing with the primary action.
+- **`ghost`** — borderless, fills on hover. Quieter than outline.
+- **`link`** — text-only underline. Lowest visual weight, good when the secondary action is truly optional.
+
+## Social proof
+
+Pass `socialProof` to render an overlapping avatar stack with a trust line beneath the actions:
+
+```tsx
+<Cta
+  socialProof={{
+    avatars: [{ src: '/avatars/1.png', alt: 'Amara O.' }, { src: '/avatars/2.png' }],
+    text: 'Trusted by 2,400+ engineering teams',
+  }}
+/>
+```
+
+`avatars` is optional — omit it to render the trust line alone. Only the first 5 avatars are rendered.
 
 ## Props
 
 <PropsTable
   props={[
+    { name: 'eyebrow', type: 'string', description: 'Small label rendered above the title, e.g. a product name or "Limited time".' },
     { name: 'title', type: 'string', defaultValue: "'Ready to get started'", description: 'Centered headline inside the banner.' },
     { name: 'description', type: 'string', defaultValue: '(see source)', description: 'Supporting copy below the title.' },
     { name: 'primaryCta', type: '{ label: string; href: string }', defaultValue: "'Browse components'", description: 'Primary brand button — always rendered.' },
-    { name: 'secondaryCta', type: '{ label: string; href: string }', description: 'Optional outline button beside the primary CTA.' },
-    { name: 'variant', type: "'default' | 'brand'", defaultValue: "'default'", description: 'Surface style — neutral card or brand gradient border.' },
+    { name: 'secondaryCta', type: '{ label: string; href: string }', description: 'Optional button beside the primary CTA.' },
+    { name: 'secondaryCtaEmphasis', type: "'outline' | 'ghost' | 'link'", defaultValue: "'outline'", description: 'Visual weight of the secondary action button.' },
+    { name: 'socialProof', type: '{ avatars?: { src: string; alt?: string }[]; text: string }', description: 'Optional avatar stack + trust line rendered below the actions.' },
+    { name: 'variant', type: "'default' | 'brand' | 'minimal'", defaultValue: "'default'", description: 'Surface style — neutral card, brand gradient border, or borderless.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section wrapper.' },
   ]}
 />
 
 ## Accessibility
 
-The root is a `<section>` labelled by the h2 via `aria-labelledby`. Buttons are native anchors inside `Button asChild`.
+The root is a `<section>` labelled by the h2 via `aria-labelledby`. Buttons are native anchors inside `Button asChild`. Avatars in the social-proof stack are decorative (`aria-hidden`) since the trust line already conveys the same information as text.
 
 | Key | Action |
 | --- | --- |

@@ -175,12 +175,26 @@ export const DockIcon = forwardRef<HTMLButtonElement, DockIconProps>(
       return value - rect.left - rect.width / 2;
     });
 
-    const widthSync = useTransform(
+    // Fixed-size box (iconSize) — magnification is a GPU-composited transform
+    // (scale + a small upward arc translate) instead of animating width/height,
+    // so neighboring icons never reflow while the spring settles.
+    const scaleFactor = magnification / iconSize;
+    const scaleSync = useTransform(
       distanceValue,
       [-distance, 0, distance],
-      [iconSize, magnification, iconSize],
+      [1, scaleFactor, 1],
     );
-    const width = useSpring(widthSync, {
+    const scale = useSpring(scaleSync, {
+      duration: SPRING_SNAPPY.duration,
+      bounce: SPRING_SNAPPY.bounce,
+    });
+
+    const liftSync = useTransform(
+      distanceValue,
+      [-distance, 0, distance],
+      [0, -(magnification - iconSize) / 2, 0],
+    );
+    const lift = useSpring(liftSync, {
       duration: SPRING_SNAPPY.duration,
       bounce: SPRING_SNAPPY.bounce,
     });
@@ -222,7 +236,15 @@ export const DockIcon = forwardRef<HTMLButtonElement, DockIconProps>(
           focusRing,
           className,
         )}
-        style={{ width, height: width, ...style }}
+        style={{
+          width: iconSize,
+          height: iconSize,
+          scale,
+          y: lift,
+          transformOrigin: 'bottom',
+          willChange: 'transform',
+          ...style,
+        }}
         title={tooltip}
         type="button"
         {...props}

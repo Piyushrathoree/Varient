@@ -49,6 +49,7 @@ const someSelected = selected.length > 0 && !allSelected;
     { name: 'isIndeterminate', type: 'boolean', defaultValue: 'false', description: 'Shows a dash instead of a checkmark. Takes over from isChecked visually; clicking always resolves to checked.' },
     { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the checkbox.' },
     { name: 'size', type: 'CheckboxSize', defaultValue: "'md'", description: 'Box/icon size — sm, md, or lg.' },
+    { name: 'variant', type: 'CheckboxVariant', defaultValue: "'default'", description: "Box style — 'default' (rounded-square, bordered), 'round' (circular), or 'filled' (always tinted, no border)." },
     { name: 'label', type: 'string', description: 'Inline label rendered next to the box and linked via htmlFor.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the box.' },
   ]}

@@ -29,14 +29,14 @@ export const WordRotate = forwardRef<HTMLSpanElement, WordRotateProps>(
     const currentWord = safeWords[index % safeWords.length] ?? '';
 
     useEffect(() => {
-      if (safeWords.length <= 1) return;
+      if (safeWords.length <= 1 || shouldReduceMotion) return;
 
       const interval = window.setInterval(() => {
         setIndex((prev) => (prev + 1) % safeWords.length);
       }, duration);
 
       return () => window.clearInterval(interval);
-    }, [safeWords, duration]);
+    }, [safeWords, duration, shouldReduceMotion]);
 
     const motionTransition = shouldReduceMotion
       ? DURATION_INSTANT

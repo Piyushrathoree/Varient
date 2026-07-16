@@ -3,7 +3,7 @@ title: FAQ
 description: Landing FAQ block with a section header and a single-open Accordion list.
 ---
 
-<ComponentPreview name="faq" />
+<ComponentPreview name="faq" variant="section" />
 
 ## Installation
 
@@ -48,6 +48,7 @@ export function Example() {
     { name: 'description', type: 'string', description: 'One-line supporting copy under the title.' },
     { name: 'items', type: '{ question: string; answer: string }[]', description: 'Question and answer pairs rendered in the accordion. Defaults to six Varient-themed FAQs.' },
     { name: 'defaultOpenIndex', type: 'number', defaultValue: '0', description: 'Zero-based index of the item open on first render.' },
+    { name: 'allowMultiple', type: 'boolean', defaultValue: 'false', description: 'Allow more than one item open at a time; passed through to the underlying Accordion as isMultiple.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
   ]}
 />

@@ -62,3 +62,8 @@ export function Example() {
 - The list container uses `aria-live="polite"` so screen readers are notified of new entries without interrupting.
 - A screen-reader-only summary tracks which item in the cycle is currently shown.
 - Under `prefers-reduced-motion`, all items render statically in document order with no cycling animation.
+
+## Notes
+
+- The cycling interval automatically pauses while the list is scrolled offscreen (via `IntersectionObserver`) and resumes when it re-enters the viewport, so background tabs and distant sections don't keep timers running.
+- Item collection identifies `AnimatedListItem` children via an internal marker rather than `displayName`, so wrapping the item in a memoized or higher-order component won't silently break the cycle.

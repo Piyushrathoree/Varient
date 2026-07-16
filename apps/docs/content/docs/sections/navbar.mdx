@@ -3,7 +3,7 @@ title: Navbar
 description: Floating pill navigation bar with desktop links, optional GitHub icon, CTA, and a mobile slide-down menu.
 ---
 
-<ComponentPreview name="navbar" />
+<ComponentPreview name="navbar" variant="section" />
 
 ## Installation
 
@@ -39,7 +39,9 @@ export function SiteShell() {
 
 Per the app shell spec: a sticky top wrapper with an inner floating pill (`rounded-full border border-border bg-background/80 backdrop-blur-xl`). Left to right — two-tone wordmark (or custom `logo`), nav links, then optional GitHub icon and CTA button. Below `md`, links collapse behind a hamburger that toggles a slide-down panel animated with height and opacity.
 
-Pass `logo` to replace the default two-tone wordmark. Set `isSticky={false}` when embedding inside a docs preview frame.
+Pass `logo` to replace the default two-tone wordmark. Set `isSticky={false}` when embedding inside a docs preview frame. Pass `activeHref` matching one of your `items[].href` to mark the current route with the primary pill treatment (`bg-primary text-foreground`) instead of the hover-only state.
+
+The mobile panel expands in place and pushes surrounding content down — it does **not** lock body scroll. This is intentional: a floating pill nav has no true overlay behind it, so trapping scroll would fight the content-push motion instead of complementing it.
 
 ## Props
 
@@ -51,6 +53,7 @@ Pass `logo` to replace the default two-tone wordmark. Set `isSticky={false}` whe
     { name: 'githubHref', type: 'string', description: 'Optional GitHub profile or repo URL — renders an icon link on the right.' },
     { name: 'cta', type: '{ label: string; href: string }', description: 'Optional primary CTA button on the right — uses the foundation Button.' },
     { name: 'isSticky', type: 'boolean', defaultValue: 'true', description: 'When true, pins the bar with `sticky top-0 z-50`.' },
+    { name: 'activeHref', type: 'string', description: 'Href matching the current route — that item renders the `bg-primary text-foreground` pill and gets `aria-current="page"`.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root header.' },
   ]}
 />

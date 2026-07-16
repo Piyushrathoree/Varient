@@ -8,6 +8,14 @@ import { SPRING_DEFAULT } from '../../../lib/animation';
 
 export type CheckboxSize = 'sm' | 'md' | 'lg';
 
+/**
+ * default — rounded-square box, brand fill + border when checked.
+ * round — fully circular box, same fill treatment.
+ * filled — square box that is always tinted (muted when unchecked, brand
+ *   when checked/indeterminate) instead of a bordered outline.
+ */
+export type CheckboxVariant = 'default' | 'round' | 'filled';
+
 export interface CheckboxProps
   extends Omit<
     ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>,
@@ -19,6 +27,8 @@ export interface CheckboxProps
   isIndeterminate?: boolean;
   isDisabled?: boolean;
   size?: CheckboxSize;
+  /** Visual style of the box. Defaults to 'default'. */
+  variant?: CheckboxVariant;
   label?: string;
 }
 
@@ -34,6 +44,12 @@ const iconSizeStyles: Record<CheckboxSize, string> = {
   lg: 'size-4',
 };
 
+const shapeStyles: Record<CheckboxVariant, string> = {
+  default: 'rounded-md',
+  round: 'rounded-full',
+  filled: 'rounded-md',
+};
+
 // Plain accessible checkbox — Radix wires role="checkbox", keyboard
 // activation, and (via aria-checked) the mixed/indeterminate state for us.
 export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
@@ -45,6 +61,7 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
       isIndeterminate = false,
       isDisabled = false,
       size = 'md',
+      variant = 'default',
       label,
       id: idProp,
       'aria-label': ariaLabelProp,
@@ -69,12 +86,17 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
           disabled={isDisabled}
           aria-label={label ? undefined : (ariaLabelProp ?? 'Checkbox')}
           className={cn(
-            'peer inline-flex shrink-0 cursor-pointer items-center justify-center rounded-md border transition-[color,background-color,border-color,transform] duration-200 ease-out active:scale-90',
+            'peer inline-flex shrink-0 cursor-pointer items-center justify-center border transition-[color,background-color,border-color,transform] duration-200 ease-out active:scale-90 motion-reduce:transition-none motion-reduce:active:scale-100',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
             'disabled:cursor-not-allowed disabled:opacity-50',
-            isFilled
-              ? 'border-brand bg-brand'
-              : 'border-input bg-transparent hover:border-foreground/20',
+            shapeStyles[variant],
+            variant === 'filled'
+              ? isFilled
+                ? 'border-transparent bg-brand'
+                : 'border-transparent bg-muted hover:bg-muted/70'
+              : isFilled
+                ? 'border-brand bg-brand'
+                : 'border-input bg-transparent hover:border-foreground/20',
             boxSizeStyles[size],
             className,
           )}

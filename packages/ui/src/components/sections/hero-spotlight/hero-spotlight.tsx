@@ -1,9 +1,10 @@
 'use client';
 
-import { forwardRef, useId, type HTMLAttributes } from 'react';
+import { forwardRef, useId, useRef, type HTMLAttributes, type MutableRefObject } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { Button } from '../../foundation/button';
 import { DURATION_INSTANT, EASE_OUT } from '../../../lib/animation';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 import { cn } from '../../../lib/utils';
 
 export interface HeroSpotlightCtaLink {
@@ -25,6 +26,12 @@ export interface HeroSpotlightProps extends Omit<HTMLAttributes<HTMLElement>, 't
   announcement?: HeroSpotlightAnnouncement;
   primaryCta?: HeroSpotlightCtaLink;
   secondaryCta?: HeroSpotlightCtaLink;
+  /**
+   * Keep the conic spotlight beam sweeping forever instead of settling after
+   * one pass. Off by default — perpetual decorative motion in a hero is a
+   * distraction, not a feature; opt in deliberately.
+   */
+  isAmbient?: boolean;
 }
 
 const DEFAULT_TITLE = 'Ship interfaces that feel alive';
@@ -74,7 +81,7 @@ function AnnouncementPill({ announcement }: { announcement: HeroSpotlightAnnounc
       {announcement.href && (
         <svg
           aria-hidden
-          className="size-4 shrink-0 text-background/60 transition-transform duration-200 ease-out motion-reduce:transition-none group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:translate-y-0"
+          className="size-4 shrink-0 text-foreground/60 transition-transform duration-200 ease-out motion-reduce:transition-none group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:translate-y-0"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -87,7 +94,7 @@ function AnnouncementPill({ announcement }: { announcement: HeroSpotlightAnnounc
   );
 
   const pillClassName =
-    'group inline-flex max-w-full items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full border border-background/15 bg-background/5 px-3 py-0.5 font-medium text-background/90 text-xs backdrop-blur-sm transition-colors hover:border-background/25';
+    'group inline-flex max-w-full items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full border border-foreground/15 bg-foreground/5 px-3 py-0.5 font-medium text-foreground/90 text-xs backdrop-blur-sm transition-colors hover:border-foreground/25';
 
   if (announcement.href) {
     return (
@@ -100,9 +107,19 @@ function AnnouncementPill({ announcement }: { announcement: HeroSpotlightAnnounc
   return <div className={pillClassName}>{content}</div>;
 }
 
-function SpotlightBeam({ isStatic }: { isStatic: boolean }) {
+function SpotlightBeam({
+  isStatic,
+  isAmbient,
+  isViewportActive,
+}: {
+  isStatic: boolean;
+  isAmbient: boolean;
+  isViewportActive: boolean;
+}) {
   const beamClassName =
     'pointer-events-none absolute -left-1/4 -top-1/4 size-[140%] opacity-70 mix-blend-screen';
+  const beamBackground =
+    'conic-gradient(from 0deg at 0% 0%, transparent 0deg, color-mix(in oklab, var(--color-brand) 28%, transparent) 50deg, transparent 100deg)';
 
   if (isStatic) {
     return (
@@ -117,34 +134,64 @@ function SpotlightBeam({ isStatic }: { isStatic: boolean }) {
     );
   }
 
+  if (isAmbient) {
+    // Explicit opt-in loop — pauses offscreen so idle demos don't burn CPU.
+    return (
+      <motion.div
+        aria-hidden
+        initial={{ rotate: 220 }}
+        animate={isViewportActive ? { rotate: [220, 580] } : undefined}
+        className={beamClassName}
+        style={{ background: beamBackground }}
+        transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
+      />
+    );
+  }
+
+  // Design law: sections don't loop decorative motion forever. One sweep on
+  // entrance, then the beam settles at its resting angle.
   return (
     <motion.div
       aria-hidden
-      animate={{ rotate: [220, 580] }}
+      initial={{ rotate: 220 }}
+      animate={{ rotate: 580 }}
       className={beamClassName}
-      style={{
-        background:
-          'conic-gradient(from 0deg at 0% 0%, transparent 0deg, color-mix(in oklab, var(--color-brand) 28%, transparent) 50deg, transparent 100deg)',
-      }}
-      transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
+      style={{ background: beamBackground }}
+      transition={{ duration: 2.2, ease: EASE_OUT }}
     />
   );
 }
 
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Splits `title` on whole-word occurrences of `highlightWord` only — guards
+ * against partial matches, e.g. highlightWord="motion" must not light up the
+ * "motion" inside "motionless".
+ */
 function renderTitle(title: string, highlightWord?: string) {
-  if (!highlightWord || !title.includes(highlightWord)) {
+  const needle = highlightWord?.trim();
+  if (!needle) {
     return title;
   }
 
-  const parts = title.split(highlightWord);
-  return parts.map((part, index) => (
-    <span key={`${part}-${index}`}>
-      {part}
-      {index < parts.length - 1 ? (
-        <span className="text-brand">{highlightWord}</span>
-      ) : null}
-    </span>
-  ));
+  const pattern = new RegExp(`(\\b${escapeRegExp(needle)}\\b)`, 'g');
+  const parts = title.split(pattern);
+  if (parts.length === 1) {
+    return title;
+  }
+
+  return parts.map((part, index) =>
+    part === needle ? (
+      <span key={`${part}-${index}`} className="text-brand">
+        {part}
+      </span>
+    ) : (
+      <span key={`${part}-${index}`}>{part}</span>
+    ),
+  );
 }
 
 export const HeroSpotlight = forwardRef<HTMLElement, HeroSpotlightProps>(
@@ -157,12 +204,15 @@ export const HeroSpotlight = forwardRef<HTMLElement, HeroSpotlightProps>(
       announcement = DEFAULT_ANNOUNCEMENT,
       primaryCta = DEFAULT_PRIMARY_CTA,
       secondaryCta = DEFAULT_SECONDARY_CTA,
+      isAmbient = false,
       ...props
     },
     ref,
   ) => {
     const shouldReduceMotion = useReducedMotion();
     const headingId = useId();
+    const sectionRef = useRef<HTMLElement | null>(null);
+    const isViewportActive = useViewportActive(sectionRef);
 
     const contentMotion = shouldReduceMotion
       ? { initial: false as const, animate: { opacity: 1 }, transition: DURATION_INSTANT }
@@ -174,13 +224,28 @@ export const HeroSpotlight = forwardRef<HTMLElement, HeroSpotlightProps>(
 
     return (
       <section
-        ref={ref}
+        ref={(node) => {
+          sectionRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) (ref as MutableRefObject<HTMLElement | null>).current = node;
+        }}
         aria-labelledby={headingId}
-        className={cn('relative w-full overflow-hidden bg-foreground text-background', className)}
+        className={cn(
+          // Forced-dark subtree: this section is always the black canvas the
+          // design calls for, in both the light and dark site themes. `dark`
+          // rescopes the semantic tokens for this element and everything
+          // inside it, independent of the page-level theme class.
+          'dark relative w-full overflow-hidden bg-background text-foreground',
+          className,
+        )}
         {...props}
       >
         <div aria-hidden className="pointer-events-none absolute inset-0">
-          <SpotlightBeam isStatic={shouldReduceMotion ?? false} />
+          <SpotlightBeam
+            isAmbient={isAmbient}
+            isStatic={shouldReduceMotion ?? false}
+            isViewportActive={isViewportActive}
+          />
           <div
             className="absolute inset-0"
             style={{
@@ -189,7 +254,7 @@ export const HeroSpotlight = forwardRef<HTMLElement, HeroSpotlightProps>(
             }}
           />
           <div
-            className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--color-foreground)_72%)]"
+            className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--color-background)_72%)]"
           />
         </div>
 
@@ -204,7 +269,7 @@ export const HeroSpotlight = forwardRef<HTMLElement, HeroSpotlightProps>(
               >
                 {renderTitle(title, highlightWord)}
               </h1>
-              <p className="mx-auto max-w-2xl text-balance text-base text-background/70 sm:text-lg md:text-xl">
+              <p className="mx-auto max-w-2xl text-balance text-base text-foreground/70 sm:text-lg md:text-xl">
                 {subtitle}
               </p>
             </div>
@@ -217,7 +282,7 @@ export const HeroSpotlight = forwardRef<HTMLElement, HeroSpotlightProps>(
               </Button>
               <Button
                 asChild
-                className="border-background/20 bg-background/5 text-background hover:bg-background/10 hover:text-background"
+                className="border-foreground/20 bg-foreground/5 text-foreground hover:bg-foreground/10 hover:text-foreground"
                 size="lg"
                 variant="outline"
               >

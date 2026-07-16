@@ -1,10 +1,13 @@
 'use client';
 
-import { forwardRef, useId, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useId, useRef, type HTMLAttributes, type MutableRefObject, type ReactNode } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 export type MarqueeDirection = 'left' | 'right' | 'up' | 'down';
+
+export type MarqueeEdgeFade = 'none' | 'sm' | 'md' | 'lg';
 
 export interface MarqueeProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   children: ReactNode;
@@ -16,7 +19,21 @@ export interface MarqueeProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chil
   isReverse?: boolean;
   /** Gap between items in pixels. */
   gap?: number;
+  /** Width of the edge fade masks. `none` removes them entirely. */
+  edgeFade?: MarqueeEdgeFade;
 }
+
+const EDGE_FADE_WIDTH: Record<Exclude<MarqueeEdgeFade, 'none'>, string> = {
+  sm: 'w-8',
+  md: 'w-12',
+  lg: 'w-16',
+};
+
+const EDGE_FADE_HEIGHT: Record<Exclude<MarqueeEdgeFade, 'none'>, string> = {
+  sm: 'h-8',
+  md: 'h-12',
+  lg: 'h-16',
+};
 
 function resolveDirection(
   direction: MarqueeDirection,
@@ -63,6 +80,7 @@ export const Marquee = forwardRef<HTMLDivElement, MarqueeProps>(
       pauseOnHover = true,
       isReverse = false,
       gap = 16,
+      edgeFade = 'md',
       ...props
     },
     ref,
@@ -74,12 +92,19 @@ export const Marquee = forwardRef<HTMLDivElement, MarqueeProps>(
     const keyframes = getKeyframeTransforms(resolvedDirection);
     const trackClass = `marquee-track-${animationId}`;
 
-    const basePlayState = isPaused ? 'paused' : 'running';
-    const hoverPlayState = isPaused || pauseOnHover ? 'paused' : 'running';
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const isViewportActive = useViewportActive(containerRef);
+
+    const basePlayState = isPaused || !isViewportActive ? 'paused' : 'running';
+    const hoverPlayState = isPaused || !isViewportActive || pauseOnHover ? 'paused' : 'running';
 
     return (
       <div
-        ref={ref}
+        ref={(node) => {
+          containerRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) (ref as MutableRefObject<HTMLDivElement | null>).current = node;
+        }}
         className={cn(
           'group/marquee relative flex overflow-hidden',
           isVertical ? 'max-h-full flex-col' : 'w-full flex-row',
@@ -88,29 +113,42 @@ export const Marquee = forwardRef<HTMLDivElement, MarqueeProps>(
         aria-live="off"
         {...props}
       >
-        {isVertical ? (
-          <>
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 top-0 z-10 h-12 bg-gradient-to-b from-background to-transparent"
-            />
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-12 bg-gradient-to-t from-background to-transparent"
-            />
-          </>
-        ) : (
-          <>
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-background to-transparent"
-            />
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-background to-transparent"
-            />
-          </>
-        )}
+        {edgeFade !== 'none' &&
+          (isVertical ? (
+            <>
+              <div
+                aria-hidden="true"
+                className={cn(
+                  'pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-background to-transparent',
+                  EDGE_FADE_HEIGHT[edgeFade],
+                )}
+              />
+              <div
+                aria-hidden="true"
+                className={cn(
+                  'pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-background to-transparent',
+                  EDGE_FADE_HEIGHT[edgeFade],
+                )}
+              />
+            </>
+          ) : (
+            <>
+              <div
+                aria-hidden="true"
+                className={cn(
+                  'pointer-events-none absolute inset-y-0 left-0 z-10 bg-gradient-to-r from-background to-transparent',
+                  EDGE_FADE_WIDTH[edgeFade],
+                )}
+              />
+              <div
+                aria-hidden="true"
+                className={cn(
+                  'pointer-events-none absolute inset-y-0 right-0 z-10 bg-gradient-to-l from-background to-transparent',
+                  EDGE_FADE_WIDTH[edgeFade],
+                )}
+              />
+            </>
+          ))}
 
         {shouldReduceMotion ? (
           <div

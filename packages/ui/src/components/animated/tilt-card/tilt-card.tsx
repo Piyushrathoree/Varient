@@ -4,7 +4,6 @@ import {
   forwardRef,
   useEffect,
   useRef,
-  useState,
   type CSSProperties,
   type HTMLAttributes,
   type ReactNode,
@@ -18,6 +17,7 @@ import {
 } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { SPRING_SNAPPY } from '../../../lib/animation';
+import { useFinePointer } from '../../../lib/use-fine-pointer';
 
 export interface TiltCardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
@@ -29,6 +29,8 @@ export interface TiltCardProps extends HTMLAttributes<HTMLDivElement> {
   isGlareEnabled?: boolean;
   /** CSS perspective distance in pixels. */
   perspective?: number;
+  /** Specular glare color, as a valid `oklch()`/`color-mix()` etc. CSS color value. */
+  glareColor?: string;
 }
 
 const springConfig = {
@@ -49,6 +51,7 @@ export const TiltCard = forwardRef<HTMLDivElement, TiltCardProps>(
       scale = 1.02,
       isGlareEnabled = true,
       perspective = 800,
+      glareColor = 'oklch(100% 0 0 / 0.28)',
       className,
       style,
       ...props
@@ -57,7 +60,7 @@ export const TiltCard = forwardRef<HTMLDivElement, TiltCardProps>(
   ) => {
     const nodeRef = useRef<HTMLDivElement | null>(null);
     const shouldReduceMotion = useReducedMotion();
-    const [isFinePointer, setIsFinePointer] = useState(false);
+    const isFinePointer = useFinePointer();
 
     const rawRotateX = useMotionValue(0);
     const rawRotateY = useMotionValue(0);
@@ -71,15 +74,7 @@ export const TiltCard = forwardRef<HTMLDivElement, TiltCardProps>(
     const cardScale = useSpring(rawScale, springConfig);
     const smoothGlareOpacity = useSpring(glareOpacity, springConfig);
 
-    const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, oklch(100% 0 0 / 0.28) 0%, transparent 55%)`;
-
-    useEffect(() => {
-      const mediaQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
-      setIsFinePointer(mediaQuery.matches);
-      const handleChange = (event: MediaQueryListEvent) => setIsFinePointer(event.matches);
-      mediaQuery.addEventListener('change', handleChange);
-      return () => mediaQuery.removeEventListener('change', handleChange);
-    }, []);
+    const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, var(--tilt-glare-color, ${glareColor}) 0%, transparent 55%)`;
 
     const isEnabled = isFinePointer && !shouldReduceMotion;
 
@@ -172,6 +167,7 @@ export const TiltCard = forwardRef<HTMLDivElement, TiltCardProps>(
           {
             ...style,
             '--tilt-perspective': `${perspective}px`,
+            '--tilt-glare-color': glareColor,
           } as CSSProperties
         }
         {...props}

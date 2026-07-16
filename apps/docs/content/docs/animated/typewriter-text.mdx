@@ -47,4 +47,6 @@ export function Example() {
 
 ## Accessibility
 
-The animating span (typed characters and cursor) is `aria-hidden` — a rapidly updating string is not something a screen reader should narrate character by character. The wrapper exposes the full intended message through `aria-label` (all phrases joined when `text` is an array). When `prefers-reduced-motion` is set, the first phrase renders immediately with no typing, deleting, or cursor blink animation. Timeouts are cleared on unmount so cycling never leaks timers.
+The animating span (typed characters and cursor) is `aria-hidden` — a rapidly updating string is not something a screen reader should narrate character by character. The wrapper exposes the full intended message through `aria-label` (all phrases joined when `text` is an array). When `prefers-reduced-motion` is set, the first phrase renders immediately with no typing, deleting, or cursor blink animation. Typing/deleting timers and the cursor blink also pause automatically while the component is scrolled offscreen, and resume when it re-enters the viewport. Timeouts are cleared on unmount so cycling never leaks timers.
+
+`showCursor` stays a top-level boolean prop (default `true`) — set it to `false` to render the typed text without the blinking cursor, as shown in the "No cursor" example above.

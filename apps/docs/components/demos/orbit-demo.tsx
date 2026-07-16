@@ -122,7 +122,7 @@ export function OrbitDemo() {
 
       <div className="flex flex-col gap-3">
         <p className="text-sm font-medium text-muted-foreground">Single ring variants</p>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <DemoCard label="Default path (20s)">
             <div className="relative flex h-48 items-center justify-center">
               <div className="absolute z-10 size-10 rounded-full border border-border bg-card" />
@@ -152,6 +152,23 @@ export function OrbitDemo() {
                 </OrbitChip>
                 <OrbitChip>
                   <Cloud className="size-4 text-foreground" strokeWidth={1.5} aria-hidden="true" />
+                </OrbitChip>
+              </Orbit>
+            </div>
+          </DemoCard>
+
+          <DemoCard label="startAngle={90} (asymmetric)">
+            <div className="relative flex h-48 items-center justify-center">
+              <div className="absolute z-10 size-10 rounded-full border border-border bg-card" />
+              <Orbit radius={72} duration={18} startAngle={90}>
+                <OrbitChip>
+                  <Cpu className="size-4 text-foreground" strokeWidth={1.5} aria-hidden="true" />
+                </OrbitChip>
+                <OrbitChip>
+                  <Code2 className="size-4 text-foreground" strokeWidth={1.5} aria-hidden="true" />
+                </OrbitChip>
+                <OrbitChip>
+                  <Layers className="size-4 text-foreground" strokeWidth={1.5} aria-hidden="true" />
                 </OrbitChip>
               </Orbit>
             </div>

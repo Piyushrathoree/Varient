@@ -1,0 +1,95 @@
+---
+title: Image Comparison
+description: A before/after reveal slider — drag or hover a divider to compare two layers.
+---
+
+<ComponentPreview name="image-comparison" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/image-comparison/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { ImageComparison } from '@varient/ui';
+
+export function Example() {
+  return (
+    <ImageComparison
+      before={{ src: '/before.jpg', alt: 'Original photo' }}
+      after={{ src: '/after.jpg', alt: 'Edited photo' }}
+      beforeLabel="Original"
+      afterLabel="Edited"
+    />
+  );
+}
+```
+
+`before` and `after` each accept either the `{ src, alt }` shorthand (rendered as a plain
+`<img>`, filling the container via `object-cover`) or any `ReactNode` — render a themed
+subtree, an SVG, a canvas, whatever needs comparing:
+
+```tsx
+<ImageComparison
+  before={<div className="dark size-full"><Dashboard /></div>}
+  after={<Dashboard />}
+  beforeLabel="Dark"
+  afterLabel="Light"
+/>
+```
+
+The `after` layer sits on top of `before` and is clipped to `inset(0 0 0 X%)`, so it always
+covers the container from the divider to the right edge — the region left of the divider is
+where `before` shows through. Set `mode="hover"` to track the pointer passively instead of
+requiring a press-and-drag:
+
+```tsx
+<ImageComparison before={before} after={after} mode="hover" />
+```
+
+Pass `isSpring={false}` to snap the divider directly to the pointer/keyboard target instead of
+smoothing it with a spring.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'before', type: 'ReactNode | { src: string; alt: string }', description: 'Required — bottom layer, always fully visible.' },
+    { name: 'after', type: 'ReactNode | { src: string; alt: string }', description: 'Required — top layer, revealed from the divider to the right edge.' },
+    { name: 'defaultPosition', type: 'number', defaultValue: '50', description: 'Initial divider position, 0–100 (percent from the left).' },
+    { name: 'mode', type: "'drag' | 'hover'", defaultValue: "'drag'", description: '`drag` requires press+drag; `hover` follows the pointer without pressing.' },
+    { name: 'beforeLabel', type: 'string', description: 'Quiet chip in the top-left corner labeling the `before` layer.' },
+    { name: 'afterLabel', type: 'string', description: 'Quiet chip in the top-right corner labeling the `after` layer.' },
+    { name: 'isSpring', type: 'boolean', defaultValue: 'true', description: 'Smooths the divider toward its target with a spring.' },
+    { name: 'onPositionChange', type: '(position: number) => void', description: 'Fires whenever the divider position changes, from drag, hover, or keyboard.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn() on the container.' },
+  ]}
+/>
+
+## Accessibility
+
+- The grip is a real `role="slider"` with `tabIndex={0}`, `aria-valuemin={0}`, `aria-valuemax={100}`,
+  `aria-valuenow` tracking the live position, and `aria-label="Comparison position"` — reachable
+  by Tab regardless of `mode`.
+- Arrow Left/Down and Arrow Right/Up nudge the position by 5; Home and End jump to 0 and 100.
+- The comparison is fully usable without a pointer: keyboard alone can move the divider across
+  the full range.
+- Both `<img>` layers (when using the `{ src, alt }` shorthand) are `pointer-events-none`,
+  `select-none`, and `draggable={false}` so native image drag/drag-to-save never fights the
+  slider's own drag handling; `alt` is required on the shorthand so real screen-reader users get
+  a description of each side.
+- Under `prefers-reduced-motion`, the divider still fully works — it just snaps directly to its
+  target instead of smoothing with a spring, since the position itself conveys the comparison.
+
+## Notes
+
+- The divider position is a single motion value driving both the `after` layer's `clip-path` and
+  the divider/grip's `left` — there is no layout thrash, only `clip-path` and `left` change per
+  frame.
+- `mode="hover"` still keeps full keyboard support on the grip; hovering is additive, not a
+  replacement for the accessible interaction.

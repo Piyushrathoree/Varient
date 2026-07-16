@@ -229,10 +229,7 @@ export const DrawerContent = forwardRef<HTMLDivElement, DrawerContentProps>(
 
                 {showCloseButton && (
                   <DialogPrimitive.Close
-                    className={cn(
-                      'absolute rounded-md p-1 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-                      isHorizontal ? 'top-4 right-4' : 'top-4 right-4',
-                    )}
+                    className="absolute top-4 right-4 rounded-md p-1 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     aria-label="Close"
                   >
                     <CloseIcon />

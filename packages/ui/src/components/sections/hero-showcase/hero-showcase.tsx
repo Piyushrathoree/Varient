@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { TiltCard } from '../../animated/tilt-card';
 import { Button } from '../../foundation/button';
 import { Card } from '../../foundation/card';
-import { DURATION_INSTANT, EASE_OUT } from '../../../lib/animation';
+import { DURATION_INSTANT, EASE_OUT, SPRING_DEFAULT } from '../../../lib/animation';
 import { cn } from '../../../lib/utils';
 
 export interface HeroShowcaseCtaLink {
@@ -33,7 +33,14 @@ const focusRing =
 
 function DefaultMedia() {
   return (
-    <div className="flex aspect-[4/3] flex-col justify-between bg-muted/40 p-5">
+    <div
+      className={cn(
+        'flex aspect-[4/3] flex-col justify-between p-5',
+        '[--dot-color:color-mix(in_oklch,var(--color-foreground)_6%,transparent)]',
+        '[background-image:radial-gradient(circle,var(--dot-color)_1px,transparent_1px)]',
+        '[background-size:20px_20px]',
+      )}
+    >
       <div className="flex items-center justify-between gap-3">
         <div className="space-y-1">
           <p className="text-xs font-medium text-muted-foreground">Dashboard</p>
@@ -90,9 +97,10 @@ function ProductFrame({ media, isStatic }: { media?: ReactNode; isStatic: boolea
 
   return (
     <motion.div
-      animate={{ y: [0, -10, 0] }}
+      animate={{ y: 0 }}
       className="relative w-full [transform:perspective(1000px)_rotateY(-8deg)_rotateX(4deg)]"
-      transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+      initial={{ y: 18 }}
+      transition={{ ...SPRING_DEFAULT, delay: 0.2 }}
     >
       {frame}
     </motion.div>

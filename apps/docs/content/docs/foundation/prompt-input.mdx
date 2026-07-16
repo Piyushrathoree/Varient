@@ -1,0 +1,93 @@
+---
+title: Prompt Input
+description: The AI-chat input — an auto-growing textarea with a morphing submit button, in Varient's quiet language.
+---
+
+<ComponentPreview name="prompt-input" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/prompt-input/` into your project.
+
+```bash
+bun add clsx tailwind-merge motion
+```
+
+## Usage
+
+```tsx
+import { useState } from 'react';
+import { PromptInput } from '@/components/foundation/prompt-input';
+
+export function Example() {
+  const [value, setValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  return (
+    <PromptInput
+      value={value}
+      onValueChange={setValue}
+      onSubmit={(text) => {
+        setIsLoading(true);
+        // send `text`, then setIsLoading(false) and setValue('') when done
+      }}
+      isLoading={isLoading}
+      onStop={() => setIsLoading(false)}
+      placeholder="Message..."
+    />
+  );
+}
+```
+
+Controlled (`value` + `onValueChange`) or uncontrolled (`defaultValue`) — same pattern as `Dialog`/`Tabs`.
+Uncontrolled usage clears itself after submit; controlled usage leaves clearing to the caller, so you can
+hold the text until an async send resolves.
+
+Press <kbd>Enter</kbd> to submit, <kbd>Shift</kbd>+<kbd>Enter</kbd> for a new line.
+
+## Slots
+
+`leftSlot` and `rightSlot` render content anchored to the bottom edge of the chassis, next to the submit
+button — attach buttons, file chips, a model picker chip, etc. Neither slot is opinionated about content;
+pass any `ReactNode`.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'value', type: 'string', description: 'Controlled text value. Pair with onValueChange.' },
+    { name: 'defaultValue', type: 'string', defaultValue: "''", description: 'Initial text value for uncontrolled usage.' },
+    { name: 'onValueChange', type: '(value: string) => void', description: 'Called whenever the text changes (both controlled and uncontrolled usage).' },
+    { name: 'onSubmit', type: '(value: string) => void', description: 'Called with the trimmed value on Enter (no Shift) or a submit-button click. Required.' },
+    { name: 'isLoading', type: 'boolean', defaultValue: 'false', description: 'Busy state — swaps the submit button to a spinner, or a stop button when onStop is set.' },
+    { name: 'onStop', type: '() => void', description: 'When set, the submit button becomes a clickable stop glyph while isLoading. Omit to show a plain busy spinner instead.' },
+    { name: 'placeholder', type: 'string', defaultValue: "'Message...'", description: 'Placeholder text inside the textarea.' },
+    { name: 'maxRows', type: 'number', defaultValue: '6', description: 'Textarea grows until this many lines, then scrolls.' },
+    { name: 'leftSlot', type: 'ReactNode', description: 'Content anchored to the bottom-left of the chassis, e.g. an attach button or file chips.' },
+    { name: 'rightSlot', type: 'ReactNode', description: 'Content anchored to the bottom-right of the chassis, before the submit button, e.g. a model chip.' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the textarea and the submit button.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root chassis.' },
+  ]}
+/>
+
+## Accessibility
+
+The textarea is a real, native `<textarea>` — full keyboard and IME support, works with browser
+spellcheck/autofill.
+
+| Keys | Action |
+| ---- | ------ |
+| `Enter` | Submits the trimmed value (no-op when empty). |
+| `Shift` + `Enter` | Inserts a newline instead of submitting. |
+| `Tab` | Moves focus to/from the textarea and slot/submit controls in DOM order. |
+
+| Attribute / element | Purpose |
+| -------------------- | ------- |
+| `aria-label` on the textarea | Falls back to `"Prompt"` when no `aria-label` or `aria-labelledby` is supplied. |
+| `aria-busy` | Set on both the textarea and the submit button while `isLoading` is true. |
+| `aria-label` on the submit button | Updates per state — `"Send message"`, `"Generating response"`, or `"Stop generating"`. |
+
+The submit button is disabled whenever the trimmed value is empty, `isDisabled` is set, or a plain busy
+spinner is showing (no `onStop`). Focus is indicated on the chassis itself — the same
+accent-border-plus-soft-glow treatment as `Input` — rather than on the textarea alone, so the whole control
+reads as one focused unit. All height and button-morph animations respect `prefers-reduced-motion`.

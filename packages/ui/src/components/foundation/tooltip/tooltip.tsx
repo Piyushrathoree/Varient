@@ -90,8 +90,7 @@ export interface TooltipProps {
   className?: string;
 }
 
-// SmoothUI's animated-tooltip pull — a 2–4px slide in from the side the
-// tooltip appears on, resolved to an x/y offset per `side`.
+// Animated-tooltip pull — a 2–4px slide in from the side the tooltip appears on.
 const slideBySide: Record<TooltipSide, { x: number; y: number }> = {
   top: { x: 0, y: 4 },
   bottom: { x: 0, y: -4 },

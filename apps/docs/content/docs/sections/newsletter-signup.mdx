@@ -3,7 +3,7 @@ title: Newsletter Signup
 description: Email capture section with inline validation, loading state, and an animated success confirmation.
 ---
 
-<ComponentPreview name="newsletter-signup" />
+<ComponentPreview name="newsletter-signup" variant="section" />
 
 ## Installation
 
@@ -45,12 +45,13 @@ Two layout styles via the `variant` prop:
 ```
 
 - **`inline`** — email input and subscribe button in a single row on `sm+`. Good for footers and narrow bands.
-- **`card`** — centered `rounded-2xl` bordered surface with title and description above the form. Good for dedicated signup moments.
+- **`card`** — centered `rounded-2xl` bordered surface with title and description above the form. Good for dedicated signup moments. Supports an optional `eyebrow` label above the title for header parity with other sections.
 
 ## Props
 
 <PropsTable
   props={[
+    { name: 'eyebrow', type: 'string', description: 'Small label above the title, card variant only. Header pattern parity with other sections.' },
     { name: 'title', type: 'string', defaultValue: "'Stay in the loop'", description: 'Headline shown above the form (card) or beside it (inline).' },
     { name: 'description', type: 'string', description: 'Supporting copy below the title.' },
     { name: 'placeholder', type: 'string', defaultValue: "'you@company.com'", description: 'Email input placeholder.' },
@@ -70,4 +71,4 @@ The form uses the Foundation `Input` label association (`htmlFor` / `id`) and su
 | `Tab` / `Shift + Tab` | Moves focus between the email field and subscribe button. |
 | `Enter` | Submits the form when focus is inside it. |
 
-Invalid email shows **"Enter a valid email address."** via the input's `errorText` prop. On success, the form swaps to a `role="status"` confirmation row. All transitions are gated behind `prefers-reduced-motion`.
+Invalid email shows **"Enter a valid email address."** via the input's `errorText` prop, and the field plays a small gated shake (skipped under reduced motion). On success, the form swaps to a `role="status"` confirmation row with a quiet "Subscribe another" link that resets the form. All transitions are gated behind `prefers-reduced-motion`.

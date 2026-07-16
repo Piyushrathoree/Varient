@@ -45,6 +45,7 @@ export function Example() {
     { name: 'scale', type: 'number', defaultValue: '1.02', description: 'Scale applied while the pointer is over the card.' },
     { name: 'isGlareEnabled', type: 'boolean', defaultValue: 'true', description: 'Show a moving specular glare overlay that follows the pointer.' },
     { name: 'perspective', type: 'number', defaultValue: '800', description: 'CSS perspective distance in pixels.' },
+    { name: 'glareColor', type: 'string', defaultValue: "'oklch(100% 0 0 / 0.28)'", description: 'Specular glare color, applied via the --tilt-glare-color CSS custom property.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
   ]}
 />

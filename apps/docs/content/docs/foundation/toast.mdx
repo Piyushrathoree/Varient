@@ -53,6 +53,8 @@ export function Example() {
 
 `toast(options)` fires a default toast; `toast.success` / `toast.error` / `toast.warning` / `toast.info` are shorthands that set the title and variant in one call. Every call returns the toast's id, which `dismiss(id)` accepts to close it early.
 
+> **Stack limit.** The viewport keeps at most 4 toasts visible at once. Firing a 5th toast silently drops the oldest one from the stack (no dismiss animation, no callback) to make room — design around this if you queue toasts programmatically in bursts.
+
 ## Props
 
 `useToast()` returns `{ toast, dismiss }`. `toast(options)` (and its shorthands) accept a `ToastOptions` object:
@@ -77,6 +79,6 @@ export function Example() {
 
 - The viewport is a labeled `region` (`aria-label="Notifications"`) so screen reader users can jump to it.
 - Each toast is `role="status"` with `aria-live="polite"`, except **error** toasts, which use `role="alert"` with `aria-live="assertive"` so failures interrupt and are announced immediately.
-- The auto-dismiss timer pauses on hover/focus so a toast never disappears mid-read.
+- The auto-dismiss timer pauses on mouse hover and on keyboard focus (the action or dismiss button) so a toast never disappears mid-read.
 - The close button is a real `<button>` with `aria-label="Dismiss notification"` — reachable and operable by keyboard alone.
 - All motion (enter, exit, and stack reflow) is skipped under `prefers-reduced-motion`.

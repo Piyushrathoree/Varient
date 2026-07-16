@@ -38,6 +38,11 @@ icon — the button's width animates smoothly as the label changes length:
 <ButtonCopy display="label" content="npx varient add button-copy" />
 ```
 
+If the copy throws (e.g. `navigator.clipboard` is unavailable or denied),
+the button briefly morphs into a "failed" state — a small x icon (and, in
+label mode, a "Failed" label) with a destructive tint — then auto-reverts
+to idle, instead of silently resetting.
+
 ## Props
 
 <PropsTable
@@ -56,18 +61,24 @@ icon — the button's width animates smoothly as the label changes length:
 ## Accessibility
 
 - In icon mode, the accessible name lives in a visually-hidden
-  `aria-live="polite"` span, so "Copy" → "Copying" → "Copied" is announced to
-  screen readers as the state changes, without depending on assistive tech
-  re-reading a changing `aria-label`. In label mode, the visible text is the
-  accessible name and the button itself is the `aria-live="polite"` region.
-- Interaction is disabled while copying or while showing the copied
-  confirmation, preventing duplicate clipboard writes mid-animation.
-- The icon morph (copy → spinner → check) is purely decorative and marked
-  `aria-hidden`; the live-region text carries the actual state.
+  `aria-live="polite"` span, so "Copy" → "Copying" → "Copied" / "Failed" is
+  announced to screen readers as the state changes, without depending on
+  assistive tech re-reading a changing `aria-label`. In label mode, the
+  visible text is the accessible name and the button itself is the
+  `aria-live="polite"` region.
+- If the copy write throws, the button morphs into a "Failed" state (x
+  icon, `text-destructive` tint) instead of silently resetting to idle,
+  then auto-reverts to idle on its own after a short hold.
+- Interaction is disabled while copying, showing the copied confirmation,
+  or showing the failed state, preventing duplicate clipboard writes
+  mid-animation.
+- The icon morph (copy → spinner → check/x) is purely decorative and
+  marked `aria-hidden`; the live-region text carries the actual state.
 - The loading spinner is a genuine round SVG ring (a partial circular arc
   with round line caps) that spins continuously; the rotation is skipped
   under `prefers-reduced-motion` but the ring itself still renders, keeping
   the state visually distinct.
 - The "copied" checkmark's `text-emerald-500` accent is a deliberate,
   scoped exception to the semantic token palette — it matches the app's own
-  copy-button confirmation color.
+  copy-button confirmation color. The "failed" state uses the semantic
+  `text-destructive` token.

@@ -11,6 +11,7 @@ import {
   useState,
   type HTMLAttributes,
   type ImgHTMLAttributes,
+  type MouseEvent,
   type ReactElement,
   type ReactNode,
 } from 'react';
@@ -239,10 +240,12 @@ export interface AvatarGroupProps extends HTMLAttributes<HTMLDivElement> {
   max?: number;
   size?: AvatarSize;
   children: ReactNode;
+  /** When provided, the +N overflow chip becomes a real button that invokes this handler. */
+  onOverflowClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
-  ({ className, max, size = 'md', children, ...props }, ref) => {
+  ({ className, max, size = 'md', children, onOverflowClick, ...props }, ref) => {
     const childArray = Children.toArray(children).filter(isValidElement) as ReactElement<
       AvatarProps & { className?: string }
     >[];
@@ -270,14 +273,33 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
           </span>
         ))}
         {overflowCount > 0 ? (
-          <span className="-ml-2">
-            <AvatarRoot
-              size={size}
-              fallback={`+${overflowCount}`}
-              className="ring-2 ring-background"
-              aria-label={`${overflowCount} more`}
-            />
-          </span>
+          onOverflowClick ? (
+            <button
+              type="button"
+              onClick={onOverflowClick}
+              aria-label={`Show ${overflowCount} more`}
+              className={cn(
+                '-ml-2 inline-flex shrink-0 rounded-full',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+              )}
+            >
+              <AvatarRoot
+                size={size}
+                fallback={`+${overflowCount}`}
+                className="ring-2 ring-background"
+                aria-hidden
+              />
+            </button>
+          ) : (
+            <span className="-ml-2">
+              <AvatarRoot
+                size={size}
+                fallback={`+${overflowCount}`}
+                className="ring-2 ring-background"
+                aria-label={`${overflowCount} more`}
+              />
+            </span>
+          )
         ) : null}
       </div>
     );

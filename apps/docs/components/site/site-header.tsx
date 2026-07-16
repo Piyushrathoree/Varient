@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, LayoutGrid, Menu, X } from 'lucide-react';
+import { BookOpen, LayoutGrid, Menu, Search, X } from 'lucide-react';
 import {
   AnimatePresence,
   motion,
@@ -12,16 +12,18 @@ import {
   useTransform,
 } from 'motion/react';
 import { useEffect, useState } from 'react';
-import { cn } from '@varient/ui';
+import { cn, Kbd } from '@varient/ui';
 import { Github } from '@/components/site/brand-icons';
 import { ThemeToggle } from '@/components/site/theme-toggle';
+import { useCommandMenu } from '@/components/site/command-menu';
+import { gitConfig } from '@/lib/shared';
 
 const navLinks = [
   { href: '/components', label: 'Components', icon: LayoutGrid },
   { href: '/docs', label: 'Docs', icon: BookOpen },
 ] as const;
 
-const GITHUB_URL = 'https://github.com/piyush/varient';
+const GITHUB_URL = `https://github.com/${gitConfig.user}/${gitConfig.repo}`;
 
 const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background';
@@ -40,6 +42,7 @@ export function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const { scrollY } = useScroll();
+  const { openCommandMenu } = useCommandMenu();
 
   const pillScale = useTransform(scrollY, [0, 100], [1, 0.985]);
 
@@ -78,16 +81,12 @@ export function SiteHeader() {
           style={shouldReduceMotion ? undefined : { scale: pillScale }}
         >
           <Link
-            className={cn('group flex items-center gap-2 rounded-full py-0.5 pl-1 pr-2', focusRing)}
+            className={cn('flex items-center gap-2 rounded-full py-0.5 pl-1 pr-2', focusRing)}
             href="/"
           >
-            <span className="font-semibold text-base tracking-tight text-foreground sm:text-lg">
-              Varient
+            <span className="font-title text-base font-semibold tracking-tight text-foreground sm:text-lg">
+              Vari<span className="text-brand">ent</span>
             </span>
-            <span
-              aria-hidden
-              className="size-1.5 rounded-full bg-brand transition-transform duration-200 group-hover:scale-125 motion-reduce:group-hover:scale-100"
-            />
           </Link>
 
           <nav aria-label="Main" className="hidden items-center gap-0.5 md:flex">
@@ -113,6 +112,20 @@ export function SiteHeader() {
           </nav>
 
           <div className="hidden items-center gap-1 md:flex">
+            <button
+              aria-label="Search components"
+              className={cn(
+                'inline-flex items-center gap-1.5 rounded-full border border-transparent px-2.5 py-1.5 text-sm text-muted-foreground transition-all duration-200 hover:border-border hover:bg-card hover:text-foreground active:scale-[0.97] motion-reduce:active:scale-100',
+                focusRing,
+              )}
+              onClick={openCommandMenu}
+              type="button"
+            >
+              <Search aria-hidden className="size-4" />
+              <Kbd className="hidden lg:inline-flex" size="sm">
+                ⌘K
+              </Kbd>
+            </button>
             <ThemeToggle />
             <a
               aria-label="View source on GitHub"
@@ -158,7 +171,25 @@ export function SiteHeader() {
                 initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: -8 }}
                 transition={{ duration: shouldReduceMotion ? 0 : 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
-                <nav aria-label="Mobile" className="flex flex-col p-2">
+                <div className="p-2">
+                  <button
+                    aria-label="Search components"
+                    className={cn(
+                      'flex w-full items-center gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5 text-left text-sm text-muted-foreground transition-colors hover:text-foreground',
+                      focusRing,
+                    )}
+                    onClick={() => {
+                      setMenuOpen(false);
+                      openCommandMenu();
+                    }}
+                    type="button"
+                  >
+                    <Search aria-hidden className="size-4 shrink-0" />
+                    <span className="flex-1">Search…</span>
+                    <Kbd size="sm">⌘K</Kbd>
+                  </button>
+                </div>
+                <nav aria-label="Mobile" className="flex flex-col p-2 pt-0">
                   {navLinks.map((link) => {
                     const isActive =
                       pathname === link.href || pathname.startsWith(`${link.href}/`);

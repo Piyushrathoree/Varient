@@ -7,6 +7,7 @@ import {
   useState,
   type FormEvent,
   type HTMLAttributes,
+  type ReactNode,
 } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { Button } from '../../foundation/button';
@@ -20,17 +21,19 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const SUBMIT_DELAY_MS = 800;
 const MIN_MESSAGE_LENGTH = 10;
 
-const SUCCESS_MESSAGE = "Thanks — we'll get back to you within two business days.";
+const DEFAULT_SUCCESS_MESSAGE = "Thanks — we'll get back to you within two business days.";
+const DEFAULT_SUBMIT_LABEL = 'Send message';
 
 export interface ContactFormData {
   name: string;
   email: string;
   company?: string;
+  subject?: string;
   message: string;
   agreedToPrivacy: boolean;
 }
 
-type FieldKey = 'name' | 'email' | 'company' | 'message' | 'privacy';
+type FieldKey = 'name' | 'email' | 'company' | 'subject' | 'message' | 'privacy';
 
 type FieldErrors = Partial<Record<FieldKey, string>>;
 
@@ -39,6 +42,20 @@ export interface ContactFormProps extends Omit<HTMLAttributes<HTMLElement>, 'onS
   description?: string;
   onSubmit?: (data: ContactFormData) => void | Promise<void>;
   showCompanyField?: boolean;
+  /** Renders an optional subject input between the company field and message. */
+  showSubjectField?: boolean;
+  /** Label rendered on the submit button. */
+  submitLabel?: string;
+  /** Heading shown above the success message once the form has been submitted. */
+  successTitle?: string;
+  /** Body copy shown in the success panel once the form has been submitted. */
+  successMessage?: string;
+  /**
+   * Extra form fields rendered after the privacy checkbox and before the
+   * submit button — an escape hatch for consumers who need fields this
+   * component doesn't model natively (file upload, phone number, etc.).
+   */
+  children?: ReactNode;
 }
 
 function CheckIcon({ className }: { className?: string }) {
@@ -103,6 +120,11 @@ export const ContactForm = forwardRef<HTMLElement, ContactFormProps>(
       description,
       onSubmit,
       showCompanyField = false,
+      showSubjectField = false,
+      submitLabel = DEFAULT_SUBMIT_LABEL,
+      successTitle,
+      successMessage = DEFAULT_SUCCESS_MESSAGE,
+      children,
       ...props
     },
     ref,
@@ -114,6 +136,7 @@ export const ContactForm = forwardRef<HTMLElement, ContactFormProps>(
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [company, setCompany] = useState('');
+    const [subject, setSubject] = useState('');
     const [message, setMessage] = useState('');
     const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
     const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
@@ -155,6 +178,7 @@ export const ContactForm = forwardRef<HTMLElement, ContactFormProps>(
           message: message.trim(),
           agreedToPrivacy,
           ...(showCompanyField && company.trim() ? { company: company.trim() } : {}),
+          ...(showSubjectField && subject.trim() ? { subject: subject.trim() } : {}),
         };
 
         try {
@@ -180,6 +204,8 @@ export const ContactForm = forwardRef<HTMLElement, ContactFormProps>(
         name,
         onSubmit,
         showCompanyField,
+        showSubjectField,
+        subject,
       ],
     );
 
@@ -250,8 +276,13 @@ export const ContactForm = forwardRef<HTMLElement, ContactFormProps>(
                   <span className="flex size-12 items-center justify-center rounded-full bg-success/10 text-success">
                     <CheckIcon className="size-6" />
                   </span>
+                  {successTitle && (
+                    <p className="text-balance font-display text-base font-semibold text-foreground sm:text-lg">
+                      {successTitle}
+                    </p>
+                  )}
                   <p className="max-w-sm text-balance text-sm font-medium text-foreground sm:text-base">
-                    {SUCCESS_MESSAGE}
+                    {successMessage}
                   </p>
                 </motion.div>
               ) : (
@@ -309,6 +340,21 @@ export const ContactForm = forwardRef<HTMLElement, ContactFormProps>(
                     />
                   )}
 
+                  {showSubjectField && (
+                    <Input
+                      label="Subject"
+                      name="subject"
+                      value={subject}
+                      onChange={(event) => {
+                        setSubject(event.target.value);
+                        clearFieldError('subject');
+                      }}
+                      errorText={fieldErrors.subject}
+                      isDisabled={isLoading}
+                      helperText="Optional"
+                    />
+                  )}
+
                   <Textarea
                     label="Message"
                     name="message"
@@ -342,6 +388,8 @@ export const ContactForm = forwardRef<HTMLElement, ContactFormProps>(
                     )}
                   </div>
 
+                  {children}
+
                   <Button
                     type="submit"
                     variant="primary"
@@ -350,7 +398,7 @@ export const ContactForm = forwardRef<HTMLElement, ContactFormProps>(
                     isDisabled={isLoading}
                     className="w-full"
                   >
-                    Send message
+                    {submitLabel}
                   </Button>
                 </motion.form>
               )}

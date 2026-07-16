@@ -1,9 +1,9 @@
 ---
 title: Footer
-description: Site footer with brand wordmark, link columns, social icons, status pill, and SmoothUI credit line.
+description: Site footer with brand wordmark, link columns, social icons, legal links, and a status pill.
 ---
 
-<ComponentPreview name="footer" />
+<ComponentPreview name="footer" variant="section" />
 
 ## Installation
 
@@ -43,7 +43,13 @@ export function Example() {
       socialLinks={[
         { label: 'GitHub', href: 'https://github.com/example', platform: 'github' },
         { label: 'X', href: 'https://x.com/example', platform: 'x' },
+        { label: 'Discord', href: 'https://discord.gg/example', platform: 'discord' },
       ]}
+      legalLinks={[
+        { label: 'Privacy', href: '/legal/privacy' },
+        { label: 'Terms', href: '/legal/terms' },
+      ]}
+      year={2026}
     />
   );
 }
@@ -55,10 +61,11 @@ export function Example() {
   props={[
     { name: 'tagline', type: 'string', description: 'One-liner under the two-tone wordmark.' },
     { name: 'columns', type: 'FooterColumn[]', description: 'Three link columns beside the brand block. Each column has a title and an array of { label, href, isExternal? } links.' },
-    { name: 'socialLinks', type: 'FooterSocialLink[]', description: 'GitHub and X profile links rendered as inline SVG icons beside the tagline.' },
+    { name: 'socialLinks', type: 'FooterSocialLink[]', description: "Social profile links rendered as inline SVG icons beside the tagline. Each link has { label, href, platform, icon? }; platform is one of 'github' | 'x' | 'linkedin' | 'discord' | 'youtube', and icon overrides the built-in glyph." },
     { name: 'statusText', type: 'string', defaultValue: "'All systems operational'", description: 'Label inside the live status pill in the bottom bar.' },
     { name: 'copyrightName', type: 'string', defaultValue: "'Varient'", description: 'Name used in the copyright line.' },
-    { name: 'creditHref', type: 'string', defaultValue: "'https://smoothui.dev'", description: 'Destination for the required SmoothUI credit link.' },
+    { name: 'legalLinks', type: 'FooterLink[]', description: 'Optional privacy/terms row rendered next to the copyright line.' },
+    { name: 'year', type: 'number', description: 'Year shown in the copyright line. Defaults to the current year — pass this to avoid a stale year on statically generated pages.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root footer.' },
   ]}
 />
@@ -71,6 +78,5 @@ export function Example() {
 | Link columns | Each column is a `<nav>` with an `aria-label` matching the column title. |
 | Social icons | Each icon link has a descriptive `aria-label`; decorative SVGs are `aria-hidden`. |
 | Status pill | Decorative ping animation is `aria-hidden`; the label text is readable by assistive tech. |
-| Credit line | External SmoothUI link opens in a new tab with `rel="noopener noreferrer"`. |
 
 External links use `target="_blank"` with `rel="noopener noreferrer"`. The status ping respects `prefers-reduced-motion` via `motion-reduce:animate-none`.

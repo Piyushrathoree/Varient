@@ -100,6 +100,41 @@ export function InputOTPDemo() {
           </InputOTP>
         </DemoCard>
       </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <DemoCard label="Size: sm">
+          <InputOTP length={4} defaultValue="4829" size="sm">
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+              <InputOTPSlot index={3} />
+            </InputOTPGroup>
+          </InputOTP>
+        </DemoCard>
+
+        <DemoCard label="Size: md (default)">
+          <InputOTP length={4} defaultValue="4829" size="md">
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+              <InputOTPSlot index={3} />
+            </InputOTPGroup>
+          </InputOTP>
+        </DemoCard>
+
+        <DemoCard label="Size: lg">
+          <InputOTP length={4} defaultValue="4829" size="lg">
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+              <InputOTPSlot index={3} />
+            </InputOTPGroup>
+          </InputOTP>
+        </DemoCard>
+      </div>
     </div>
   );
 }

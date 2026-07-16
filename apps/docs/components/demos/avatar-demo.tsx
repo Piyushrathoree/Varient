@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Avatar, AvatarGroup, type AvatarSize, type AvatarStatus } from '@varient/ui';
 
 const PLACEHOLDER_IMAGE = 'https://i.pravatar.cc/150?img=1';
@@ -29,6 +29,8 @@ function DemoCard({ label, children }: { label: string; children: ReactNode }) {
 }
 
 export function AvatarDemo() {
+  const [overflowClicks, setOverflowClicks] = useState(0);
+
   return (
     <div className="flex w-full flex-col gap-8">
       <div className="flex flex-col gap-3">
@@ -103,6 +105,15 @@ export function AvatarDemo() {
               <Avatar.Image src={PLACEHOLDER_IMAGE} alt="Alex Morgan" />
               <Avatar.Fallback>Alex Morgan</Avatar.Fallback>
             </Avatar>
+          </DemoCard>
+          <DemoCard label={`Clickable overflow (${overflowClicks} clicks)`}>
+            <AvatarGroup max={3} size="md" onOverflowClick={() => setOverflowClicks((n) => n + 1)}>
+              <Avatar src="https://i.pravatar.cc/150?img=21" alt="Member 1" fallback="Member 1" />
+              <Avatar src="https://i.pravatar.cc/150?img=22" alt="Member 2" fallback="Member 2" />
+              <Avatar src="https://i.pravatar.cc/150?img=23" alt="Member 3" fallback="Member 3" />
+              <Avatar src="https://i.pravatar.cc/150?img=24" alt="Member 4" fallback="Member 4" />
+              <Avatar src="https://i.pravatar.cc/150?img=25" alt="Member 5" fallback="Member 5" />
+            </AvatarGroup>
           </DemoCard>
         </div>
       </div>

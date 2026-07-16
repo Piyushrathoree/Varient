@@ -36,7 +36,7 @@ export function Example() {
 }
 ```
 
-The component is fully controlled — pass `page`, `pageCount`, and `onPageChange`. Previous and Next disable automatically at the first and last page.
+The component is fully controlled — pass `page`, `pageCount`, and `onPageChange`. Previous and Next disable automatically at the first and last page. The active page's fill is a single shared indicator that slides between buttons as the page changes, matching the `Tabs` selection pattern; it snaps instantly under `prefers-reduced-motion`.
 
 ## Props
 

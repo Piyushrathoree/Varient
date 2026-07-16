@@ -35,6 +35,7 @@ export function Example() {
 
 - **Default** — a bordered surface at rest; focus swaps the border to the accent color and adds a soft, low-opacity glow.
 - **Filled** — a quiet `bg-muted` fill with no visible border until focus, when it lifts to `bg-background` with the same accent border + soft glow.
+- **Frame** — a gradient-rimmed border (brand → brand-secondary) with a brand-tinted focus glow. Pairs with `Input` and `Button` `variant="frame"` so related form fields read as one family.
 
 ## Props
 
@@ -44,7 +45,7 @@ export function Example() {
     { name: 'placeholder', type: 'string', description: 'Placeholder text inside the textarea.' },
     { name: 'helperText', type: 'string', description: 'Helper text shown below the textarea when there is no error.' },
     { name: 'errorText', type: 'string', description: 'Error message — triggers error styling and takes over from helperText.' },
-    { name: 'variant', type: "TextareaVariant", defaultValue: "'default'", description: "'default' is a bordered surface, 'filled' is a soft bg-muted surface with no visible border until focus." },
+    { name: 'variant', type: "TextareaVariant", defaultValue: "'default'", description: "'default' is a bordered surface, 'filled' is a soft bg-muted surface with no visible border until focus, 'frame' is a gradient-rimmed border with a brand-tinted focus glow." },
     { name: 'resize', type: "'none' | 'vertical' | 'both'", defaultValue: "'vertical'", description: 'Controls the native resize handle — none, vertical only, or both axes.' },
     { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the textarea.' },
     { name: 'isReadOnly', type: 'boolean', defaultValue: 'false', description: 'Makes the textarea read-only.' },

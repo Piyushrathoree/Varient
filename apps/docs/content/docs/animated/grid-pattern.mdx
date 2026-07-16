@@ -52,3 +52,14 @@ export function Example() {
   above stays fully interactive.
 - Under `prefers-reduced-motion`, animation is disabled: highlighted cells
   render as static fills and the grid does not pan.
+- Both animation modes pause automatically while the component is scrolled
+  offscreen (`useViewportActive`), so mounted-but-invisible instances don't
+  burn CPU.
+
+## Implementation notes
+
+- The no-highlights pan mode translates a wrapping `<g>` via a CSS transform
+  (GPU-composited) instead of animating the `<pattern>`'s `x`/`y` attributes,
+  which would force a layout recalculation of the entire tiled fill on every
+  frame. The filled rect bleeds 50% past the viewport on each side so the pan
+  never reveals a seam.

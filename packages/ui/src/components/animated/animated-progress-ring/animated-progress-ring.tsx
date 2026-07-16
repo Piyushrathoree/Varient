@@ -1,7 +1,15 @@
 'use client';
 
 import { forwardRef, useEffect, useRef, useState } from 'react';
-import { animate, useInView, useReducedMotion } from 'motion/react';
+import {
+  animate,
+  motion,
+  useInView,
+  useMotionValue,
+  useMotionValueEvent,
+  useReducedMotion,
+  useTransform,
+} from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { EASE_OUT } from '../../../lib/animation';
 
@@ -53,8 +61,6 @@ export const AnimatedProgressRing = forwardRef<SVGSVGElement, AnimatedProgressRi
     ref,
   ) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const animatedValueRef = useRef(0);
-    const displayValueRef = useRef(0);
     const isInView = useInView(containerRef, { once: true, margin: '-80px' });
     const shouldReduceMotion = useReducedMotion();
 
@@ -63,46 +69,35 @@ export const AnimatedProgressRing = forwardRef<SVGSVGElement, AnimatedProgressRi
     const circumference = 2 * Math.PI * radius;
     const center = size / 2;
 
-    const [animatedValue, setAnimatedValue] = useState(0);
-    const [displayValue, setDisplayValue] = useState(0);
+    // Single motion value drives both the arc's stroke-dashoffset and the
+    // center count-up — no second parallel animate() loop to keep in sync.
+    const progress = useMotionValue(0);
+    const strokeDashoffset = useTransform(
+      progress,
+      (latest) => circumference * (1 - latest / 100),
+    );
+    const roundedDisplay = useTransform(progress, (latest) => Math.round(latest));
+
+    const [ariaValueNow, setAriaValueNow] = useState(0);
+    useMotionValueEvent(progress, 'change', (latest) => {
+      setAriaValueNow(Math.round(latest));
+    });
 
     useEffect(() => {
       if (!isInView) return;
 
       if (shouldReduceMotion) {
-        animatedValueRef.current = clampedValue;
-        displayValueRef.current = clampedValue;
-        setAnimatedValue(clampedValue);
-        setDisplayValue(clampedValue);
+        progress.jump(clampedValue);
         return;
       }
 
-      const arcControls = animate(animatedValueRef.current, clampedValue, {
+      const controls = animate(progress, clampedValue, {
         duration,
         ease: EASE_OUT,
-        onUpdate: (latest) => {
-          animatedValueRef.current = latest;
-          setAnimatedValue(latest);
-        },
       });
 
-      const countControls = animate(displayValueRef.current, clampedValue, {
-        duration,
-        ease: EASE_OUT,
-        onUpdate: (latest) => {
-          displayValueRef.current = latest;
-          setDisplayValue(Math.round(latest));
-        },
-      });
-
-      return () => {
-        arcControls.stop();
-        countControls.stop();
-      };
-    }, [clampedValue, isInView, duration, shouldReduceMotion]);
-
-    const strokeDashoffset = circumference * (1 - animatedValue / 100);
-    const roundedDisplay = Math.round(displayValue);
+      return () => controls.stop();
+    }, [clampedValue, isInView, duration, shouldReduceMotion, progress]);
 
     return (
       <div
@@ -112,8 +107,8 @@ export const AnimatedProgressRing = forwardRef<SVGSVGElement, AnimatedProgressRi
         role="progressbar"
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-valuenow={roundedDisplay}
-        aria-label={`Progress: ${roundedDisplay} percent`}
+        aria-valuenow={ariaValueNow}
+        aria-label={`Progress: ${ariaValueNow} percent`}
       >
         <svg
           ref={ref}
@@ -121,7 +116,7 @@ export const AnimatedProgressRing = forwardRef<SVGSVGElement, AnimatedProgressRi
           height={size}
           viewBox={`0 0 ${size} ${size}`}
           className="-rotate-90"
-          aria-hidden={showValue}
+          aria-hidden="true"
         >
           <circle
             cx={center}
@@ -131,7 +126,7 @@ export const AnimatedProgressRing = forwardRef<SVGSVGElement, AnimatedProgressRi
             stroke={trackColor}
             strokeWidth={strokeWidth}
           />
-          <circle
+          <motion.circle
             cx={center}
             cy={center}
             r={radius}
@@ -140,16 +135,18 @@ export const AnimatedProgressRing = forwardRef<SVGSVGElement, AnimatedProgressRi
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
+            style={{ strokeDashoffset }}
           />
         </svg>
 
+        {/* Decorative — the accessible value lives on the progressbar's
+            aria-valuenow/aria-label above, regardless of showValue. */}
         {showValue ? (
           <span
             className="absolute inset-0 flex items-center justify-center text-lg font-semibold tabular-nums text-foreground"
             aria-hidden="true"
           >
-            {roundedDisplay}
+            <motion.span>{roundedDisplay}</motion.span>
             <span className="text-sm text-muted-foreground">%</span>
           </span>
         ) : null}

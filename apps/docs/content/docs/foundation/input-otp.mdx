@@ -54,6 +54,7 @@ export function Example() {
   { name: 'onComplete', type: '(value: string) => void', description: 'Fired once all slots are filled (InputOTP root).' },
   { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables input and dims the container (InputOTP root).' },
   { name: 'isInvalid', type: 'boolean', defaultValue: 'false', description: 'Applies destructive border styling to slots (InputOTP root).' },
+  { name: 'size', type: "'sm' | 'md' | 'lg'", defaultValue: "'md'", description: 'Slot box + text size for every InputOTPSlot inside this root (InputOTP root).' },
   { name: 'InputOTPSlot index', type: 'number', description: 'Zero-based slot index — must match a position within length.' },
   { name: 'InputOTPGroup', type: 'HTMLAttributes<"div">', description: 'Groups adjacent slots — use between separators for visual chunking.' },
   { name: 'InputOTPSeparator', type: 'HTMLAttributes<"div">', description: 'Visual divider between slot groups.' },

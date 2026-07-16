@@ -1,6 +1,6 @@
 ---
 title: Retro Grid
-description: Scrolling perspective grid background with overlay slot and optional brand tint.
+description: Scrolling perspective grid background with overlay slot and brand-tinted lines by default.
 ---
 
 <ComponentPreview name="retro-grid" />
@@ -15,14 +15,14 @@ bun add motion clsx tailwind-merge
 
 ## Usage
 
-Wrap hero or section content — the grid scrolls behind a radial mask while children stay in the overlay slot:
+Wrap hero or section content — the grid scrolls behind a radial mask while children stay in the overlay slot. Grid lines carry a faint ember tint by default; pass `isBrandTinted={false}` for a neutral grid:
 
 ```tsx
 import { RetroGrid } from '@/components/animated/retro-grid';
 
 export function Example() {
   return (
-    <RetroGrid isBrandTinted className="min-h-[400px] rounded-xl">
+    <RetroGrid className="min-h-[400px] rounded-xl">
       <div className="flex min-h-[400px] flex-col items-center justify-center p-8">
         <h2 className="text-2xl font-semibold text-foreground">Your headline</h2>
       </div>
@@ -40,7 +40,7 @@ export function Example() {
     { name: 'perspective', type: 'number', defaultValue: '220', description: 'CSS perspective depth in pixels.' },
     { name: 'angle', type: 'number', defaultValue: '62', description: 'Tilt angle of the grid plane in degrees.' },
     { name: 'speed', type: 'number', defaultValue: '18', description: 'Seconds for one scroll loop.' },
-    { name: 'isBrandTinted', type: 'boolean', defaultValue: 'false', description: 'When true, grid lines pick up a faint brand tint.' },
+    { name: 'isBrandTinted', type: 'boolean', defaultValue: 'true', description: 'When true, grid lines pick up a faint brand tint. Set to false for a neutral grid.' },
     { name: 'className', type: 'string', description: 'Size and layout on the outer relative container.' },
   ]}
 />
@@ -49,4 +49,5 @@ export function Example() {
 
 - The grid layer is decorative (`aria-hidden`) and uses `pointer-events-none` — overlay content remains fully interactive.
 - Under `prefers-reduced-motion`, the grid plane is static with no scroll keyframes.
+- The scroll loop pauses automatically while the component is scrolled offscreen, resuming when it re-enters the viewport.
 - Pair with sufficient contrast on overlay text — the radial mask fades lines toward the edges.

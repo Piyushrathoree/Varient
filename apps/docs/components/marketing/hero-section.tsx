@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowUpRight, Wand2 } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
@@ -15,25 +16,35 @@ interface HeroSectionProps {
 
 const EASE_OUT_QUAD = [0.25, 0.46, 0.45, 0.94] as const;
 
-/** Real, live compact demos for the right-side showcase — first and last
- * slots go full-width (2 cols), matching SmoothUI's hero grid shape exactly:
- * one wide tile, four single tiles, one wide tile. */
-const SHOWCASE_SLUGS = ['number-ticker', 'input', 'switch', 'badge', 'button', 'card'] as const;
+/** Real, live compact demos for the right-side showcase — wow-first, motion-led.
+ * First and last slots go full-width (2 cols): one wide tile, four single tiles, one wide tile. */
+const SHOWCASE_SLUGS = [
+  'border-beam',
+  'shimmer-button',
+  'number-ticker',
+  'button-copy',
+  'switch',
+  'marquee',
+] as const;
 
 function AnnouncementBadge({ readyCount, totalCount }: HeroSectionProps) {
   const shouldReduceMotion = useReducedMotion();
+  // Sweep plays once on mount (default motion behavior); bump the key to replay on hover.
+  const [sweepKey, setSweepKey] = useState(0);
 
   return (
     <Link
       href="/components"
+      onMouseEnter={() => !shouldReduceMotion && setSweepKey((k) => k + 1)}
       className="group inline-flex max-w-full items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full border border-border bg-background px-3 py-0.5 font-medium text-foreground text-xs transition-all"
     >
       <div className="relative -ml-2.5 flex shrink-0 items-center gap-1 overflow-hidden truncate rounded-full bg-brand/10 px-2.5 py-1 text-brand text-xs">
         {!shouldReduceMotion && (
           <motion.div
+            key={sweepKey}
             animate={{ x: ['-100%', '200%'] }}
             className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, repeatDelay: 3, ease: 'easeInOut' }}
+            transition={{ duration: 0.9, ease: 'easeInOut' }}
           />
         )}
         <Wand2 className="size-3" />
@@ -53,10 +64,8 @@ function AnnouncementBadge({ readyCount, totalCount }: HeroSectionProps) {
 }
 
 /**
- * Ported from SmoothUI's `components/landing/hero.tsx`. Structure, classes,
- * and the two-column layout are copied as-is; content is Varient's (headline,
- * description, CTAs → /components + /docs) and the right-side showcase grid
- * mounts our own shipped `@varient/ui` components instead of SmoothUI's.
+ * Marketing hero — two-column layout with headline, CTAs, and a live component
+ * showcase grid mounting shipped `@varient/ui` compact demos.
  */
 export function HeroSection({ readyCount, totalCount }: HeroSectionProps) {
   const shouldReduceMotion = useReducedMotion();

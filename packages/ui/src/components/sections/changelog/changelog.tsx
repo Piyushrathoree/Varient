@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, type HTMLAttributes } from 'react';
+import { forwardRef, useId, type HTMLAttributes } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { Badge } from '../../foundation/badge';
 import { cn } from '../../../lib/utils';
@@ -15,7 +15,10 @@ export interface ChangelogChange {
 
 export interface ChangelogEntry {
   version: string;
+  /** Human-readable display date, e.g. "Jul 1, 2026". */
   date: string;
+  /** Machine-readable ISO date (e.g. "2026-07-01") passed to <time dateTime>. Falls back to `date`. */
+  isoDate?: string;
   title?: string;
   changes: ChangelogChange[];
 }
@@ -46,6 +49,7 @@ export const defaultChangelogEntries: ChangelogEntry[] = [
   {
     version: '1.2.0',
     date: 'Jul 1, 2026',
+    isoDate: '2026-07-01',
     title: 'Sections layer ships',
     changes: [
       { type: 'added', text: 'Integration grid, changelog, and 404 page sections.' },
@@ -56,6 +60,7 @@ export const defaultChangelogEntries: ChangelogEntry[] = [
   {
     version: '1.1.0',
     date: 'Jun 12, 2026',
+    isoDate: '2026-06-12',
     title: 'Animated layer polish',
     changes: [
       { type: 'added', text: 'Blur fade, border beam, and shimmer button components.' },
@@ -66,6 +71,7 @@ export const defaultChangelogEntries: ChangelogEntry[] = [
   {
     version: '1.0.0',
     date: 'May 20, 2026',
+    isoDate: '2026-05-20',
     title: 'Foundation layer launch',
     changes: [
       { type: 'added', text: '25 Radix-powered foundation components with copy-paste docs.' },
@@ -127,7 +133,7 @@ function ChangelogEntryRow({
         >
           v{entry.version}
         </Badge>
-        <time className="text-xs text-muted-foreground" dateTime={entry.date}>
+        <time className="text-xs text-muted-foreground" dateTime={entry.isoDate ?? entry.date}>
           {entry.date}
         </time>
       </div>
@@ -158,6 +164,7 @@ export const Changelog = forwardRef<HTMLElement, ChangelogProps>(
     ref,
   ) => {
     const shouldReduceMotion = useReducedMotion();
+    const headingId = useId();
 
     const headerMotion = shouldReduceMotion
       ? {}
@@ -171,7 +178,7 @@ export const Changelog = forwardRef<HTMLElement, ChangelogProps>(
     return (
       <section
         ref={ref}
-        aria-labelledby="changelog-heading"
+        aria-labelledby={headingId}
         className={cn('w-full px-6 py-16 md:px-8 md:py-24', className)}
         {...props}
       >
@@ -181,7 +188,7 @@ export const Changelog = forwardRef<HTMLElement, ChangelogProps>(
               <p className="text-sm font-medium text-brand">{eyebrow}</p>
             )}
             <h2
-              id="changelog-heading"
+              id={headingId}
               className="mt-2 font-display text-2xl font-semibold tracking-tight text-foreground md:text-3xl"
             >
               {title}

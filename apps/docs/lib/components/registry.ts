@@ -14,6 +14,8 @@ export interface ComponentEntry {
   category: string;
   description: string;
   status: ComponentStatus;
+  /** Recently shipped — surfaces a quiet NEW chip in the gallery for a couple of weeks. */
+  isNew?: boolean;
 }
 
 export const layerLabels: Record<ComponentLayer, string> = {
@@ -67,6 +69,7 @@ function entry(
   category: string,
   description: string,
   status: ComponentStatus = 'planned',
+  isNew?: boolean,
 ): ComponentEntry {
   return {
     name,
@@ -78,6 +81,7 @@ function entry(
     category,
     description,
     status,
+    ...(isNew ? { isNew } : {}),
   };
 }
 
@@ -94,6 +98,7 @@ export const components: ComponentEntry[] = [
   entry('Toggle', 'foundation', 'Forms & Inputs', 'Two-state button for a single boolean setting.', 'shipped'),
   entry('Toggle Group', 'foundation', 'Forms & Inputs', 'Grouped toggles with single or multi selection.', 'shipped'),
   entry('Input OTP', 'foundation', 'Forms & Inputs', 'Segmented one-time-code input with group and separator composition.', 'shipped'),
+  entry('Prompt Input', 'foundation', 'Forms & Inputs', 'AI-chat composer with auto-growing textarea, attachments, and submit state.', 'shipped', true),
   entry('Dialog', 'foundation', 'Overlays', 'Modal overlay for focused interactions.', 'shipped'),
   entry('Alert Dialog', 'foundation', 'Overlays', 'Interruptive confirmation for destructive actions.', 'shipped'),
   entry('Drawer', 'foundation', 'Overlays', 'Edge-anchored panel for supplementary content.', 'shipped'),
@@ -113,6 +118,7 @@ export const components: ComponentEntry[] = [
   entry('Pagination', 'foundation', 'Navigation', 'Navigate between pages of paginated content.', 'shipped'),
   entry('Breadcrumb', 'foundation', 'Navigation', 'Hierarchical trail back to a page\u2019s ancestors.', 'shipped'),
   entry('Sidebar', 'foundation', 'Navigation', 'Collapsible composable app sidebar with animated width and icon rail.', 'shipped'),
+  entry('Stepper', 'foundation', 'Navigation', 'Multi-step progress indicator with animated connectors and step states.', 'shipped', true),
   entry('Toast', 'foundation', 'Feedback', 'Transient notifications with an animated stack.', 'shipped'),
   entry('Progress', 'foundation', 'Feedback', 'Linear progress bar with sizes, value label, and indeterminate sweep.', 'shipped'),
 
@@ -126,6 +132,8 @@ export const components: ComponentEntry[] = [
   entry('Number Ticker', 'animated', 'Text Effects', 'Counts up to a target value on scroll into view.', 'shipped'),
   entry('Hero Highlight', 'animated', 'Text Effects', 'Interactive dot-grid hero with cursor reveal and scroll-triggered text highlights.', 'shipped'),
   entry('Morphing Text', 'animated', 'Text Effects', 'Cycles words with a blur-crossfade morph — distinct from Word Rotate.', 'shipped'),
+  entry('Text Scramble', 'animated', 'Text Effects', 'Characters shuffle, then resolve left to right — a decrypt-style reveal.', 'shipped', true),
+  entry('Sliding Number', 'animated', 'Text Effects', 'Odometer-style digit roll for live numbers and counters.', 'shipped', true),
   entry('Shimmer Button', 'animated', 'Buttons', 'Button with a moving shimmer highlight.', 'shipped'),
   entry('Button Copy', 'animated', 'Buttons', 'Copy button with an animated idle → copied state morph.', 'shipped'),
   entry('Ripple Button', 'animated', 'Buttons', 'Button with an expanding ripple on click.', 'shipped'),
@@ -150,6 +158,9 @@ export const components: ComponentEntry[] = [
   entry('Cursor Spotlight', 'animated', 'Cards & Surfaces', 'Mask-reveal spotlight that follows the cursor.', 'shipped'),
   entry('Terminal', 'animated', 'Cards & Surfaces', 'Dark terminal window mockup with composable typing lines.', 'shipped'),
   entry('Browser Frame', 'animated', 'Cards & Surfaces', 'Browser window mockup with URL bar and composable content slot.', 'shipped'),
+  entry('Expandable Card', 'animated', 'Cards & Surfaces', 'Card that morphs into a centered modal via shared-layout animation.', 'shipped', true),
+  entry('Morphing Dialog', 'animated', 'Cards & Surfaces', 'Composable trigger-to-dialog morph built on shared layout IDs.', 'shipped', true),
+  entry('Image Comparison', 'animated', 'Cards & Surfaces', 'Before/after image slider with draggable spring-loaded divider.', 'shipped', true),
   entry('Globe', 'animated', 'Visualizations', 'Rotating 3D globe with arc connections.', 'shipped'),
   entry('Animated Beam', 'animated', 'Visualizations', 'A traveling light beam connecting two points.', 'shipped'),
   entry('Orbit', 'animated', 'Visualizations', 'Icons circling a central anchor point.', 'shipped'),
@@ -162,6 +173,9 @@ export const components: ComponentEntry[] = [
   entry('Animated List', 'animated', 'Layout & Navigation', 'Vertical list where items spring in one-by-one at the top with fading older entries.', 'shipped'),
   entry('Dock', 'animated', 'Layout & Navigation', 'macOS-style dock with cursor-proximity icon magnification.', 'shipped'),
   entry('Avatar Circles', 'animated', 'Layout & Navigation', 'Overlapping avatar row with staggered pop-in and +N overflow chip.', 'shipped'),
+  entry('Dynamic Island', 'animated', 'Layout & Navigation', 'Pill that fluidly morphs between compact and expanded states, iOS-style.', 'shipped', true),
+  entry('Carousel', 'animated', 'Layout & Navigation', 'Swipeable spring-physics carousel with drag, snap, and dot navigation.', 'shipped', true),
+  entry('Sortable List', 'animated', 'Layout & Navigation', 'Drag-to-reorder list with spring-animated layout shifts.', 'shipped', true),
 
   // ── Sections (20) — full-page blocks, compose from Layer 1 + 2 ──
   entry('Hero', 'sections', 'Marketing', 'Full-width hero with headline and CTAs.', 'shipped'),

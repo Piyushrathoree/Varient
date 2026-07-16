@@ -3,7 +3,7 @@ title: Changelog
 description: A versioned list of product updates with color-coded change-type badges.
 ---
 
-<ComponentPreview name="changelog" />
+<ComponentPreview name="changelog" variant="section" />
 
 ## Installation
 
@@ -27,6 +27,7 @@ export function ReleasesPage() {
         {
           version: '1.2.0',
           date: 'Jul 1, 2026',
+          isoDate: '2026-07-01',
           title: 'Sections layer ships',
           changes: [
             { type: 'added', text: 'Integration grid and 404 page sections.' },
@@ -56,7 +57,8 @@ export function ReleasesPage() {
 <PropsTable
   props={[
     { name: 'version', type: 'string', description: 'Semantic version string — rendered in a mono Badge chip prefixed with "v".' },
-    { name: 'date', type: 'string', description: 'Human-readable release date, also passed to a semantic <time> element.' },
+    { name: 'date', type: 'string', description: 'Human-readable display date shown next to the version badge.' },
+    { name: 'isoDate', type: 'string', description: 'Optional machine-readable ISO date passed to the <time dateTime> attribute; falls back to date when omitted.' },
     { name: 'title', type: 'string', description: 'Optional release headline below the version row.' },
     { name: 'changes', type: '{ type: "added" | "improved" | "fixed"; text: string }[]', description: 'Bullet list of changes — each type maps to a color-coded Badge (success, brand, warning).' },
   ]}
@@ -66,7 +68,8 @@ export function ReleasesPage() {
 
 The section uses a semantic `<section>` with `aria-labelledby` pointing at the heading.
 Each release renders as an `<article>` with a version row, optional `<h3>` title, and a semantic `<ul>` of changes.
-Version dates use a `<time>` element for machine-readable dating when you pass an ISO-friendly `date` string.
+The heading id is generated with `useId()` so multiple `Changelog` instances on one page never collide.
+Version dates use a `<time>` element; pass `isoDate` (e.g. `"2026-07-01"`) for machine-readable dating — it falls back to `date` when omitted.
 Change-type badges are visible text labels — not icon-only.
 
 Scroll-reveal animations are gated behind `prefers-reduced-motion` — reduced-motion users see content immediately without stagger or fade.

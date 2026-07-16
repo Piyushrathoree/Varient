@@ -13,9 +13,11 @@ import {
   useMotionValue,
   useReducedMotion,
   useSpring,
+  useTransform,
 } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { SPRING_SNAPPY } from '../../../lib/animation';
+import { useFinePointer } from '../../../lib/use-fine-pointer';
 
 export interface CursorSpotlightProps extends HTMLAttributes<HTMLDivElement> {
   /** Content revealed under the cursor spotlight. */
@@ -25,14 +27,20 @@ export interface CursorSpotlightProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * Mask-reveal spotlight: children render dimmed, and a circular region around
- * the cursor reveals full brightness via a radial CSS mask. On pointer leave
- * the mask fades out. Under reduced motion renders children at full brightness.
+ * Cursor-tracking spotlight: `children` render exactly once, at full
+ * brightness and fully interactive/keyboard-reachable. A decorative scrim
+ * overlay dims and desaturates the surrounding area, punched through by a
+ * circular hole that follows the pointer via a radial CSS mask, so the real
+ * content underneath reads clearly inside the spotlight. Requires a fine
+ * (hover-capable) pointer — touch devices and `prefers-reduced-motion`
+ * render children plainly with no scrim and no pointer listeners.
  */
 export const CursorSpotlight = forwardRef<HTMLDivElement, CursorSpotlightProps>(
   ({ children, size = 200, className, ...props }, ref) => {
     const nodeRef = useRef<HTMLDivElement | null>(null);
     const shouldReduceMotion = useReducedMotion();
+    const isFinePointer = useFinePointer();
+    const isActive = isFinePointer && !shouldReduceMotion;
 
     const pointerX = useMotionValue(0);
     const pointerY = useMotionValue(0);
@@ -41,12 +49,16 @@ export const CursorSpotlight = forwardRef<HTMLDivElement, CursorSpotlightProps>(
     const x = useSpring(pointerX, SPRING_SNAPPY);
     const y = useSpring(pointerY, SPRING_SNAPPY);
     const revealOpacity = useSpring(spotlightOpacity, SPRING_SNAPPY);
+    // Hole radius grows from 0 (fully dimmed, idle) to `size` (full reveal)
+    // in lockstep with the same spring, so the punch-through animates
+    // smoothly instead of popping to full size on the first pointer move.
+    const holeRadius = useTransform(revealOpacity, [0, 1], [0, size]);
 
-    const maskImage = useMotionTemplate`radial-gradient(circle ${size}px at ${x}px ${y}px, black 0%, transparent 100%)`;
+    const scrimMask = useMotionTemplate`radial-gradient(circle ${holeRadius}px at ${x}px ${y}px, transparent 0%, black 100%)`;
 
     useEffect(() => {
       const node = nodeRef.current;
-      if (!node || shouldReduceMotion) return;
+      if (!node || !isActive) return;
 
       const handlePointerMove = (event: PointerEvent) => {
         const rect = node.getBoundingClientRect();
@@ -66,7 +78,7 @@ export const CursorSpotlight = forwardRef<HTMLDivElement, CursorSpotlightProps>(
         node.removeEventListener('pointermove', handlePointerMove);
         node.removeEventListener('pointerleave', handlePointerLeave);
       };
-    }, [shouldReduceMotion, pointerX, pointerY, spotlightOpacity]);
+    }, [isActive, pointerX, pointerY, spotlightOpacity]);
 
     const setRefs = (node: HTMLDivElement | null) => {
       nodeRef.current = node;
@@ -74,38 +86,24 @@ export const CursorSpotlight = forwardRef<HTMLDivElement, CursorSpotlightProps>(
       else if (ref) ref.current = node;
     };
 
-    if (shouldReduceMotion) {
-      return (
-        <div ref={setRefs} className={cn('relative', className)} {...props}>
-          {children}
-        </div>
-      );
-    }
-
     return (
       <div
         ref={setRefs}
-        className={cn('relative overflow-hidden', className)}
+        className={cn('relative', isActive && 'overflow-hidden', className)}
         {...props}
       >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none select-none opacity-35 saturate-50"
-        >
-          {children}
-        </div>
+        {children}
 
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 select-none"
-          style={{
-            opacity: revealOpacity,
-            maskImage,
-            WebkitMaskImage: maskImage,
-          }}
-        >
-          {children}
-        </motion.div>
+        {isActive && (
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 select-none backdrop-brightness-50 backdrop-saturate-50"
+            style={{
+              maskImage: scrimMask,
+              WebkitMaskImage: scrimMask,
+            }}
+          />
+        )}
       </div>
     );
   },

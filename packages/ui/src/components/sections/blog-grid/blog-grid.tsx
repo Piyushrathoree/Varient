@@ -1,11 +1,12 @@
 'use client';
 
-import { forwardRef, type HTMLAttributes } from 'react';
+import { forwardRef, useId, type HTMLAttributes, type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { Card } from '../../foundation/card';
 import { Badge } from '../../foundation/badge';
 import { Avatar } from '../../foundation/avatar';
 import { cn } from '../../../lib/utils';
+import { EASE_OUT } from '../../../lib/animation';
 
 export interface BlogPostAuthor {
   name: string;
@@ -20,6 +21,12 @@ export interface BlogPost {
   date: string;
   readingTime?: string;
   author?: BlogPostAuthor;
+  /** Cover image URL rendered in the card header. Falls back to a flat placeholder when omitted. */
+  imageSrc?: string;
+  /** Alt text for `imageSrc` — required by consumers passing an image for accessible output. */
+  imageAlt?: string;
+  /** Full override for the card header — takes precedence over imageSrc/imageAlt and the placeholder. */
+  image?: ReactNode;
 }
 
 export interface BlogGridProps extends HTMLAttributes<HTMLElement> {
@@ -98,7 +105,7 @@ function BlogPostCard({
         whileInView: { opacity: 1, y: 0 },
         transition: {
           duration: 0.3,
-          ease: [0.22, 1, 0.36, 1] as const,
+          ease: EASE_OUT,
           delay: index * 0.06,
         },
         viewport: { once: true, amount: 0.2 } as const,
@@ -111,10 +118,20 @@ function BlogPostCard({
         className="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         <Card isHoverable className="h-full overflow-hidden">
-          <div
-            aria-hidden
-            className="h-32 bg-muted/60 sm:h-40"
-          />
+          <div className="h-32 overflow-hidden sm:h-40">
+            {post.image ? (
+              post.image
+            ) : post.imageSrc ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={post.imageSrc}
+                alt={post.imageAlt ?? ''}
+                className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+              />
+            ) : (
+              <div aria-hidden className="h-full w-full bg-muted/60" />
+            )}
+          </div>
           <Card.Body className="flex flex-col gap-3 pt-4">
             {post.category && (
               <Badge variant="primary" size="sm">
@@ -162,13 +179,14 @@ export const BlogGrid = forwardRef<HTMLElement, BlogGridProps>(
     ref,
   ) => {
     const shouldReduceMotion = useReducedMotion();
+    const headingId = useId();
 
     const headerMotion = shouldReduceMotion
       ? {}
       : {
           initial: { opacity: 0, y: 12 },
           whileInView: { opacity: 1, y: 0 },
-          transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const },
+          transition: { duration: 0.3, ease: EASE_OUT },
           viewport: { once: true, amount: 0.4 } as const,
         };
 
@@ -176,7 +194,7 @@ export const BlogGrid = forwardRef<HTMLElement, BlogGridProps>(
       <section
         ref={ref}
         className={cn('w-full px-6 py-16 md:px-8 md:py-24', className)}
-        aria-labelledby="blog-grid-heading"
+        aria-labelledby={headingId}
         {...props}
       >
         <motion.header className="max-w-2xl" {...headerMotion}>
@@ -184,7 +202,7 @@ export const BlogGrid = forwardRef<HTMLElement, BlogGridProps>(
             <p className="text-sm font-medium text-brand">{eyebrow}</p>
           )}
           <h2
-            id="blog-grid-heading"
+            id={headingId}
             className="mt-2 font-display text-2xl font-semibold tracking-tight text-foreground md:text-3xl"
           >
             {title}

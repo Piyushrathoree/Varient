@@ -22,12 +22,12 @@ export function SparklesDemo() {
 
       <div className="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
-          <Sparkles density={16} sparkleDuration={1800} className="h-32 w-full rounded-lg border border-border bg-background">
+          <Sparkles density={24} sparkleDuration={1600} className="h-32 w-full rounded-lg border border-border bg-background">
             <div className="flex h-full items-center justify-center">
               <span className="text-sm font-medium text-foreground">Dense field</span>
             </div>
           </Sparkles>
-          <span className="text-xs font-medium text-muted-foreground">density 16</span>
+          <span className="text-xs font-medium text-muted-foreground">density 24</span>
         </div>
 
         <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">

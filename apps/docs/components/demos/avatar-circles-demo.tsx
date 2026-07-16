@@ -60,6 +60,25 @@ export function AvatarCirclesDemo() {
           </DemoCard>
         </div>
       </div>
+      <div className="flex flex-col gap-3">
+        <p className="text-sm font-medium text-muted-foreground">Overflow</p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <DemoCard label="maxVisible={3} at lg — +4 chip">
+            <AvatarCircles
+              avatars={[...TEAM_AVATARS]}
+              maxVisible={3}
+              size="lg"
+            />
+          </DemoCard>
+          <DemoCard label="maxVisible={4} at sm — +3 chip">
+            <AvatarCircles
+              avatars={[...TEAM_AVATARS]}
+              maxVisible={4}
+              size="sm"
+            />
+          </DemoCard>
+        </div>
+      </div>
     </div>
   );
 }

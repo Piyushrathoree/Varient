@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useMemo, type HTMLAttributes } from 'react';
+import { forwardRef, useId, useMemo, type HTMLAttributes } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { Accordion } from '../../foundation/accordion';
 import { cn } from '../../../lib/utils';
@@ -21,6 +21,8 @@ export interface FaqProps extends HTMLAttributes<HTMLElement> {
   items?: FaqItem[];
   /** Zero-based index of the item open on first render. @default 0 */
   defaultOpenIndex?: number;
+  /** Allow more than one item open at a time. @default false */
+  allowMultiple?: boolean;
 }
 
 const DEFAULT_ITEMS: FaqItem[] = [
@@ -65,24 +67,27 @@ export const Faq = forwardRef<HTMLElement, FaqProps>(
       description = 'Quick answers about copying components, theming, and what ships in the library.',
       items = DEFAULT_ITEMS,
       defaultOpenIndex = 0,
+      allowMultiple = false,
       ...props
     },
     ref,
   ) => {
     const shouldReduceMotion = useReducedMotion();
+    const headingId = useId();
 
     const defaultValue = useMemo(() => {
-      if (items.length === 0) return undefined;
+      if (items.length === 0) return allowMultiple ? [] : undefined;
       const clampedIndex = Math.min(Math.max(defaultOpenIndex, 0), items.length - 1);
-      return `faq-${clampedIndex}`;
-    }, [defaultOpenIndex, items.length]);
+      const value = `faq-${clampedIndex}`;
+      return allowMultiple ? [value] : value;
+    }, [allowMultiple, defaultOpenIndex, items.length]);
 
     const transition = (delay: number) =>
       shouldReduceMotion ? { duration: 0 } : { type: 'spring' as const, duration: 0.3, bounce: 0.1, delay };
 
     const fadeUp = (delay: number) => ({
-      initial: shouldReduceMotion ? { opacity: 1 } : { opacity: 0, transform: 'translateY(10px)' },
-      whileInView: shouldReduceMotion ? { opacity: 1 } : { opacity: 1, transform: 'translateY(0px)' },
+      initial: shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 10 },
+      whileInView: shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 },
       transition: transition(delay),
       viewport: { once: true, amount: 0.5 } as const,
     });
@@ -90,7 +95,7 @@ export const Faq = forwardRef<HTMLElement, FaqProps>(
     return (
       <section
         ref={ref}
-        aria-labelledby="faq-section-title"
+        aria-labelledby={headingId}
         className={cn('w-full bg-background px-6 py-16 md:px-8 md:py-24', className)}
         {...props}
       >
@@ -102,7 +107,7 @@ export const Faq = forwardRef<HTMLElement, FaqProps>(
               </motion.p>
             )}
             <motion.h2
-              id="faq-section-title"
+              id={headingId}
               className="text-balance font-display text-2xl font-semibold tracking-tight text-foreground md:text-3xl"
               {...fadeUp(0.05)}
             >
@@ -119,7 +124,12 @@ export const Faq = forwardRef<HTMLElement, FaqProps>(
           </div>
 
           <motion.div className="mt-8 md:mt-10" {...fadeUp(0.15)}>
-            <Accordion variant="separated" defaultValue={defaultValue} className="w-full">
+            <Accordion
+              variant="separated"
+              isMultiple={allowMultiple}
+              defaultValue={defaultValue}
+              className="w-full"
+            >
               {items.map((item, index) => (
                 <Accordion.Item key={item.question} value={`faq-${index}`}>
                   <Accordion.Trigger>{item.question}</Accordion.Trigger>

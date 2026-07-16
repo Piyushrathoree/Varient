@@ -1,4 +1,7 @@
 export { cn } from './lib/utils';
+export { useFinePointer } from './lib/use-fine-pointer';
+export { useViewportActive } from './lib/use-viewport-active';
+export { seededUnit } from './lib/random';
 export { Button, buttonVariants, type ButtonProps, type ButtonSize, type ButtonVariant } from './components/foundation/button';
 export { Input, type InputProps, type InputSize, type InputVariant } from './components/foundation/input';
 export {
@@ -255,6 +258,33 @@ export {
   type ShimmerButtonProps,
   type ShimmerButtonSize,
 } from './components/animated/shimmer-button';
+export {
+  Stepper,
+  type StepperProps,
+  type StepperOrientation,
+  type StepperItemProps,
+  type StepperContentProps,
+} from './components/foundation/stepper';
+export {
+  Carousel,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+  CarouselDots,
+  type CarouselProps,
+  type CarouselAlign,
+  type CarouselItemProps,
+  type CarouselPreviousProps,
+  type CarouselNextProps,
+  type CarouselDotsProps,
+} from './components/animated/carousel';
+export {
+  ImageComparison,
+  type ImageComparisonProps,
+  type ImageComparisonMode,
+  type ImageComparisonSource,
+  type ImageComparisonMedia,
+} from './components/animated/image-comparison';
 export { Meteors, type MeteorsProps } from './components/animated/meteors';
 export { Spotlight, type SpotlightProps } from './components/animated/spotlight';
 export {
@@ -597,3 +627,27 @@ export {
   type TerminalLineVariant,
   type TerminalProps,
 } from './components/animated/terminal';
+export {
+  TextScramble,
+  type TextScrambleProps,
+  type TextScrambleElement,
+} from './components/animated/text-scramble';
+export { SlidingNumber, type SlidingNumberProps } from './components/animated/sliding-number';
+export { ExpandableCard, type ExpandableCardProps } from './components/animated/expandable-card';
+export {
+  MorphingDialog,
+  MorphingDialogTrigger,
+  MorphingDialogContent,
+  MorphingDialogTitle,
+  MorphingDialogDescription,
+  MorphingDialogClose,
+  type MorphingDialogProps,
+  type MorphingDialogTriggerProps,
+  type MorphingDialogContentProps,
+  type MorphingDialogTitleProps,
+  type MorphingDialogDescriptionProps,
+  type MorphingDialogCloseProps,
+} from './components/animated/morphing-dialog';
+export { DynamicIsland, type DynamicIslandProps } from './components/animated/dynamic-island';
+export { PromptInput, type PromptInputProps } from './components/foundation/prompt-input';
+export { SortableList, type SortableListProps } from './components/animated/sortable-list';

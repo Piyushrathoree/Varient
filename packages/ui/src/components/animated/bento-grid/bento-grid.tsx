@@ -3,7 +3,7 @@
 import { forwardRef, useRef, type ReactNode } from 'react';
 import { motion, useInView, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
-import { EASE_OUT } from '../../../lib/animation';
+import { EASE_OUT, SPRING_DEFAULT } from '../../../lib/animation';
 
 const STAGGER_SECONDS = 0.06;
 
@@ -131,7 +131,7 @@ export const BentoGridItem = forwardRef<HTMLDivElement, BentoGridItemProps>(
         className={surfaceClassName}
         variants={itemVariants}
         whileHover={{ y: -4 }}
-        transition={{ type: 'spring', duration: 0.25, bounce: 0.1 }}
+        transition={SPRING_DEFAULT}
       >
         {content}
       </motion.div>

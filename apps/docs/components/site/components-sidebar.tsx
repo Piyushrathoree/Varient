@@ -11,7 +11,7 @@ import {
   Sparkles,
   type LucideIcon,
 } from 'lucide-react';
-import { cn } from '@varient/ui';
+import { cn, Kbd } from '@varient/ui';
 import {
   getCategoryAnchorId,
   getComponentBySlug,
@@ -22,7 +22,7 @@ import {
   type ComponentLayer,
 } from '@/lib/components/registry';
 import { useOptionalGalleryNav } from '@/components/site/gallery-nav-context';
-import { useSearchContext } from 'fumadocs-ui/contexts/search';
+import { useCommandMenu } from '@/components/site/command-menu';
 
 const layers: ComponentLayer[] = ['foundation', 'animated', 'sections'];
 
@@ -57,7 +57,7 @@ interface ComponentsSidebarProps {
 export function ComponentsSidebar({ className, variant = 'desktop' }: ComponentsSidebarProps) {
   const pathname = usePathname();
   const galleryNav = useOptionalGalleryNav();
-  const { setOpenSearch, hotKey, enabled: searchEnabled } = useSearchContext();
+  const { openCommandMenu } = useCommandMenu();
   const isGalleryPage = pathname === '/components';
 
   const slugMatch = pathname.match(/^\/components\/([^/]+)$/);
@@ -111,24 +111,14 @@ export function ComponentsSidebar({ className, variant = 'desktop' }: Components
           'hover:border-brand/40 hover:text-foreground',
           focusRing,
         )}
-        onClick={() => setOpenSearch(true)}
+        onClick={openCommandMenu}
         type="button"
       >
         <Search aria-hidden className="size-4 shrink-0" />
         <span className="flex-1 truncate">Search…</span>
-        {searchEnabled && hotKey.length > 0 && (
-          <span className="hidden items-center gap-0.5 sm:flex">
-            {hotKey.map((k, i) => (
-              <kbd
-                // biome-ignore lint: hotkey entries have no stable id
-                key={i}
-                className="rounded-md border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground"
-              >
-                {k.display}
-              </kbd>
-            ))}
-          </span>
-        )}
+        <span className="hidden sm:flex">
+          <Kbd size="sm">⌘K</Kbd>
+        </span>
       </button>
 
       <Link

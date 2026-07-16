@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { MorphingText } from '@varient/ui';
 
 function DemoCard({ label, children }: { label: string; children: ReactNode }) {
@@ -13,6 +13,32 @@ function DemoCard({ label, children }: { label: string; children: ReactNode }) {
 }
 
 const PRODUCT_WORDS = ['beautiful', 'accessible', 'delightful', 'performant'] as const;
+
+function PausableCard() {
+  const [isPaused, setIsPaused] = useState(false);
+
+  return (
+    <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+      <span className="font-title text-xl font-semibold text-foreground">
+        Ship{' '}
+        <MorphingText
+          words={['faster', 'smoother', 'better']}
+          isPaused={isPaused}
+        />
+      </span>
+      <button
+        type="button"
+        onClick={() => setIsPaused((prev) => !prev)}
+        className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground transition-colors hover:bg-muted motion-reduce:transition-none"
+      >
+        {isPaused ? 'Resume' : 'Pause'}
+      </button>
+      <span className="text-xs font-medium text-muted-foreground">
+        isPaused: {String(isPaused)}
+      </span>
+    </div>
+  );
+}
 
 export function MorphingTextDemo() {
   return (
@@ -29,7 +55,7 @@ export function MorphingTextDemo() {
 
       <div className="flex flex-col gap-3">
         <p className="text-sm font-medium text-muted-foreground">Timing</p>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <DemoCard label="Default (2.5s)">
             <span className="font-title text-xl font-semibold text-foreground">
               Ship{' '}
@@ -45,6 +71,7 @@ export function MorphingTextDemo() {
               />
             </span>
           </DemoCard>
+          <PausableCard />
         </div>
       </div>
     </div>

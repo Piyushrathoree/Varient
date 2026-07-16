@@ -203,7 +203,7 @@ export const SidebarSection = forwardRef<HTMLDivElement, SidebarSectionProps>(
             <motion.p
               animate={{ opacity: 1, height: 'auto' }}
               className="px-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground"
-              exit={shouldReduceMotion ? { opacity: 0, height: 0 } : { opacity: 0, height: 0 }}
+              exit={{ opacity: 0, height: 0 }}
               id={sectionId}
               initial={shouldReduceMotion ? false : { opacity: 0, height: 0 }}
               transition={shouldReduceMotion ? DURATION_INSTANT : { duration: 0.2, ease: EASE_OUT }}
@@ -264,7 +264,7 @@ export const SidebarNavItem = forwardRef<HTMLAnchorElement, SidebarNavItemProps>
             <motion.span
               animate={{ opacity: 1, x: 0 }}
               className="flex min-w-0 flex-1 items-center justify-between gap-2"
-              exit={shouldReduceMotion ? { opacity: 0, x: -8 } : { opacity: 0, x: -8 }}
+              exit={{ opacity: 0, x: -8 }}
               initial={shouldReduceMotion ? false : { opacity: 0, x: -8 }}
               transition={shouldReduceMotion ? DURATION_INSTANT : { duration: 0.2, ease: EASE_OUT }}
             >

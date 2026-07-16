@@ -6,9 +6,8 @@ import { useEffect, useState } from 'react';
 import { cn } from '@varient/ui';
 
 /**
- * Light/dark toggle — ported from SmoothUI's `ThemeSwitch` (float-nav.tsx).
- * Two modes only, switched via the `.dark` class (next-themes, wired through
- * fumadocs' `RootProvider`). No system option, no theme-identity engine.
+ * Light/dark toggle. Two modes only, switched via the `.dark` class (next-themes,
+ * wired through fumadocs' `RootProvider`).
  */
 export function ThemeToggle({ className }: { className?: string }) {
   const { resolvedTheme, setTheme } = useTheme();

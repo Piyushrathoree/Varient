@@ -1,8 +1,9 @@
 'use client';
 
-import { forwardRef, useId, useMemo } from 'react';
+import { forwardRef, useId, useMemo, useRef } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 const DEFAULT_COLORS = [
   'var(--color-foreground)',
@@ -33,6 +34,10 @@ export const GradientText = forwardRef<HTMLSpanElement, GradientTextProps>(
       [reactId],
     );
 
+    const internalRef = useRef<HTMLSpanElement>(null);
+    const isViewportActive = useViewportActive(internalRef);
+    const isAnimating = !shouldReduceMotion && isViewportActive;
+
     const gradientStops = colors.length > 0 ? colors : [...DEFAULT_COLORS];
     const backgroundImage = `linear-gradient(90deg, ${gradientStops.join(', ')})`;
 
@@ -47,7 +52,11 @@ export const GradientText = forwardRef<HTMLSpanElement, GradientTextProps>(
           `}</style>
         ) : null}
         <span
-          ref={ref}
+          ref={(node) => {
+            internalRef.current = node;
+            if (typeof ref === 'function') ref(node);
+            else if (ref) ref.current = node;
+          }}
           className={cn(
             'inline-block bg-clip-text text-transparent',
             'bg-[length:200%_auto]',
@@ -59,6 +68,7 @@ export const GradientText = forwardRef<HTMLSpanElement, GradientTextProps>(
             animation: shouldReduceMotion
               ? undefined
               : `${animationName} ${duration}s linear infinite`,
+            animationPlayState: isAnimating ? 'running' : 'paused',
           }}
         >
           {children}

@@ -1,9 +1,9 @@
 ---
 title: Features
-description: A landing section with an eyebrow header and a responsive grid of feature cards with inline icons.
+description: A landing section with an eyebrow header and either a responsive card grid or alternating icon/text rows.
 ---
 
-<ComponentPreview name="features" />
+<ComponentPreview name="features" variant="section" />
 
 ## Installation
 
@@ -39,6 +39,7 @@ export function LandingPage() {
           description: 'Copy source files directly into your project.',
         },
       ]}
+      layout="split"
     />
   );
 }
@@ -51,7 +52,8 @@ export function LandingPage() {
     { name: 'eyebrow', type: 'string', defaultValue: "'Why Varient'", description: 'Small brand-colored label above the section title.' },
     { name: 'title', type: 'ReactNode', description: 'Section headline — defaults to a title with a brand-colored span.' },
     { name: 'description', type: 'string', description: 'One-line supporting copy below the title.' },
-    { name: 'features', type: 'FeatureItem[]', description: 'Grid items — each needs title and description; icon is optional (built-in SVGs rotate when omitted).' },
+    { name: 'features', type: 'FeatureItem[]', description: 'Items — each needs title and description; icon is optional (built-in SVGs rotate when omitted).' },
+    { name: 'layout', type: "'grid' | 'split'", defaultValue: "'grid'", description: "'grid' renders a responsive card grid; 'split' renders alternating icon/text rows (differentiates this from BentoFeatures)." },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
   ]}
 />

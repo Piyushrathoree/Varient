@@ -3,7 +3,7 @@ title: Logo Cloud
 description: A row of partner or customer logos with optional infinite marquee scroll and hand-drawn placeholder marks.
 ---
 
-<ComponentPreview name="logo-cloud" />
+<ComponentPreview name="logo-cloud" variant="section" />
 
 ## Installation
 
@@ -34,10 +34,18 @@ export function LandingPage() {
 
 ## Marquee
 
-Pass `isMarquee` to wrap the row in a self-contained CSS translate loop. Under `prefers-reduced-motion`, the row stays static regardless of this flag.
+Pass `isMarquee` to wrap the row in a self-contained CSS translate loop. Control loop speed with `durationSeconds`. Under `prefers-reduced-motion`, the row stays static regardless of this flag.
 
 ```tsx
-<LogoCloud isMarquee title="Powering products worldwide" />
+<LogoCloud isMarquee durationSeconds={16} title="Powering products worldwide" />
+```
+
+## Icon only
+
+Pass `isIconOnly` to hide the logo name text and render marks alone.
+
+```tsx
+<LogoCloud isIconOnly title="Marks only" />
 ```
 
 ## Props
@@ -47,12 +55,14 @@ Pass `isMarquee` to wrap the row in a self-contained CSS translate loop. Under `
     { name: 'title', type: 'string', defaultValue: "'Trusted by teams at'", description: 'Small centered eyebrow above the logo row — `text-sm text-muted-foreground`.' },
     { name: 'logos', type: '{ name: string; icon?: ReactNode }[]', defaultValue: '(6 placeholder wordmarks)', description: 'Partner logos — each renders an inline SVG mark plus name when `icon` is omitted.' },
     { name: 'isMarquee', type: 'boolean', defaultValue: 'false', description: 'When true, scrolls the row in an infinite CSS translate loop. Falls back to a static row under reduced motion.' },
+    { name: 'durationSeconds', type: 'number', defaultValue: '28', description: 'Marquee loop duration in seconds. Only applies when `isMarquee` is true.' },
+    { name: 'isIconOnly', type: 'boolean', defaultValue: 'false', description: 'Hide logo name text and render marks only.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
   ]}
 />
 
 ## Accessibility
 
-The root is a `<section>` with `aria-label` from the title (or a generic partner label when title is omitted). Decorative SVG marks are `aria-hidden`. Logo names are visible text — no image-only logos without accompanying text.
+The root is a `<section>` with `aria-label` from the title (or a generic partner label when title is omitted). Decorative SVG marks are `aria-hidden`. Logo names are visible text — no image-only logos without accompanying text (unless `isIconOnly` is set, in which case the `title` attribute on each mark still exposes the name on hover/assistive hover-tooltip).
 
-Marquee animation is disabled under `prefers-reduced-motion`. The duplicated marquee track is marked `aria-hidden` so screen readers do not hear logos twice.
+Marquee animation is disabled under `prefers-reduced-motion`. The duplicated marquee track is marked `aria-hidden` so screen readers do not hear logos twice. The static row fades and rises into view once via `whileInView` (skipped entirely under `prefers-reduced-motion`).

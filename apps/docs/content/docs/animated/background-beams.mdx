@@ -37,7 +37,7 @@ export function Example() {
 <PropsTable
   props={[
     { name: 'children', type: 'ReactNode', description: 'Content rendered above the beam layer.' },
-    { name: 'pathCount', type: 'number', defaultValue: '6', description: 'Number of curved beam paths (1–12).' },
+    { name: 'pathCount', type: 'number', defaultValue: '6', description: 'Number of curved beam paths. Silently clamped to 1–12 (values outside that range are clamped, not rejected).' },
     { name: 'accentColor', type: 'string', defaultValue: 'var(--color-brand)', description: 'Stroke color for animated gradient highlights.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
   ]}
@@ -48,3 +48,4 @@ export function Example() {
 - SVG paths are decorative and marked `aria-hidden` — they do not affect accessible structure.
 - Under `prefers-reduced-motion`, paths render as static faint strokes with no gradient travel.
 - Children remain fully interactive; the beam layer uses `pointer-events-none`.
+- The per-path gradient/travel loops pause automatically while the component is scrolled offscreen (`useViewportActive`) and resume on re-entry, so offscreen instances don't burn CPU.

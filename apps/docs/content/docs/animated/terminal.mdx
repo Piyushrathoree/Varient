@@ -10,7 +10,7 @@ description: Dark terminal window mockup with composable lines that type and app
 Copy the component from `packages/ui/src/components/animated/terminal/` into your project.
 
 ```bash
-bun add clsx tailwind-merge motion lucide-react
+bun add clsx tailwind-merge motion
 ```
 
 ## Usage
@@ -60,4 +60,4 @@ export function Example() {
 
 ## Accessibility
 
-The terminal chrome is always a dark surface via smooth tokens so it reads consistently in both light and dark site themes. Command-line typing is decorative — the content area uses `aria-live="polite"` with `aria-relevant="additions"` so new lines are announced without interrupting the user. When `prefers-reduced-motion` is set, all lines render instantly with no typing cursor or stagger. Timers are cleared on unmount.
+The terminal chrome wraps its own `dark`-classed subtree, so it always renders as a dark surface via semantic tokens (`bg-background`/`text-foreground`/`border-border`/`bg-muted`) regardless of the site's active theme. Command-line typing is decorative — the content area uses `aria-live="polite"` with `aria-relevant="additions"` so new lines are announced without interrupting the user. When `prefers-reduced-motion` is set, all lines render instantly with no typing cursor or stagger. Timers are cleared on unmount.

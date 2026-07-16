@@ -1,8 +1,16 @@
 'use client';
 
-import { forwardRef, useId, type HTMLAttributes, type ReactNode } from 'react';
+import {
+  forwardRef,
+  useId,
+  useRef,
+  type HTMLAttributes,
+  type MutableRefObject,
+  type ReactNode,
+} from 'react';
 import { useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 export interface RetroGridProps extends HTMLAttributes<HTMLDivElement> {
   /** Content rendered above the grid plane. */
@@ -39,19 +47,25 @@ export const RetroGrid = forwardRef<HTMLDivElement, RetroGridProps>(
       perspective = 220,
       angle = 62,
       speed = 18,
-      isBrandTinted = false,
+      isBrandTinted = true,
       ...props
     },
     ref,
   ) => {
     const shouldReduceMotion = useReducedMotion();
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const isViewportActive = useViewportActive(containerRef);
     const animationId = useId().replace(/:/g, '');
     const gridClass = `retro-grid-plane-${animationId}`;
     const lineColor = isBrandTinted ? GRID_LINE_BRAND : GRID_LINE_NEUTRAL;
 
     return (
       <div
-        ref={ref}
+        ref={(node) => {
+          containerRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) (ref as MutableRefObject<HTMLDivElement | null>).current = node;
+        }}
         className={cn('relative overflow-hidden bg-background', className)}
         {...props}
       >
@@ -68,6 +82,7 @@ export const RetroGrid = forwardRef<HTMLDivElement, RetroGridProps>(
                 }
                 .${gridClass} {
                   animation: retro-grid-scroll-${animationId} ${speed}s linear infinite;
+                  animation-play-state: ${isViewportActive ? 'running' : 'paused'};
                 }
               `}
             </style>

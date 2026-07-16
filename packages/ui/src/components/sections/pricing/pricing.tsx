@@ -3,13 +3,16 @@
 import { forwardRef, useId, useState, type HTMLAttributes, type ReactNode } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
-import { EASE_OUT } from '../../../lib/animation';
+import { DURATION_INSTANT, EASE_OUT, SPRING_SNAPPY } from '../../../lib/animation';
 import { Badge } from '../../foundation/badge';
 import { Button } from '../../foundation/button';
 import { Card } from '../../foundation/card';
 import { Switch } from '../../foundation/switch';
 
 export type BillingPeriod = 'monthly' | 'annual';
+
+/** A feature row — a plain label (always included) or an object toggling inclusion. */
+export type PricingFeature = string | { label: string; isIncluded?: boolean };
 
 export interface PricingPlan {
   id: string;
@@ -19,7 +22,8 @@ export interface PricingPlan {
   annualPrice: number | string;
   /** Suffix shown after the price, e.g. "/mo". */
   priceSuffix?: string;
-  features: string[];
+  /** Plain strings render as included; pass `{ label, isIncluded: false }` to dim a row. */
+  features: PricingFeature[];
   ctaLabel?: string;
   /** Highlights the plan with a brand ring, badge, and primary CTA. */
   isPopular?: boolean;
@@ -33,6 +37,8 @@ export interface PricingProps extends Omit<HTMLAttributes<HTMLElement>, 'title'>
   defaultBillingPeriod?: BillingPeriod;
   /** Shown beside the annual label when billing is toggled to annual. */
   annualSavingsLabel?: string;
+  /** Badge label on the highlighted plan. */
+  popularLabel?: string;
 }
 
 function CheckIcon({ className }: { className?: string }) {
@@ -50,6 +56,28 @@ function CheckIcon({ className }: { className?: string }) {
       <path d="M20 6 9 17l-5-5" />
     </svg>
   );
+}
+
+function MinusIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M5 12h14" />
+    </svg>
+  );
+}
+
+function normalizeFeature(feature: PricingFeature): { label: string; isIncluded: boolean } {
+  if (typeof feature === 'string') return { label: feature, isIncluded: true };
+  return { label: feature.label, isIncluded: feature.isIncluded ?? true };
 }
 
 export const defaultPricingPlans: PricingPlan[] = [
@@ -170,6 +198,7 @@ export const Pricing = forwardRef<HTMLElement, PricingProps>(
       plans = defaultPricingPlans,
       defaultBillingPeriod = 'monthly',
       annualSavingsLabel = 'Save 20%',
+      popularLabel = 'Most popular',
       ...props
     },
     ref,
@@ -232,11 +261,22 @@ export const Pricing = forwardRef<HTMLElement, PricingProps>(
             )}
           >
             Annual
-            {annualSavingsLabel && (
-              <Badge variant="primary" size="sm">
-                {annualSavingsLabel}
-              </Badge>
-            )}
+            <AnimatePresence initial={false}>
+              {isAnnual && annualSavingsLabel && (
+                <motion.span
+                  key="annual-savings-badge"
+                  initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.7 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.7 }}
+                  transition={shouldReduceMotion ? DURATION_INSTANT : SPRING_SNAPPY}
+                  className="inline-flex"
+                >
+                  <Badge variant="primary" size="sm">
+                    {annualSavingsLabel}
+                  </Badge>
+                </motion.span>
+              )}
+            </AnimatePresence>
           </span>
         </div>
 
@@ -267,7 +307,7 @@ export const Pricing = forwardRef<HTMLElement, PricingProps>(
                 >
                   {isPopular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge variant="primary">Most popular</Badge>
+                      <Badge variant="primary">{popularLabel}</Badge>
                     </div>
                   )}
 
@@ -283,12 +323,33 @@ export const Pricing = forwardRef<HTMLElement, PricingProps>(
 
                   <Card.Body className="flex-1">
                     <ul className="flex flex-col gap-3" aria-label={`${plan.name} features`}>
-                      {plan.features.map((feature) => (
-                        <li key={feature} className="flex items-start gap-2.5 text-sm">
-                          <CheckIcon className="mt-0.5 size-4 shrink-0 text-brand" />
-                          <span className="text-muted-foreground">{feature}</span>
-                        </li>
-                      ))}
+                      {plan.features.map((rawFeature) => {
+                        const { label, isIncluded } = normalizeFeature(rawFeature);
+                        return (
+                          <li
+                            key={label}
+                            className={cn(
+                              'flex items-start gap-2.5 text-sm',
+                              !isIncluded && 'opacity-50',
+                            )}
+                          >
+                            {isIncluded ? (
+                              <CheckIcon className="mt-0.5 size-4 shrink-0 text-brand" />
+                            ) : (
+                              <MinusIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+                            )}
+                            <span
+                              className={cn(
+                                'text-muted-foreground',
+                                !isIncluded && 'line-through',
+                              )}
+                            >
+                              {label}
+                            </span>
+                            {!isIncluded && <span className="sr-only"> (not included)</span>}
+                          </li>
+                        );
+                      })}
                     </ul>
                   </Card.Body>
 

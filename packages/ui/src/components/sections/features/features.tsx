@@ -1,8 +1,9 @@
 'use client';
 
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useId, type HTMLAttributes, type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { EASE_OUT } from '../../../lib/animation';
 
 export interface FeatureItem {
   /** Custom icon node — defaults to a built-in inline SVG when omitted. */
@@ -16,6 +17,12 @@ export interface FeaturesProps extends Omit<HTMLAttributes<HTMLElement>, 'title'
   title?: ReactNode;
   description?: string;
   features?: FeatureItem[];
+  /**
+   * `'grid'` renders the default responsive card grid; `'split'` renders
+   * alternating icon/text rows (image-free split layout) so this component
+   * reads differently from `BentoFeatures`.
+   */
+  layout?: 'grid' | 'split';
 }
 
 function IconSparkle({ className }: { className?: string }) {
@@ -182,7 +189,7 @@ function FeatureCard({
     : {
         initial: { opacity: 0, y: 16 },
         whileInView: { opacity: 1, y: 0 },
-        transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const, delay: index * 0.06 },
+        transition: { duration: 0.3, ease: EASE_OUT, delay: index * 0.06 },
         viewport: { once: true, amount: 0.2 } as const,
       };
 
@@ -205,6 +212,52 @@ function FeatureCard({
   );
 }
 
+function FeatureRow({
+  feature,
+  index,
+  shouldReduceMotion,
+}: {
+  feature: FeatureItem;
+  index: number;
+  shouldReduceMotion: boolean;
+}) {
+  const DefaultIcon = defaultFeatureIcons[index % defaultFeatureIcons.length];
+  const icon = feature.icon ?? <DefaultIcon className="size-5 text-brand" />;
+  const reversed = index % 2 === 1;
+
+  const motionProps = shouldReduceMotion
+    ? {}
+    : {
+        initial: { opacity: 0, x: reversed ? 16 : -16 },
+        whileInView: { opacity: 1, x: 0 },
+        transition: { duration: 0.35, ease: EASE_OUT, delay: index * 0.05 },
+        viewport: { once: true, amount: 0.3 } as const,
+      };
+
+  return (
+    <motion.article
+      className={cn(
+        'flex flex-col items-start gap-6 border-b border-border py-8 last:border-b-0 sm:flex-row sm:items-center',
+        reversed && 'sm:flex-row-reverse',
+      )}
+      {...motionProps}
+    >
+      <div
+        aria-hidden
+        className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-brand/10"
+      >
+        {icon}
+      </div>
+      <div className="flex-1">
+        <h3 className="text-lg font-semibold text-foreground">{feature.title}</h3>
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
+          {feature.description}
+        </p>
+      </div>
+    </motion.article>
+  );
+}
+
 export const Features = forwardRef<HTMLElement, FeaturesProps>(
   (
     {
@@ -218,18 +271,20 @@ export const Features = forwardRef<HTMLElement, FeaturesProps>(
       ),
       description = 'Foundation components, animated flourishes, and ready-made sections — copy the code and make it yours.',
       features = defaultFeatures,
+      layout = 'grid',
       ...props
     },
     ref,
   ) => {
     const shouldReduceMotion = useReducedMotion();
+    const headingId = useId();
 
     const headerMotion = shouldReduceMotion
       ? {}
       : {
           initial: { opacity: 0, y: 12 },
           whileInView: { opacity: 1, y: 0 },
-          transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const },
+          transition: { duration: 0.3, ease: EASE_OUT },
           viewport: { once: true, amount: 0.4 } as const,
         };
 
@@ -237,7 +292,7 @@ export const Features = forwardRef<HTMLElement, FeaturesProps>(
       <section
         ref={ref}
         className={cn('w-full px-6 py-16 md:px-8 md:py-24', className)}
-        aria-labelledby="features-heading"
+        aria-labelledby={headingId}
         {...props}
       >
         <motion.header className="max-w-2xl" {...headerMotion}>
@@ -245,7 +300,7 @@ export const Features = forwardRef<HTMLElement, FeaturesProps>(
             <p className="text-sm font-medium text-brand">{eyebrow}</p>
           )}
           <h2
-            id="features-heading"
+            id={headingId}
             className="mt-2 font-display text-2xl font-semibold tracking-tight text-foreground md:text-3xl"
           >
             {title}
@@ -255,16 +310,29 @@ export const Features = forwardRef<HTMLElement, FeaturesProps>(
           )}
         </motion.header>
 
-        <div className="mt-10 grid auto-rows-fr grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-          {features.map((feature, index) => (
-            <FeatureCard
-              key={`${feature.title}-${index}`}
-              feature={feature}
-              index={index}
-              shouldReduceMotion={!!shouldReduceMotion}
-            />
-          ))}
-        </div>
+        {layout === 'split' ? (
+          <div className="mt-10 flex flex-col">
+            {features.map((feature, index) => (
+              <FeatureRow
+                key={`${feature.title}-${index}`}
+                feature={feature}
+                index={index}
+                shouldReduceMotion={!!shouldReduceMotion}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 grid auto-rows-fr grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            {features.map((feature, index) => (
+              <FeatureCard
+                key={`${feature.title}-${index}`}
+                feature={feature}
+                index={index}
+                shouldReduceMotion={!!shouldReduceMotion}
+              />
+            ))}
+          </div>
+        )}
       </section>
     );
   },

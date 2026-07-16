@@ -9,4 +9,5 @@ export {
   type InputOTPSlotProps,
   type InputOTPSeparatorProps,
   type InputOTPLabelProps,
+  type InputOTPSize,
 } from './input-otp';

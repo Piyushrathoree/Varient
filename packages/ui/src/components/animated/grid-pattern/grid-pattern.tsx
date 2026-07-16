@@ -1,9 +1,17 @@
 'use client';
 
-import { forwardRef, useId, useMemo, type SVGAttributes } from 'react';
+import {
+  forwardRef,
+  useId,
+  useMemo,
+  useRef,
+  type MutableRefObject,
+  type SVGAttributes,
+} from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { DURATION } from '../../../lib/animation';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 export interface GridPatternProps extends SVGAttributes<SVGSVGElement> {
   /** Cell width in pixels. */
@@ -110,7 +118,10 @@ export const GridPattern = forwardRef<SVGSVGElement, GridPatternProps>(
   ) => {
     const patternId = useId();
     const shouldReduceMotion = useReducedMotion();
-    const motionEnabled = isAnimated && !shouldReduceMotion;
+    const svgRef = useRef<SVGSVGElement | null>(null);
+    const isViewportActive = useViewportActive(svgRef);
+    const motionEnabled = isAnimated && !shouldReduceMotion && isViewportActive;
+    const isPanMode = squares.length === 0;
     const panDuration = 28;
 
     const gridPath = useMemo(
@@ -120,7 +131,11 @@ export const GridPattern = forwardRef<SVGSVGElement, GridPatternProps>(
 
     return (
       <svg
-        ref={ref}
+        ref={(node) => {
+          svgRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) (ref as MutableRefObject<SVGSVGElement | null>).current = node;
+        }}
         aria-hidden="true"
         className={cn(
           'pointer-events-none absolute inset-0 h-full w-full text-border',
@@ -129,53 +144,48 @@ export const GridPattern = forwardRef<SVGSVGElement, GridPatternProps>(
         {...props}
       >
         <defs>
-          {motionEnabled && squares.length === 0 ? (
-            <motion.pattern
-              id={patternId}
-              width={cellWidth}
-              height={cellHeight}
-              patternUnits="userSpaceOnUse"
-              animate={{
-                x: [patternX, patternX + cellWidth, patternX],
-                y: [patternY, patternY + cellHeight, patternY],
-              }}
-              transition={{
-                duration: panDuration,
-                repeat: Infinity,
-                ease: 'linear',
-              }}
-            >
-              <path
-                d={gridPath}
-                fill="none"
-                stroke="currentColor"
-                strokeOpacity={0.35}
-                strokeWidth={1}
-                strokeDasharray={strokeDasharray}
-              />
-            </motion.pattern>
-          ) : (
-            <pattern
-              id={patternId}
-              width={cellWidth}
-              height={cellHeight}
-              patternUnits="userSpaceOnUse"
-              x={patternX}
-              y={patternY}
-            >
-              <path
-                d={gridPath}
-                fill="none"
-                stroke="currentColor"
-                strokeOpacity={0.35}
-                strokeWidth={1}
-                strokeDasharray={strokeDasharray}
-              />
-            </pattern>
-          )}
+          <pattern
+            id={patternId}
+            width={cellWidth}
+            height={cellHeight}
+            patternUnits="userSpaceOnUse"
+            x={patternX}
+            y={patternY}
+          >
+            <path
+              d={gridPath}
+              fill="none"
+              stroke="currentColor"
+              strokeOpacity={0.35}
+              strokeWidth={1}
+              strokeDasharray={strokeDasharray}
+            />
+          </pattern>
         </defs>
 
-        <rect width="100%" height="100%" fill={`url(#${patternId})`} />
+        {isPanMode && motionEnabled ? (
+          // Panning translates a wrapping <g> (GPU-composited transform) instead of
+          // rewriting the pattern's x/y attributes every frame, which would force a
+          // layout recalculation of the whole tiled fill on each tick. The filled
+          // rect bleeds 50% past the viewport on every side so the pan never reveals
+          // a seam.
+          <motion.g
+            initial={{ x: 0, y: 0 }}
+            animate={{
+              x: [0, -cellWidth, 0],
+              y: [0, -cellHeight, 0],
+            }}
+            transition={{
+              duration: panDuration,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+          >
+            <rect x="-50%" y="-50%" width="200%" height="200%" fill={`url(#${patternId})`} />
+          </motion.g>
+        ) : (
+          <rect width="100%" height="100%" fill={`url(#${patternId})`} />
+        )}
 
         {squares.map(([col, row], index) => (
           <HighlightSquare

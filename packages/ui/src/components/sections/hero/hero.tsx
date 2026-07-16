@@ -27,7 +27,8 @@ export interface HeroAnnouncement {
 export interface HeroProps extends HTMLAttributes<HTMLElement> {
   title?: string;
   subtitle?: string;
-  announcement?: HeroAnnouncement;
+  /** Pass `null` to hide the pill entirely. Omit (or pass `undefined`) to use the default announcement. */
+  announcement?: HeroAnnouncement | null;
   primaryCta?: HeroCtaLink;
   secondaryCta?: HeroCtaLink;
   /** Tech stack names shown in the "built with" row. Pass `[]` to hide. */
@@ -50,21 +51,23 @@ const DEFAULT_BUILT_WITH = ['Next.js', 'React', 'Tailwind CSS', 'Motion'];
 
 function AnnouncementPill({ announcement }: { announcement: HeroAnnouncement }) {
   const shouldReduceMotion = useReducedMotion();
+  // Design law: no perpetual loop on a sections-layer ambient flourish. The shimmer
+  // sweeps once on mount, then replays once per hover — never `repeat: Infinity`.
+  const [shimmerKey, setShimmerKey] = useState(0);
+  const replayShimmer = () => setShimmerKey((key) => key + 1);
+
   const content = (
     <>
       {announcement.badge && (
         <span className="relative -ml-2.5 flex shrink-0 items-center gap-1 overflow-hidden truncate rounded-full bg-muted px-2.5 py-1 font-medium text-brand text-xs">
           {!shouldReduceMotion && (
             <motion.span
+              key={shimmerKey}
               aria-hidden
-              animate={{ x: ['-100%', '200%'] }}
+              initial={{ x: '-100%' }}
+              animate={{ x: '200%' }}
               className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-              transition={{
-                duration: 2,
-                repeat: Number.POSITIVE_INFINITY,
-                repeatDelay: 3,
-                ease: 'easeInOut',
-              }}
+              transition={{ duration: 0.9, ease: 'easeInOut' }}
             />
           )}
           {announcement.badge}
@@ -91,13 +94,17 @@ function AnnouncementPill({ announcement }: { announcement: HeroAnnouncement }) 
 
   if (announcement.href) {
     return (
-      <a className={pillClassName} href={announcement.href}>
+      <a className={pillClassName} href={announcement.href} onMouseEnter={replayShimmer}>
         {content}
       </a>
     );
   }
 
-  return <div className={pillClassName}>{content}</div>;
+  return (
+    <div className={pillClassName} onMouseEnter={replayShimmer}>
+      {content}
+    </div>
+  );
 }
 
 function HeroVisualGrid() {
@@ -114,8 +121,8 @@ function HeroVisualGrid() {
         };
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:gap-4">
-      <motion.div className="col-span-2" {...tileMotion(0)}>
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+      <motion.div className="col-span-1 sm:col-span-2" {...tileMotion(0)}>
         <Card className="bg-primary/50 p-4 shadow-sm">
           <div className="flex items-start justify-between gap-3">
             <div className="space-y-1">
@@ -188,7 +195,7 @@ function HeroVisualGrid() {
         </Card>
       </motion.div>
 
-      <motion.div className="col-span-2" {...tileMotion(0.25)}>
+      <motion.div className="col-span-1 sm:col-span-2" {...tileMotion(0.25)}>
         <Card isHoverable className="p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="space-y-1">
@@ -254,7 +261,7 @@ export const Hero = forwardRef<HTMLElement, HeroProps>(
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-12">
             <motion.div className="space-y-6 md:space-y-8" {...contentMotion}>
-              <AnnouncementPill announcement={announcement} />
+              {announcement && <AnnouncementPill announcement={announcement} />}
 
               <div className="space-y-4">
                 <h1

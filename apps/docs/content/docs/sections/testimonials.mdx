@@ -3,7 +3,7 @@ title: Testimonials
 description: A masonry-style grid of customer quote cards with avatars and optional scroll-reveal animation.
 ---
 
-<ComponentPreview name="testimonials" />
+<ComponentPreview name="testimonials" variant="section" />
 
 ## Installation
 
@@ -29,7 +29,6 @@ export function LandingPage() {
           quote: 'We shipped our landing page in a day instead of a week.',
           name: 'Maya Chen',
           role: 'Product lead, Northline',
-          avatarSrc: 'https://i.pravatar.cc/150?img=1',
         },
       ]}
     />
@@ -44,7 +43,7 @@ export function LandingPage() {
     { name: 'eyebrow', type: 'string', defaultValue: "'Testimonials'", description: 'Small brand-colored label above the section title.' },
     { name: 'title', type: 'string', defaultValue: "'Teams ship faster with Varient'", description: 'Section headline.' },
     { name: 'description', type: 'string', description: 'One-line supporting copy below the title.' },
-    { name: 'testimonials', type: 'Testimonial[]', description: 'Quote cards — each needs quote and name; role and avatarSrc are optional.' },
+    { name: 'testimonials', type: 'Testimonial[]', defaultValue: 'defaultTestimonials', description: 'Quote cards — each needs quote and name; role and avatarSrc are optional.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
   ]}
 />
@@ -56,7 +55,7 @@ export function LandingPage() {
     { name: 'quote', type: 'string', description: 'Customer quote body copy.' },
     { name: 'name', type: 'string', description: 'Person name shown in the card footer.' },
     { name: 'role', type: 'string', description: 'Optional role or company line below the name.' },
-    { name: 'avatarSrc', type: 'string', description: 'Optional image URL for the footer avatar.' },
+    { name: 'avatarSrc', type: 'string', description: 'Optional image URL for the footer avatar. When omitted, the avatar shows initials derived from name.' },
   ]}
 />
 

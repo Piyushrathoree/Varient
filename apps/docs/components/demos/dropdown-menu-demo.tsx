@@ -1,11 +1,16 @@
 'use client';
 
+import { useState } from 'react';
 import { CreditCard, Keyboard, LogOut, Settings, User } from 'lucide-react';
 import { Button, DropdownMenu } from '@varient/ui';
 
 export function DropdownMenuDemo() {
+  const [showBookmarks, setShowBookmarks] = useState(true);
+  const [showUrls, setShowUrls] = useState(false);
+  const [fontSize, setFontSize] = useState('medium');
+
   return (
-    <div className="flex w-full items-center justify-center">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
         <DropdownMenu>
           <DropdownMenu.Trigger asChild>
@@ -43,6 +48,35 @@ export function DropdownMenuDemo() {
           </DropdownMenu.Content>
         </DropdownMenu>
         <span className="text-xs font-medium text-muted-foreground">Account menu</span>
+      </div>
+
+      <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+        <DropdownMenu>
+          <DropdownMenu.Trigger asChild>
+            <Button variant="outline" size="sm" className="size-9 p-0" aria-label="View settings">
+              <Settings className="size-4" strokeWidth={1.75} />
+            </Button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content>
+            <DropdownMenu.Label>View</DropdownMenu.Label>
+            <DropdownMenu.Separator />
+            <DropdownMenu.CheckboxItem checked={showBookmarks} onCheckedChange={setShowBookmarks}>
+              Show bookmarks bar
+              <DropdownMenu.Shortcut>⌘⇧B</DropdownMenu.Shortcut>
+            </DropdownMenu.CheckboxItem>
+            <DropdownMenu.CheckboxItem checked={showUrls} onCheckedChange={setShowUrls}>
+              Show full URLs
+            </DropdownMenu.CheckboxItem>
+            <DropdownMenu.Separator />
+            <DropdownMenu.Label>Font size</DropdownMenu.Label>
+            <DropdownMenu.RadioGroup value={fontSize} onValueChange={setFontSize}>
+              <DropdownMenu.RadioItem value="small">Small</DropdownMenu.RadioItem>
+              <DropdownMenu.RadioItem value="medium">Medium</DropdownMenu.RadioItem>
+              <DropdownMenu.RadioItem value="large">Large</DropdownMenu.RadioItem>
+            </DropdownMenu.RadioGroup>
+          </DropdownMenu.Content>
+        </DropdownMenu>
+        <span className="text-xs font-medium text-muted-foreground">Settings menu</span>
       </div>
     </div>
   );

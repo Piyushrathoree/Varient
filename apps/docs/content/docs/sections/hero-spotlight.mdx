@@ -3,7 +3,7 @@ title: Hero Spotlight
 description: Dark-canvas hero with an animated spotlight beam, brand-accent headline word, and dual CTAs.
 ---
 
-<ComponentPreview name="hero-spotlight" />
+<ComponentPreview name="hero-spotlight" variant="section" />
 
 ## Installation
 
@@ -42,6 +42,7 @@ export function LandingPage() {
     { name: 'announcement', type: '{ badge?: string; label: string; href?: string }', defaultValue: '(see source)', description: 'Optional announcement pill above the headline.' },
     { name: 'primaryCta', type: '{ label: string; href: string }', defaultValue: '(see source)', description: 'Primary brand button.' },
     { name: 'secondaryCta', type: '{ label: string; href: string }', defaultValue: '(see source)', description: 'Secondary outline button beside the primary CTA.' },
+    { name: 'isAmbient', type: 'boolean', defaultValue: 'false', description: 'Keep the conic spotlight beam sweeping forever instead of settling after one pass. Off by default — the beam sweeps once on mount then holds; opt in for a perpetual loop, which auto-pauses while the section is scrolled offscreen.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
   ]}
 />
@@ -51,3 +52,9 @@ export function LandingPage() {
 The root is a `<section>` labelled by the h1 via `aria-labelledby`. CTA links are native anchors inside `Button asChild`. The sweeping spotlight beam is decorative (`aria-hidden`) and does not intercept pointer events.
 
 Under `prefers-reduced-motion`, the beam is static, entrance motion is instant, and the announcement shimmer is omitted.
+
+## Notes
+
+`highlightWord` only lights up a whole-word match inside `title` — a value like `"motion"` will not highlight the `"motion"` inside `"motionless"`.
+
+The section always renders on a true-black canvas: it forces a `dark`-scoped subtree internally, so the surface stays dark in both the light and dark site themes rather than inverting.

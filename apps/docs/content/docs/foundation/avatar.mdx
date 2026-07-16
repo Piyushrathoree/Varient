@@ -97,6 +97,7 @@ Four sizes and four status colors — the simple and compound APIs share the sam
     { name: 'Avatar.Fallback delayMs', type: 'number', description: 'Optional Radix delay before showing fallback while the image loads.' },
     { name: 'AvatarGroup max', type: 'number', description: 'Maximum avatars to show before rendering a +N overflow chip.' },
     { name: 'AvatarGroup size', type: "'sm' | 'md' | 'lg' | 'xl'", defaultValue: "'md'", description: 'Default size applied to children without their own size prop.' },
+    { name: 'AvatarGroup onOverflowClick', type: '(event: MouseEvent<HTMLButtonElement>) => void', description: 'When provided, the +N overflow chip renders as a real, keyboard-focusable button with a visible focus ring instead of a decorative span.' },
   ]}
 />
 
@@ -109,5 +110,6 @@ Built on `@radix-ui/react-avatar` for correct image load/fallback coordination.
 | — | Avatars are presentational unless given an `alt` or `aria-label`. |
 | — | Status dots are decorative when an image `alt` is provided; otherwise the root gets a combined `aria-label`. |
 | — | `AvatarGroup` exposes `role="group"` with an `aria-label` of "Avatar group". |
+| — | The `+N` overflow chip is a plain `span` by default; passing `onOverflowClick` upgrades it to a `<button>` with an `aria-label` of "Show N more" and a visible `focus-visible` ring. |
 
 Image load and fallback transitions are gated behind `prefers-reduced-motion` — reduced-motion users get instant state changes instead of fade animations.

@@ -37,12 +37,25 @@ export function Example() {
 
 <PropsTable
   props={[
-    { name: 'size', type: 'number', defaultValue: '350', description: 'Radius of the radial glow in pixels.' },
-    { name: 'color', type: 'string', defaultValue: 'brand at ~18% alpha', description: 'Spotlight tint via CSS color (defaults to brand at low alpha).' },
+    { name: 'size', type: 'number', defaultValue: '350 (220 for `variant="border"`)', description: 'Radius of the radial glow in pixels.' },
+    { name: 'color', type: 'string', defaultValue: 'foreground at 14% alpha', description: 'Spotlight tint via CSS color — a neutral `color-mix(in oklab, var(--color-foreground) 14%, transparent)` by default, not a brand tint.' },
     { name: 'fill', type: 'string', description: 'Optional override for the gradient fill color; takes precedence over `color`.' },
+    { name: 'variant', type: "'default' | 'border'", defaultValue: "'default'", description: '`default` is a free-floating glow that follows the pointer anywhere on the surface. `border` clips the same glow to a thin ring that hugs and travels the container edge, projecting the pointer onto the nearest border point.' },
+    { name: 'borderWidth', type: 'number', defaultValue: '2', description: 'Ring thickness in pixels, only used when `variant="border"`.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
   ]}
 />
+
+## Border variant
+
+Pass `variant="border"` to trade the free-floating glow for one that hugs the
+container's edge — the pointer position is projected onto the nearest point
+on the perimeter, so the light travels along the border instead of floating
+across the surface:
+
+```tsx
+<Spotlight variant="border" borderWidth={3} />
+```
 
 ## Accessibility
 
@@ -52,5 +65,7 @@ export function Example() {
   `relative z-10`.
 - Under `prefers-reduced-motion`, pointer tracking and hover fade are disabled.
   A static, centered soft glow is shown instead with no cursor follow.
-- Tracking listeners attach to the parent element only when motion is allowed,
-  and are removed on unmount.
+- On coarse/non-hover pointers (touch), tracking listeners never attach and the
+  same static soft-glow treatment is shown instead.
+- Tracking listeners attach to the parent element only when motion is allowed
+  and the primary pointer is fine (mouse/trackpad), and are removed on unmount.

@@ -269,7 +269,7 @@ export const SelectItem = forwardRef<ElementRef<typeof SelectPrimitive.Item>, Se
         ref={ref}
         className={cn(
           'relative flex w-full cursor-default items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-sm text-foreground outline-none select-none',
-          'data-[highlighted]:bg-muted',
+          'transition-colors duration-150 data-[highlighted]:bg-muted',
           'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
           className,
         )}

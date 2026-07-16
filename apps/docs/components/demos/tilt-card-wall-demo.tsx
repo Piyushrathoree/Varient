@@ -46,12 +46,38 @@ const DEMO_ITEMS: TiltCardItem[] = [
 ];
 
 const COMPACT_ITEMS: TiltCardItem[] = DEMO_ITEMS.slice(0, 2);
+const VARIANT_ITEMS: TiltCardItem[] = DEMO_ITEMS.slice(0, 3);
 
 export function TiltCardWallDemo() {
   return (
-    <div className="flex w-full flex-col items-center gap-6 py-4">
-      <p className="text-sm font-medium text-muted-foreground">Hover a card</p>
-      <TiltCardWall items={DEMO_ITEMS} className="max-w-full overflow-x-hidden" />
+    <div className="flex w-full flex-col items-center gap-10 py-4">
+      <div className="flex w-full flex-col items-center gap-6">
+        <p className="text-sm font-medium text-muted-foreground">Full wall — hover a card</p>
+        <TiltCardWall items={DEMO_ITEMS} className="max-w-full overflow-x-hidden" />
+      </div>
+
+      <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+          <TiltCardWall
+            items={VARIANT_ITEMS}
+            maxRotation={12}
+            className="max-w-full overflow-x-hidden"
+          />
+          <span className="text-xs font-medium text-muted-foreground">
+            3-item wall &middot; default rotation (12&deg;)
+          </span>
+        </div>
+        <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+          <TiltCardWall
+            items={VARIANT_ITEMS}
+            maxRotation={24}
+            className="max-w-full overflow-x-hidden"
+          />
+          <span className="text-xs font-medium text-muted-foreground">
+            3-item wall &middot; wide fan (maxRotation=24)
+          </span>
+        </div>
+      </div>
     </div>
   );
 }

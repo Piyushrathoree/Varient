@@ -5,6 +5,12 @@ description: A short, floating hint anchored to its trigger — hover or focus t
 
 <ComponentPreview name="tooltip" />
 
+`Tooltip` is intentionally a single component driven by a `content` prop, not a
+compound API like `Popover` or `Dialog` — there's no `Tooltip.Trigger` /
+`Tooltip.Content` to assemble yourself. The only other piece is the optional
+`Tooltip.Provider` wrapper for sharing delay timing across a group. Reach for
+`Popover` instead when you need richer, interactive, or focusable content.
+
 ## Installation
 
 Copy the component from `packages/ui/src/components/foundation/tooltip/` into your project.

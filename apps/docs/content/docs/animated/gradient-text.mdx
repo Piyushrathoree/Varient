@@ -32,7 +32,7 @@ export function Example() {
 <PropsTable
   props={[
     { name: 'children', type: 'string', description: 'Required — headline text rendered with an animated gradient fill.' },
-    { name: 'colors', type: 'string[]', defaultValue: 'brand → brand-light → brand-secondary', description: 'Gradient stop colors — use semantic CSS variables such as `var(--color-brand)`.' },
+    { name: 'colors', type: 'string[]', defaultValue: 'foreground → muted-foreground → foreground', description: 'Gradient stop colors — use semantic CSS variables. Defaults to a neutral sweep; pass brand tokens such as `var(--color-brand)` for an ember variant.' },
     { name: 'duration', type: 'number', defaultValue: '6', description: 'Sweep cycle duration in seconds.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
   ]}
@@ -40,4 +40,4 @@ export function Example() {
 
 ## Accessibility
 
-Gradient text is decorative headline styling — the string in `children` is plain text in the DOM and is read normally by assistive tech. When `prefers-reduced-motion` is set, the gradient renders as a static fill with no background-position animation; the injected keyframes are omitted entirely. Prefer modest durations and high-contrast stop colors so the text remains readable in both light and dark themes.
+Gradient text is decorative headline styling — the string in `children` is plain text in the DOM and is read normally by assistive tech. When `prefers-reduced-motion` is set, the gradient renders as a static fill with no background-position animation; the injected keyframes are omitted entirely. The sweep also pauses automatically while the element is scrolled offscreen, so it only burns CPU when visible. Prefer modest durations and high-contrast stop colors so the text remains readable in both light and dark themes.

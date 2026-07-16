@@ -267,7 +267,10 @@ function IntegrationTile({
         )}
       </div>
       <div className="min-w-0 space-y-1">
-        <p className="text-sm font-semibold text-foreground">{integration.name}</p>
+        <h3 className="sr-only">{integration.name}</h3>
+        <p aria-hidden className="text-sm font-semibold text-foreground">
+          {integration.name}
+        </p>
         {integration.description && (
           <p className="line-clamp-1 text-xs text-muted-foreground">{integration.description}</p>
         )}

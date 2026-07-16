@@ -1,0 +1,147 @@
+---
+title: Morphing Dialog
+description: Generic trigger→dialog shared-layout morph — a compound API mirroring Dialog, the primitive under ExpandableCard.
+---
+
+<ComponentPreview name="morphing-dialog" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/morphing-dialog/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Button, MorphingDialog } from '@/components/animated/morphing-dialog';
+
+export function Example() {
+  return (
+    <MorphingDialog>
+      <MorphingDialog.Trigger>
+        <Button variant="outline">Settings</Button>
+      </MorphingDialog.Trigger>
+
+      <MorphingDialog.Content>
+        <MorphingDialog.Title>Preferences</MorphingDialog.Title>
+        <MorphingDialog.Description>
+          Changes apply immediately to this workspace.
+        </MorphingDialog.Description>
+        {/* ...panel body... */}
+      </MorphingDialog.Content>
+    </MorphingDialog>
+  );
+}
+```
+
+`MorphingDialog.Trigger` wraps *any* element (a button, an avatar, a card) and shares a
+`layoutId` with `MorphingDialog.Content`, so the trigger's shape morphs directly into the
+dialog panel instead of the panel simply fading in on top of it.
+
+For controlled usage, pass `isOpen` and `onOpenChange`:
+
+```tsx
+const [isOpen, setIsOpen] = useState(false);
+
+<MorphingDialog isOpen={isOpen} onOpenChange={setIsOpen}>
+  <MorphingDialog.Trigger>{/* ... */}</MorphingDialog.Trigger>
+  <MorphingDialog.Content>{/* ... */}</MorphingDialog.Content>
+</MorphingDialog>;
+```
+
+### Text that morphs too
+
+`MorphingDialog.Title` (and `.Description`) can be placed *inside* the trigger's content as
+well as inside `Content` — both instances share a `layoutId`, so if your collapsed trigger
+already shows a title (e.g. a note card), it morphs its position/size directly into the
+dialog's heading instead of cross-fading:
+
+```tsx
+<MorphingDialog.Trigger>
+  <MorphingDialog.Title className="text-sm">Launch checklist</MorphingDialog.Title>
+  <p className="text-xs text-muted-foreground">Finalize pricing page...</p>
+</MorphingDialog.Trigger>
+<MorphingDialog.Content>
+  <MorphingDialog.Title>Launch checklist</MorphingDialog.Title>
+  {/* editor body */}
+</MorphingDialog.Content>
+```
+
+Only the `Title`/`Description` rendered inside `Content` owns the `id` used for
+`aria-labelledby`/`aria-describedby` — the trigger-side copy is purely visual so no
+duplicate DOM ids are ever produced.
+
+## Props
+
+<PropsTable
+  props={[
+    {
+      name: 'isOpen',
+      type: 'boolean',
+      description: 'Controlled open state — pair with onOpenChange. Omit for uncontrolled usage (MorphingDialog root).',
+    },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean) => void',
+      description: 'Called whenever the open state should change — trigger click, Esc, overlay click, or Close (MorphingDialog root).',
+    },
+    {
+      name: 'defaultOpen',
+      type: 'boolean',
+      defaultValue: 'false',
+      description: 'Initial open state for uncontrolled usage (MorphingDialog root).',
+    },
+    {
+      name: 'MorphingDialog.Trigger isDisabled',
+      type: 'boolean',
+      defaultValue: 'false',
+      description: 'Prevents the trigger from opening the dialog.',
+    },
+    {
+      name: 'MorphingDialog.Trigger className',
+      type: 'string',
+      description: 'Additional Tailwind classes merged via cn(), applied to the wrapping element.',
+    },
+    {
+      name: 'MorphingDialog.Content showCloseButton',
+      type: 'boolean',
+      defaultValue: 'true',
+      description: 'Renders the built-in top-right X button. Set false to place your own via MorphingDialog.Close.',
+    },
+    {
+      name: 'MorphingDialog.Content className',
+      type: 'string',
+      description: 'Additional Tailwind classes merged via cn(), applied to the panel.',
+    },
+    {
+      name: 'MorphingDialog.Title / Description',
+      type: 'HTMLAttributes<HTMLHeadingElement> / <HTMLParagraphElement>',
+      description: 'Renders an h2 / p. Usable inside Trigger and/or Content — both share a layoutId for a text morph; only the Content instance owns the aria id.',
+    },
+    {
+      name: 'MorphingDialog.Close children',
+      type: 'ReactNode',
+      description: 'Unstyled dismiss action — place anywhere (e.g. a footer "Done" button). Renders a bare inline X icon when no children are passed.',
+    },
+  ]}
+/>
+
+## Accessibility
+
+- The trigger is a real interactive element — `role="button"`, `tabIndex={0}`,
+  `aria-haspopup="dialog"`, `aria-expanded`, activatable with **Enter** or **Space**, with a
+  visible `focus-visible` ring.
+- The panel is `role="dialog"` `aria-modal="true"`, with `aria-labelledby`/`aria-describedby`
+  wired automatically once a `MorphingDialog.Title`/`.Description` mounts inside `Content`.
+- **Escape** closes the dialog, clicking the overlay closes it, and the built-in close button
+  (or any `MorphingDialog.Close`) closes it.
+- Body scroll is locked (and restored to its prior value) while the dialog is open.
+- Focus moves to the close button (or the panel itself when `showCloseButton={false}`) on
+  open, and returns to the trigger on close — the trigger stays mounted (just made
+  `invisible`) while open so focus restoration is instant and the shared-layout morph has a
+  stable origin to animate back to.
+- All motion respects `prefers-reduced-motion`: the shared-layout morph is replaced with a
+  plain crossfade, and the content-reveal delay is skipped.

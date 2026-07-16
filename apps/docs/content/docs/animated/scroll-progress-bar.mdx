@@ -19,7 +19,7 @@ Place at the top or bottom of the viewport (or inside a scroll container for dem
 
 ```tsx
 import { useRef } from 'react';
-import { ScrollProgressBar } from '@/components/animated/scroll-progress-bar';
+import { ScrollProgressBar } from '@varient/ui';
 
 export function Example() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -42,7 +42,7 @@ export function Example() {
 <PropsTable
   props={[
     { name: 'className', type: 'string', description: 'Additional Tailwind classes on the track wrapper.' },
-    { name: 'color', type: 'string', defaultValue: 'bg-gradient-to-r from-brand-secondary to-brand', description: 'Tailwind classes for the fill bar.' },
+    { name: 'color', type: 'string', defaultValue: 'bg-foreground/55', description: 'Tailwind classes for the fill bar.' },
     { name: 'height', type: 'number', defaultValue: '3', description: 'Bar thickness in pixels.' },
     { name: 'position', type: "'top' | 'bottom'", defaultValue: 'top', description: 'Anchors the bar to the top or bottom edge.' },
     { name: 'scrollContainerRef', type: 'RefObject<HTMLElement | null>', description: 'Scroll container to track. Defaults to window scroll when omitted.' },

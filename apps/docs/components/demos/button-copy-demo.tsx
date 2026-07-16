@@ -75,6 +75,27 @@ export function ButtonCopyDemo() {
       </div>
 
       <div className="flex flex-col gap-3">
+        <p className="text-sm font-medium text-muted-foreground">Failed state</p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <DemoCard label="Icon-only">
+            <ButtonCopy
+              onCopy={() => {
+                throw new Error('Clipboard denied');
+              }}
+            />
+          </DemoCard>
+          <DemoCard label="With label">
+            <ButtonCopy
+              display="label"
+              onCopy={() => {
+                throw new Error('Clipboard denied');
+              }}
+            />
+          </DemoCard>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-3">
         <p className="text-sm font-medium text-muted-foreground">On a code block</p>
         <div className="flex w-full max-w-md items-center justify-between gap-3 rounded-lg border border-border bg-muted/40 px-4 py-3">
           <code className="truncate font-mono text-sm text-muted-foreground">

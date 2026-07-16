@@ -4,7 +4,7 @@ import { forwardRef, useId, type TextareaHTMLAttributes } from 'react';
 import { cn } from '../../../lib/utils';
 
 export type TextareaSize = 'sm' | 'md' | 'lg';
-export type TextareaVariant = 'default' | 'filled';
+export type TextareaVariant = 'default' | 'filled' | 'frame';
 export type TextareaResize = 'none' | 'vertical' | 'both';
 
 export interface TextareaProps
@@ -37,6 +37,9 @@ const containerVariantStyles: Record<TextareaVariant, string> = {
     'border border-input hover:border-input/70 focus-within:border-ring focus-within:shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-ring)_16%,transparent)]',
   filled:
     'border border-transparent bg-muted hover:bg-muted/70 focus-within:border-ring focus-within:bg-background focus-within:shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-ring)_16%,transparent)]',
+  // Gradient-frame glow — pairs with Input variant="frame" / Button variant="frame".
+  frame:
+    'border-2 border-transparent [background:linear-gradient(var(--color-background),var(--color-background))_padding-box,linear-gradient(135deg,var(--color-brand),var(--color-brand-secondary))_border-box] hover:shadow-xs focus-within:shadow-[0_0_0_3px_color-mix(in_oklab,var(--color-brand)_16%,transparent)]',
 };
 
 const errorStyles =

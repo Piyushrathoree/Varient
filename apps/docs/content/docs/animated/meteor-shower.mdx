@@ -37,6 +37,10 @@ export function Example() {
 <PropsTable
   props={[
     { name: 'number', type: 'number', defaultValue: '20', description: 'Count of meteor streaks to render.' },
+    { name: 'color', type: 'string', defaultValue: "color-mix(in oklab, var(--color-background) 75%, transparent)", description: 'Meteor head and trail color.' },
+    { name: 'angle', type: 'number', defaultValue: '-45', description: 'Travel angle in degrees (CSS rotate() convention) — controls the diagonal.' },
+    { name: 'minSpeed', type: 'number', defaultValue: '3', description: 'Fastest loop duration in seconds — lower bound of the randomized range.' },
+    { name: 'maxSpeed', type: 'number', defaultValue: '9', description: 'Slowest loop duration in seconds — upper bound of the randomized range.' },
     { name: 'className', type: 'string', description: 'Additional classes merged onto the absolute inset-0 layer via cn().' },
   ]}
 />
@@ -46,3 +50,4 @@ export function Example() {
 - The layer is `pointer-events-none` and `aria-hidden` on each meteor — it never intercepts clicks or receives focus.
 - Decorative only; do not rely on motion to convey information.
 - Under `prefers-reduced-motion` the animation loop is disabled and a few static meteors are rendered instead, preserving the look without perpetual motion.
+- The loop pauses automatically while the layer is scrolled offscreen and resumes on re-entry, so mounted-but-unseen instances don't burn CPU.

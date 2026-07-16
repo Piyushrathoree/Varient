@@ -35,6 +35,8 @@ export interface NavbarProps extends HTMLAttributes<HTMLElement> {
   cta?: NavbarCta;
   /** Pin the bar to the top of the viewport. @default true */
   isSticky?: boolean;
+  /** Href matching the active route — that item renders the primary pill treatment. */
+  activeHref?: string;
 }
 
 const DEFAULT_ITEMS: NavbarItem[] = [
@@ -119,6 +121,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(
       githubHref,
       cta,
       isSticky = true,
+      activeHref,
       ...props
     },
     ref,
@@ -165,18 +168,25 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(
                 aria-label="Main"
                 className="hidden items-center gap-1 md:flex"
               >
-                {items.map((item) => (
-                  <a
-                    key={item.href}
-                    className={cn(
-                      'rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors duration-200 hover:bg-primary hover:text-foreground motion-reduce:transition-none',
-                      focusRing,
-                    )}
-                    href={item.href}
-                  >
-                    {item.label}
-                  </a>
-                ))}
+                {items.map((item) => {
+                  const isActive = activeHref === item.href;
+                  return (
+                    <a
+                      key={item.href}
+                      aria-current={isActive ? 'page' : undefined}
+                      className={cn(
+                        'rounded-full px-3 py-1.5 text-sm transition-colors duration-200 hover:bg-primary hover:text-foreground motion-reduce:transition-none',
+                        isActive
+                          ? 'bg-primary text-foreground'
+                          : 'text-muted-foreground',
+                        focusRing,
+                      )}
+                      href={item.href}
+                    >
+                      {item.label}
+                    </a>
+                  );
+                })}
               </nav>
 
               <div className="hidden items-center gap-2 md:flex">
@@ -240,19 +250,26 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(
                   transition={panelTransition}
                 >
                   <div className="flex flex-col gap-1 border-t border-border pt-3 pb-1">
-                    {items.map((item) => (
-                      <a
-                        key={item.href}
-                        className={cn(
-                          'rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors duration-200 hover:bg-primary hover:text-foreground motion-reduce:transition-none',
-                          focusRing,
-                        )}
-                        href={item.href}
-                        onClick={closeMobile}
-                      >
-                        {item.label}
-                      </a>
-                    ))}
+                    {items.map((item) => {
+                      const isActive = activeHref === item.href;
+                      return (
+                        <a
+                          key={item.href}
+                          aria-current={isActive ? 'page' : undefined}
+                          className={cn(
+                            'rounded-lg px-3 py-2.5 text-sm transition-colors duration-200 hover:bg-primary hover:text-foreground motion-reduce:transition-none',
+                            isActive
+                              ? 'bg-primary text-foreground'
+                              : 'text-muted-foreground',
+                            focusRing,
+                          )}
+                          href={item.href}
+                          onClick={closeMobile}
+                        >
+                          {item.label}
+                        </a>
+                      );
+                    })}
 
                     {(githubHref || cta) && (
                       <div className="mt-2 flex items-center gap-2 border-t border-border pt-3">

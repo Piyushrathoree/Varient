@@ -1,0 +1,98 @@
+---
+title: Stepper
+description: Multi-step progress indicator with a checkmark draw-in, filling connectors, and optional animated per-step content.
+---
+
+<ComponentPreview name="stepper" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/foundation/stepper/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { useState } from 'react';
+import { Stepper } from '@/components/foundation/stepper';
+
+const steps = [
+  { title: 'Cart', content: 'Review items' },
+  { title: 'Shipping', content: 'Delivery address' },
+  { title: 'Payment', content: 'Card details' },
+];
+
+export function Example() {
+  const [activeStep, setActiveStep] = useState(0);
+
+  return (
+    <Stepper activeStep={activeStep} onStepChange={setActiveStep}>
+      {steps.map((step) => (
+        <Stepper.Item key={step.title} title={step.title} />
+      ))}
+      <Stepper.Content>{steps[activeStep].content}</Stepper.Content>
+    </Stepper>
+  );
+}
+```
+
+`Stepper.Item` never takes an explicit index — the root auto-assigns one from each item's
+position among its `Stepper.Item` siblings, so status (complete / active / upcoming) always
+matches document order. `Stepper.Content` is a generic transition wrapper: pass whatever panel
+belongs to the current `activeStep` as its `children` (indexing your own array, as above) and it
+handles the slide-in/out crossfade, keyed internally off the shared `activeStep`.
+
+## Props
+
+### Stepper
+
+<PropsTable
+  props={[
+    { name: 'activeStep', type: 'number', description: 'Required — zero-based index of the current step.' },
+    { name: 'onStepChange', type: '(step: number) => void', description: 'Called with a step\'s index when a reachable step is clicked.' },
+    { name: 'orientation', type: "'horizontal' | 'vertical'", defaultValue: "'horizontal'", description: 'Layout of the step list.' },
+    { name: 'isNavigable', type: 'boolean', defaultValue: 'false', description: 'Unlocks clicking steps AHEAD of activeStep. Completed steps are always clickable regardless of this flag — it only controls jumping forward.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the outer wrapper.' },
+  ]}
+/>
+
+### Stepper.Item
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'ReactNode', description: 'Required — the step\'s label.' },
+    { name: 'description', type: 'ReactNode', description: 'Optional secondary line under the title.' },
+  ]}
+/>
+
+### Stepper.Content
+
+<PropsTable
+  props={[
+    { name: 'children', type: 'ReactNode', description: 'The panel to show for the current activeStep — pick it yourself (e.g. index into your own panels array).' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the outer clipping wrapper.' },
+  ]}
+/>
+
+Optional — omit it entirely if you only need the step indicator (e.g. driving your own routed
+pages instead of an inline panel).
+
+## Accessibility
+
+- The step list renders as a real `<ol>` (an implicit ARIA list), so assistive tech announces
+  step count and position automatically.
+- The active step's dot gets `aria-current="step"`.
+- Connector lines are `aria-hidden` — purely decorative, they carry no information not already
+  conveyed by each step's dot and label.
+- Each step dot is a real `<button>`. Completed steps (`index < activeStep`) are always
+  clickable; steps ahead of `activeStep` are `disabled` unless `isNavigable` is set. Disabled
+  buttons are removed from the tab order natively, so keyboard users only ever tab through
+  reachable steps.
+- Status is never color-alone: the active/complete title also switches to a heavier font weight,
+  and the complete dot additionally swaps its number for a checkmark glyph.
+- The checkmark's path-draw, the connector fill, and `Stepper.Content`'s slide all collapse to
+  instant transitions under `prefers-reduced-motion` — the underlying state changes are
+  unaffected, only the animation is skipped.

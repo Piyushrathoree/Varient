@@ -12,6 +12,11 @@ import {
 import { motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { DURATION } from '../../../lib/animation';
+import { useViewportActive } from '../../../lib/use-viewport-active';
+
+/** Hard cap on concurrently animated dots — large canvases sample instead of
+ * spawning a spring per grid cell (a hero-sized surface can hold thousands). */
+const MAX_ANIMATED_DOTS = 140;
 
 export interface DotPatternProps extends SVGAttributes<SVGSVGElement> {
   /** Spacing between dot centers in pixels. */
@@ -61,6 +66,18 @@ function buildDotPositions(
   return dots;
 }
 
+/** Evenly samples at most `max` dots from the grid so animation cost stays
+ * bounded regardless of canvas size. */
+function sampleDots(dots: DotPosition[], max: number): DotPosition[] {
+  if (dots.length <= max) return dots;
+  const step = dots.length / max;
+  const sampled: DotPosition[] = [];
+  for (let i = 0; i < max; i += 1) {
+    sampled.push(dots[Math.floor(i * step)]);
+  }
+  return sampled;
+}
+
 /**
  * Dot-grid background texture — the `.frame-box` aesthetic as a component.
  * Accepts `className` for radial masks (`[mask-image:radial-gradient(...)]`).
@@ -106,6 +123,13 @@ export const DotPattern = forwardRef<SVGSVGElement, DotPatternProps>(
       [dimensions.width, dimensions.height, size, offsetX, offsetY],
     );
 
+    const animatedDots = useMemo(
+      () => sampleDots(dotPositions, MAX_ANIMATED_DOTS),
+      [dotPositions],
+    );
+
+    const isViewportActive = useViewportActive(containerRef);
+
     const setRefs = (node: SVGSVGElement | null) => {
       containerRef.current = node;
       if (typeof ref === 'function') ref(node);
@@ -123,7 +147,25 @@ export const DotPattern = forwardRef<SVGSVGElement, DotPatternProps>(
           )}
           {...props}
         >
-          {dotPositions.map((dot) => (
+          <defs>
+            <pattern
+              id={patternId}
+              width={size}
+              height={size}
+              patternUnits="userSpaceOnUse"
+              x={offsetX}
+              y={offsetY}
+            >
+              <circle
+                cx={size / 2}
+                cy={size / 2}
+                r={radius}
+                className="fill-muted-foreground/20"
+              />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill={`url(#${patternId})`} />
+          {animatedDots.map((dot) => (
             <motion.circle
               key={dot.id}
               cx={dot.cx}
@@ -131,11 +173,15 @@ export const DotPattern = forwardRef<SVGSVGElement, DotPatternProps>(
               r={radius}
               className="fill-muted-foreground/20"
               initial={{ opacity: 0.25 }}
-              animate={{ opacity: [0.25, 0.65, 0.25] }}
+              animate={
+                isViewportActive
+                  ? { opacity: [0.25, 0.65, 0.25] }
+                  : { opacity: 0.25 }
+              }
               transition={{
                 duration: DURATION.slow * 2.5,
                 delay: dot.delay,
-                repeat: Infinity,
+                repeat: isViewportActive ? Infinity : 0,
                 ease: 'easeInOut',
               }}
             />

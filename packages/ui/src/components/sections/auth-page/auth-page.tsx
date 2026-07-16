@@ -3,7 +3,9 @@
 import {
   forwardRef,
   useCallback,
+  useEffect,
   useId,
+  useRef,
   useState,
   type FormEvent,
   type HTMLAttributes,
@@ -40,20 +42,41 @@ export type AuthPageFormData = AuthPageLoginData | AuthPageSignupData;
 
 export type AuthPageSocialProvider = 'github' | 'google';
 
+/** A generic social provider entry rendered alongside the built-in GitHub/Google buttons. */
+export interface AuthPageSocialProviderConfig {
+  /** Stable id passed to `onSocialAuth`. */
+  id: string;
+  /** Button label. */
+  label: string;
+  /** Icon slot — any ReactNode (typically a 16x16 inline SVG). */
+  icon: ReactNode;
+}
+
 type FieldKey = 'name' | 'email' | 'password' | 'terms';
 
 type FieldErrors = Partial<Record<FieldKey, string>>;
+
+type SubmitState = 'idle' | 'loading' | 'success';
 
 export interface AuthPageProps extends Omit<HTMLAttributes<HTMLElement>, 'title' | 'onSubmit'> {
   variant?: AuthPageVariant;
   headline?: ReactNode;
   description?: ReactNode;
   onSubmit?: (data: AuthPageFormData) => void | Promise<void>;
-  onSocialAuth?: (provider: AuthPageSocialProvider) => void;
+  /** Called when a social auth button is clicked. Accepts built-in ids plus any custom `socialProviders` id. */
+  onSocialAuth?: (provider: AuthPageSocialProvider | (string & {})) => void;
+  /** Extra social providers rendered after the built-in GitHub/Google buttons — bring your own icon. */
+  socialProviders?: AuthPageSocialProviderConfig[];
   forgotPasswordHref?: string;
   forgotPasswordLabel?: string;
   /** Right panel content on large screens. Defaults to a dot-grid panel with a testimonial quote. */
   aside?: ReactNode;
+  /** Submit button label. Defaults to "Sign in" / "Create account" per variant. */
+  submitLabel?: ReactNode;
+  /** Submit button label while the async `onSubmit` is pending. */
+  loadingLabel?: ReactNode;
+  /** Submit button label shown briefly after `onSubmit` resolves successfully. */
+  successLabel?: ReactNode;
 }
 
 const DEFAULT_LOGIN_HEADLINE = 'Welcome back';
@@ -61,6 +84,7 @@ const DEFAULT_LOGIN_DESCRIPTION = 'Sign in to your account to continue.';
 const DEFAULT_SIGNUP_HEADLINE = 'Create your account';
 const DEFAULT_SIGNUP_DESCRIPTION = 'Start building with copy-paste components today.';
 const DEFAULT_FORGOT_PASSWORD_LABEL = 'Forgot password?';
+const SUCCESS_LABEL_DURATION_MS = 1600;
 
 const DEFAULT_TESTIMONIAL = {
   quote:
@@ -194,9 +218,13 @@ export const AuthPage = forwardRef<HTMLElement, AuthPageProps>(
       description,
       onSubmit,
       onSocialAuth,
+      socialProviders,
       forgotPasswordHref = '#forgot-password',
       forgotPasswordLabel = DEFAULT_FORGOT_PASSWORD_LABEL,
       aside,
+      submitLabel,
+      loadingLabel,
+      successLabel,
       ...props
     },
     ref,
@@ -210,8 +238,19 @@ export const AuthPage = forwardRef<HTMLElement, AuthPageProps>(
     const [rememberMe, setRememberMe] = useState(false);
     const [agreedToTerms, setAgreedToTerms] = useState(false);
     const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
-    const [isLoading, setIsLoading] = useState(false);
+    const [submitState, setSubmitState] = useState<SubmitState>('idle');
+    const successTimeoutRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
 
+    useEffect(() => {
+      return () => {
+        if (successTimeoutRef.current !== null) {
+          window.clearTimeout(successTimeoutRef.current);
+        }
+      };
+    }, []);
+
+    const isLoading = submitState === 'loading';
+    const isSuccess = submitState === 'success';
     const isLogin = variant === 'login';
     const resolvedHeadline =
       headline ?? (isLogin ? DEFAULT_LOGIN_HEADLINE : DEFAULT_SIGNUP_HEADLINE);
@@ -247,7 +286,7 @@ export const AuthPage = forwardRef<HTMLElement, AuthPageProps>(
         }
 
         setFieldErrors({});
-        setIsLoading(true);
+        setSubmitState('loading');
 
         try {
           if (onSubmit) {
@@ -268,8 +307,13 @@ export const AuthPage = forwardRef<HTMLElement, AuthPageProps>(
               });
             }
           }
-        } finally {
-          setIsLoading(false);
+          setSubmitState('success');
+          successTimeoutRef.current = window.setTimeout(() => {
+            setSubmitState('idle');
+          }, SUCCESS_LABEL_DURATION_MS);
+        } catch (error) {
+          setSubmitState('idle');
+          throw error;
         }
       },
       [
@@ -283,6 +327,22 @@ export const AuthPage = forwardRef<HTMLElement, AuthPageProps>(
         rememberMe,
       ],
     );
+
+    const resolvedSubmitLabel = isSuccess && successLabel
+      ? successLabel
+      : isLoading && loadingLabel
+        ? loadingLabel
+        : (submitLabel ?? (isLogin ? 'Sign in' : 'Create account'));
+
+    const socialButtons = [
+      { id: 'github' as const, label: 'GitHub', icon: <GitHubIcon className="size-4" /> },
+      { id: 'google' as const, label: 'Google', icon: <GoogleIcon className="size-4" /> },
+      ...(socialProviders ?? []).map((provider) => ({
+        id: provider.id,
+        label: provider.label,
+        icon: provider.icon,
+      })),
+    ];
 
     const panelMotion = shouldReduceMotion
       ? {
@@ -428,39 +488,37 @@ export const AuthPage = forwardRef<HTMLElement, AuthPageProps>(
                 type="submit"
                 variant="primary"
               >
-                {isLogin ? 'Sign in' : 'Create account'}
+                {resolvedSubmitLabel}
               </Button>
 
               <OrDivider />
 
-              <div className="grid grid-cols-2 gap-3">
-                <Button
-                  isDisabled={isLoading}
-                  onClick={() => onSocialAuth?.('github')}
-                  size="md"
-                  type="button"
-                  variant="outline"
-                >
-                  <GitHubIcon className="size-4" />
-                  GitHub
-                </Button>
-                <Button
-                  isDisabled={isLoading}
-                  onClick={() => onSocialAuth?.('google')}
-                  size="md"
-                  type="button"
-                  variant="outline"
-                >
-                  <GoogleIcon className="size-4" />
-                  Google
-                </Button>
+              <div
+                className="grid gap-3"
+                style={{
+                  gridTemplateColumns: `repeat(${Math.min(socialButtons.length, 3)}, minmax(0, 1fr))`,
+                }}
+              >
+                {socialButtons.map((provider) => (
+                  <Button
+                    isDisabled={isLoading}
+                    key={provider.id}
+                    onClick={() => onSocialAuth?.(provider.id)}
+                    size="md"
+                    type="button"
+                    variant="outline"
+                  >
+                    {provider.icon}
+                    {provider.label}
+                  </Button>
+                ))}
               </div>
             </form>
           </div>
         </motion.div>
 
         <motion.aside
-          aria-hidden
+          aria-hidden={aside === undefined ? true : undefined}
           className="hidden border-l border-border bg-muted/20 lg:block lg:w-1/2"
           {...asideMotion}
         >

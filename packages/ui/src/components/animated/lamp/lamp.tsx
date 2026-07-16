@@ -1,7 +1,7 @@
 'use client';
 
-import { forwardRef, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { forwardRef, useRef, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
+import { motion, useInView, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { DURATION, EASE_OUT } from '../../../lib/animation';
 
@@ -25,16 +25,23 @@ const CONE_RIGHT =
 export const Lamp = forwardRef<HTMLDivElement, LampProps>(
   ({ className, children, accentColor = 'var(--color-brand)', ...props }, ref) => {
     const shouldReduceMotion = useReducedMotion();
+    const localRef = useRef<HTMLDivElement>(null);
+    const isInView = useInView(localRef, { once: true, margin: '-80px' });
+    const shouldAnimate = !shouldReduceMotion && isInView;
 
     const barWidth = shouldReduceMotion ? '100%' : '0%';
-    const barAnimate = shouldReduceMotion ? undefined : { width: ['0%', '100%'] };
-    const barTransition = shouldReduceMotion
-      ? undefined
-      : { duration: DURATION.complex, ease: EASE_OUT };
+    const barAnimate = shouldAnimate ? { width: ['0%', '100%'] } : undefined;
+    const barTransition = shouldAnimate
+      ? { duration: DURATION.complex, ease: EASE_OUT }
+      : undefined;
 
     return (
       <div
-        ref={ref}
+        ref={(node) => {
+          localRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+        }}
         className={cn(
           'relative flex w-full flex-col items-center justify-center overflow-hidden bg-background',
           className,
@@ -65,11 +72,7 @@ export const Lamp = forwardRef<HTMLDivElement, LampProps>(
                 'radial-gradient(ellipse at center, color-mix(in oklab, var(--lamp-accent) 40%, transparent), transparent 70%)',
             }}
             initial={shouldReduceMotion ? false : { opacity: 0, scaleX: 0.2 }}
-            animate={
-              shouldReduceMotion
-                ? undefined
-                : { opacity: 0.5, scaleX: 1 }
-            }
+            animate={shouldAnimate ? { opacity: 0.5, scaleX: 1 } : undefined}
             transition={{ duration: DURATION.complex, ease: EASE_OUT }}
           />
 
@@ -77,25 +80,21 @@ export const Lamp = forwardRef<HTMLDivElement, LampProps>(
             className="absolute inset-auto top-0 h-44 w-full -translate-y-1/2 opacity-40 blur-2xl"
             style={{ background: CONE_LEFT }}
             initial={shouldReduceMotion ? false : { opacity: 0 }}
-            animate={shouldReduceMotion ? undefined : { opacity: 0.4 }}
+            animate={shouldAnimate ? { opacity: 0.4 } : undefined}
             transition={{ duration: DURATION.complex, delay: 0.1, ease: EASE_OUT }}
           />
           <motion.div
             className="absolute inset-auto top-0 h-44 w-full -translate-y-1/2 opacity-40 blur-2xl"
             style={{ background: CONE_RIGHT }}
             initial={shouldReduceMotion ? false : { opacity: 0 }}
-            animate={shouldReduceMotion ? undefined : { opacity: 0.4 }}
+            animate={shouldAnimate ? { opacity: 0.4 } : undefined}
             transition={{ duration: DURATION.complex, delay: 0.15, ease: EASE_OUT }}
           />
 
           <motion.div
             className="absolute inset-auto top-0 h-px w-full bg-gradient-to-r from-transparent via-[var(--lamp-accent)] to-transparent"
             initial={shouldReduceMotion ? false : { width: barWidth, opacity: 0 }}
-            animate={
-              shouldReduceMotion
-                ? undefined
-                : { width: '100%', opacity: 1 }
-            }
+            animate={shouldAnimate ? { width: '100%', opacity: 1 } : undefined}
             transition={{ duration: DURATION.complex, ease: EASE_OUT }}
           />
         </div>

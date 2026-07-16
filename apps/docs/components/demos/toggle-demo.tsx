@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Bold, Italic } from 'lucide-react';
 import { Toggle, type ToggleSize, type ToggleVariant } from '@varient/ui';
 
-function DemoCard({ label, children }: { label: string; children: React.ReactNode }) {
+function DemoCard({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
       {children}

@@ -6,6 +6,7 @@ import { getComponentHref, layerLabels } from '@/lib/components/registry';
 import { getDemo } from '@/lib/components/demos';
 import { PreviewFrame } from './preview-frame';
 import { SectionPreviewScale } from './section-preview-scale';
+import { LazyMount } from './lazy-mount';
 
 interface ComponentCardProps {
   entry: ComponentEntry;
@@ -32,13 +33,15 @@ export function ComponentCard({ entry, size = 'compact' }: ComponentCardProps) {
 
   const previewContent =
     isShipped && CompactDemo ? (
-      isWide ? (
-        <SectionPreviewScale>
+      <LazyMount minHeight={isWide ? 280 : 160} className="flex h-full w-full items-center justify-center">
+        {isWide ? (
+          <SectionPreviewScale>
+            <CompactDemo />
+          </SectionPreviewScale>
+        ) : (
           <CompactDemo />
-        </SectionPreviewScale>
-      ) : (
-        <CompactDemo />
-      )
+        )}
+      </LazyMount>
     ) : isInProgress ? (
       <div className="flex flex-col items-center gap-2 text-center">
         <div className="flex size-9 items-center justify-center rounded-full border border-yellow-500/30 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400">
@@ -68,13 +71,20 @@ export function ComponentCard({ entry, size = 'compact' }: ComponentCardProps) {
         !isShipped && 'opacity-90',
       )}
     >
-      <PreviewFrame
-        minHeight={isWide ? 'section' : 'sm'}
-        alignTop={isWide}
-        className="rounded-none border-0"
-      >
-        {previewContent}
-      </PreviewFrame>
+      <div className="relative">
+        {entry.isNew && (
+          <span className="absolute right-2.5 top-2.5 z-20 rounded-full border border-brand/30 bg-brand/10 px-1.5 py-0.5 font-mono text-[9px] font-medium uppercase tracking-wider text-brand">
+            New
+          </span>
+        )}
+        <PreviewFrame
+          minHeight={isWide ? 'section' : 'sm'}
+          alignTop={isWide}
+          className="rounded-none border-0"
+        >
+          {previewContent}
+        </PreviewFrame>
+      </div>
 
       <div className={cn('flex flex-1 flex-col gap-3 border-t border-border p-5', isWide && 'sm:p-6')}>
         <div className="flex items-start justify-between gap-2">

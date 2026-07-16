@@ -1,0 +1,85 @@
+---
+title: Carousel
+description: Drag-to-snap carousel with springy physics, arrows, dots, and full keyboard support — no embla.
+---
+
+<ComponentPreview name="carousel" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/carousel/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { Carousel } from '@/components/animated/carousel';
+
+export function Example() {
+  return (
+    <Carousel align="center" gap={16} className="w-full max-w-md">
+      <Carousel.Item className="w-full">Slide one</Carousel.Item>
+      <Carousel.Item className="w-full">Slide two</Carousel.Item>
+      <Carousel.Item className="w-full">Slide three</Carousel.Item>
+      <Carousel.Previous />
+      <Carousel.Next />
+      <Carousel.Dots />
+    </Carousel>
+  );
+}
+```
+
+Slide width is controlled entirely by the `className` on each `Carousel.Item` — use `w-full` for
+one-at-a-time, or a percentage (`w-[70%] sm:w-[55%]`) for a centered "peek" layout where neighboring
+slides are partially visible. `Carousel.Previous`, `Carousel.Next`, and `Carousel.Dots` can be placed
+anywhere inside `<Carousel>` — they're rendered outside the draggable track automatically.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'align', type: "'start' | 'center'", defaultValue: "'center'", description: 'How each slide snaps against the viewport edge.' },
+    { name: 'gap', type: 'number', defaultValue: '16', description: 'Gap between slides in pixels.' },
+    { name: 'index', type: 'number', description: 'Controlled active slide index — pair with onIndexChange.' },
+    { name: 'defaultIndex', type: 'number', defaultValue: '0', description: 'Initial active slide index for uncontrolled usage.' },
+    { name: 'onIndexChange', type: '(index: number) => void', description: 'Fires whenever the active slide changes — drag, arrows, dots, or keyboard.' },
+    { name: 'isLooping', type: 'boolean', defaultValue: 'false', description: 'Wraps Previous/Next/Dots navigation past the first/last slide. Drag itself stays bounded to the real track.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged onto the outer wrapper via cn().' },
+  ]}
+/>
+
+<PropsTable
+  props={[
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes — commonly a width utility (`w-full`, `w-[70%]`) controlling how many slides are visible at once.' },
+  ]}
+/>
+
+`Carousel.Item` — one slide. Accepts any standard `div` props.
+
+<PropsTable
+  props={[
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(). Accepts any standard `button` props otherwise.' },
+  ]}
+/>
+
+`Carousel.Previous` / `Carousel.Next` — navigation buttons, absolutely positioned over the viewport edges.
+Disabled automatically at the bounds when `isLooping` is false.
+
+<PropsTable
+  props={[
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged onto the dots row via cn().' },
+  ]}
+/>
+
+`Carousel.Dots` — one button per registered slide, jumps directly to that index.
+
+## Accessibility
+
+- The viewport is `role="region"` `aria-roledescription="carousel"`, focusable, with `ArrowLeft`/`ArrowRight` navigating slides.
+- Each `Carousel.Item` is `role="group"` `aria-roledescription="slide"` with an `aria-label` announcing its position (`"2 of 5"`), computed automatically from render order.
+- `Carousel.Previous` / `Carousel.Next` carry `aria-label` and are real `<button disabled>` elements at the bounds (non-looping).
+- `Carousel.Dots` buttons use `aria-label="Go to slide N"` and `aria-current` on the active dot.
+- Under `prefers-reduced-motion`, drag still works but the release/settle snap is instant — no spring overshoot.

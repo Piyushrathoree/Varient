@@ -3,7 +3,7 @@ title: Hero Grid
 description: Hero over a fine line-grid background with radial fade, glow orbs, staggered entrance, and optional stats row.
 ---
 
-<ComponentPreview name="hero-grid" />
+<ComponentPreview name="hero-grid" variant="section" />
 
 ## Installation
 
@@ -43,11 +43,13 @@ export function LandingPage() {
     { name: 'subtitle', type: 'string', defaultValue: '(see source)', description: 'One-paragraph subhead below the title.' },
     { name: 'primaryCta', type: '{ label: string; href: string }', defaultValue: '(see source)', description: 'Primary brand button.' },
     { name: 'secondaryCta', type: '{ label: string; href: string }', defaultValue: '(see source)', description: 'Secondary outline button.' },
-    { name: 'stats', type: '{ value: string; label: string }[]', defaultValue: '(see source)', description: 'Optional metrics row beneath CTAs. Pass `[]` to hide.' },
+    { name: 'stats', type: '{ value: string; label: string }[]', defaultValue: '(see source)', description: 'Optional metrics row beneath CTAs. Collapses to a single stacked column below `sm`. Pass `[]` to hide.' },
+    { name: 'backgroundSlot', type: 'ReactNode', description: 'Replaces the default line-grid + glow-orb backdrop entirely — pass an image, video, solid tint, or custom canvas so the hero stops competing with a page’s existing `Hero` background.' },
+    { name: 'isAmbient', type: 'boolean', defaultValue: 'false', description: 'Opt in to a perpetual float loop on the glow orbs (paused offscreen). Default settles the orbs into place once on mount and holds.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
   ]}
 />
 
 ## Accessibility
 
-The root is a `<section>` labelled by the h1. Background grid, fade mask, and glow orbs are decorative (`aria-hidden`). Text entrance respects `prefers-reduced-motion` — content renders immediately without stagger when reduced motion is preferred.
+The root is a `<section>` labelled by the h1. Background grid, fade mask, and glow orbs (or a custom `backgroundSlot`) are decorative (`aria-hidden`). Text entrance respects `prefers-reduced-motion` — content renders immediately without stagger when reduced motion is preferred, and glow orbs render as static, motionless fills.

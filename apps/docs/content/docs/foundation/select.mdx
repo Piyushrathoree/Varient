@@ -38,6 +38,11 @@ export function Example() {
 
 ## Props
 
+Select is built on `@radix-ui/react-select`, so its controlled-value prop follows Radix's
+naming: **`onValueChange`**, not `onChange`. This differs from `Checkbox` and `Switch` in
+this library, which expose a plain `onChange`. Keep that in mind when swapping a Select into
+a form that otherwise standardizes on `onChange`.
+
 <PropsTable props={[
   { name: 'value', type: 'string', description: 'Controlled selected value — pass with onValueChange (Select root).' },
   { name: 'defaultValue', type: 'string', description: 'Initial selected value for uncontrolled usage (Select root).' },

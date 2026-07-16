@@ -8,12 +8,9 @@
 @source '../../../packages/ui/src/**/*.{ts,tsx}';
 
 /* ═══════════════════════════════════════════════════════════════════════════
- * SMOOTHUI TOKEN SYSTEM — ported verbatim from smoothui.dev (MIT, Edu Calvo).
- * See PORT-SPEC.md. Two modes only, switched by `.dark` (next-themes / the
- * fumadocs RootProvider) — the 4-identity engine is gone, never reference it.
- * Only intentional deviation: SmoothUI's pink `--color-brand` slot carries our
- * ember (#FF5A1F) hue instead — same architecture, our color, everything else
- * is their values verbatim.
+ * VARIENT TOKEN SYSTEM — neutral OKLCH gray ladder + semantic slots.
+ * Two modes only, switched by `.dark` (next-themes / the fumadocs RootProvider).
+ * Brand accent: ember (#FF5A1F) in the `--color-brand` slot.
  * ═══════════════════════════════════════════════════════════════════════════ */
 @theme inline {
   --font-body: var(--font-inter);
@@ -90,14 +87,13 @@
   --color-fd-primary: var(--color-brand);
   --color-fd-secondary: var(--color-smooth-50);
 
-  /* Ember — our brand, dropped into SmoothUI's `--brand` slot. Scale mirrors
-     packages/ui's ember-300/400/500/600 (see @varient/ui/styles/globals.css). */
+  /* Ember brand scale — mirrors packages/ui's ember-300/400/500/600
+     (see @varient/ui/styles/globals.css). */
   --color-brand: #ff5a1f;
   --color-brand-secondary: #f03e0c;
   --color-brand-light: #ff7e44;
   --color-brand-lighter: #ffa377;
-  /* shadcn-ui tokens SmoothUI's own repo pulls from an external package we
-     don't have — filled with our closest equivalents so nothing dangles. */
+  /* Semantic status tokens — filled with Varient equivalents so nothing dangles. */
   --destructive: var(--danger);
   --success: #059669;
   --warning: #d97706;
@@ -152,6 +148,36 @@
   --warning: #fbbf24;
 }
 
+/* ─── `.light` token block — lets a light-classed subtree render correctly
+   inside an otherwise-dark page (per-preview theme toggles). Values are the
+   `:root` light defaults, kept in exact sync with them. ─── */
+.light {
+  --shadow-custom:
+    0px 0px 0px 1px rgba(0, 0, 0, 0.08),
+    0px 1px 2px -1px rgba(0, 0, 0, 0.08), 0px 2px 4px 0px rgba(0, 0, 0, 0.04);
+  --lines-page: url('/lines-b.png');
+
+  --color-smooth-50: oklch(1 0 0);
+  --color-smooth-100: oklch(0.985 0 0);
+  --color-smooth-200: oklch(0.97 0 0);
+  --color-smooth-300: oklch(0.955 0 0);
+  --color-smooth-400: oklch(0.935 0 0);
+  --color-smooth-500: oklch(0.91 0 0);
+  --color-smooth-600: oklch(0.88 0 0);
+  --color-smooth-700: oklch(0.82 0 0);
+  --color-smooth-800: oklch(0.62 0 0);
+  --color-smooth-900: oklch(0.58 0 0);
+  --color-smooth-950: oklch(0.48 0 0);
+  --color-smooth-1000: oklch(0.15 0 0);
+  --color-input: var(--color-smooth-600);
+
+  --success: #059669;
+  --warning: #d97706;
+  --sidebar-accent: var(--color-smooth-200);
+  --accent-soft: rgb(0 0 0 / 0.04);
+  --skeleton-shimmer: rgb(0 0 0 / 0.06);
+}
+
 @layer base {
   *,
   ::after,
@@ -193,13 +219,6 @@
 }
 .hover\:gradient-brand:hover {
   @apply from-brand-secondary to-brand bg-gradient-to-bl;
-}
-
-.shadow-custom-btgray {
-  box-shadow:
-    0px 1px 2px rgba(0, 0, 0, 0.4),
-    0px 0px 0px 1px var(--color-bt-gray),
-    inset 0px 0.75px 0px rgba(255, 255, 255, 0.2);
 }
 
 .bg-lines-page {
@@ -360,42 +379,23 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
- * COMPAT ALIASES — old semantic classes/vars → SmoothUI tokens. Keeps every
- * not-yet-ported file (see PORT-SPEC.md "files owned by other agents")
- * rendering unchanged. New/ported code should reach for SmoothUI's own
- * classes directly (bg-background, text-foreground, border-border, …) —
+ * COMPAT ALIASES — old semantic classes/vars → Varient tokens. Keeps every
+ * not-yet-migrated file rendering unchanged. New code should reach for the
+ * canonical classes directly (bg-background, text-foreground, border-border, …) —
  * these aliases are a bridge, not the destination.
  * ═══════════════════════════════════════════════════════════════════════════ */
 @theme inline {
   --color-bg-base: var(--color-background);
-  --color-bg-subtle: var(--color-smooth-100);
-  --color-bg-muted: var(--color-muted);
-  --color-bg-elevated: var(--color-smooth-100);
-  --color-border-strong: var(--color-smooth-600);
   --color-text-primary: var(--color-foreground);
-  --color-text-secondary: var(--color-muted-foreground);
-  --color-text-tertiary: var(--color-smooth-800);
   --color-accent: var(--color-brand);
-  --color-accent-hover: var(--color-brand-secondary);
-  --color-accent-contrast: var(--accent-contrast);
-  --color-accent-soft: var(--accent-soft);
-
-  --radius-theme: var(--radius-lg);
-  --radius-theme-pill: 9999px;
-
-  --shadow-theme: var(--shadow-theme);
-  --shadow-glow-theme: var(--glow-theme);
 
   --font-display: var(--font-title);
   --font-mono: var(--font-mono);
 }
 
 :root {
-  --accent-contrast: #ffffff;
   --accent-soft: rgb(0 0 0 / 0.04);
   --accent-gradient: linear-gradient(135deg, #ff5a1f, #ff8a3d);
-  --shadow-theme: 0 1px 2px 0 rgb(0 0 0 / 0.04);
-  --glow-theme: 0 0 0 3px rgb(255 90 31 / 0.12);
   --skeleton-shimmer: rgb(0 0 0 / 0.06);
   --motion-duration: 180ms;
   --motion-duration-slow: 260ms;
@@ -404,11 +404,8 @@
 }
 
 .dark {
-  --accent-contrast: #ffffff;
   --accent-soft: rgb(255 255 255 / 0.04);
   --accent-gradient: linear-gradient(135deg, #ff5a1f, #ff9e6b);
-  --shadow-theme: inset 0 1px 0 0 rgb(255 255 255 / 0.03);
-  --glow-theme: 0 0 0 1px rgb(255 90 31 / 0.22), 0 0 12px -2px rgb(255 90 31 / 0.14);
   --skeleton-shimmer: rgb(255 255 255 / 0.06);
 }
 

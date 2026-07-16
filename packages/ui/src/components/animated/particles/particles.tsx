@@ -9,6 +9,8 @@ import {
 } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { seededUnit } from '../../../lib/random';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 export interface ParticlesProps extends HTMLAttributes<HTMLCanvasElement> {
   /** Number of particles to render. */
@@ -30,11 +32,6 @@ interface Particle {
   vy: number;
   size: number;
   alpha: number;
-}
-
-function seededUnit(seed: number): number {
-  const value = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
-  return value - Math.floor(value);
 }
 
 function resolveDefaultColor(element: HTMLElement): string {
@@ -86,6 +83,9 @@ export const Particles = forwardRef<HTMLCanvasElement, ParticlesProps>(
     const pointerRef = useRef({ x: 0, y: 0, active: false });
     const colorRef = useRef<string | undefined>(color);
     const frameRef = useRef<number | null>(null);
+    const drawFrameRef = useRef<() => void>(() => {});
+    const isViewportActive = useViewportActive(canvasRef);
+    const isActiveRef = useRef(isViewportActive);
 
     const mergeRef = useCallback(
       (node: HTMLCanvasElement | null) => {
@@ -99,6 +99,19 @@ export const Particles = forwardRef<HTMLCanvasElement, ParticlesProps>(
     useEffect(() => {
       colorRef.current = color;
     }, [color]);
+
+    useEffect(() => {
+      isActiveRef.current = isViewportActive;
+      if (
+        isViewportActive &&
+        !shouldReduceMotion &&
+        frameRef.current === null
+      ) {
+        frameRef.current = window.requestAnimationFrame(() =>
+          drawFrameRef.current(),
+        );
+      }
+    }, [isViewportActive, shouldReduceMotion]);
 
     useEffect(() => {
       const canvas = canvasRef.current;
@@ -140,6 +153,11 @@ export const Particles = forwardRef<HTMLCanvasElement, ParticlesProps>(
       };
 
       const drawFrame = () => {
+        if (!isActiveRef.current) {
+          frameRef.current = null;
+          return;
+        }
+
         const rect = parent.getBoundingClientRect();
         const width = rect.width;
         const height = rect.height;
@@ -201,6 +219,8 @@ export const Particles = forwardRef<HTMLCanvasElement, ParticlesProps>(
         pointerRef.current.active = false;
       };
 
+      drawFrameRef.current = drawFrame;
+
       resizeCanvas();
       drawStatic();
 
@@ -215,7 +235,9 @@ export const Particles = forwardRef<HTMLCanvasElement, ParticlesProps>(
       if (!shouldReduceMotion) {
         parent.addEventListener('pointermove', handlePointerMove);
         parent.addEventListener('pointerleave', handlePointerLeave);
-        frameRef.current = window.requestAnimationFrame(drawFrame);
+        if (isActiveRef.current) {
+          frameRef.current = window.requestAnimationFrame(drawFrame);
+        }
       }
 
       return () => {

@@ -46,7 +46,7 @@ Two visual styles on the root — items share the same compound API either way.
 </ToggleGroup>
 ```
 
-- **`segmented`** — an enclosed track (`bg-muted rounded-lg p-1`) with a neutral raised chip (`bg-background shadow-sm`) behind the active item. In single-select mode the chip slides between items via a shared `layoutId` spring — same mechanic as Tabs segmented. Multi-select gives each active item its own static chip instead.
+- **`segmented`** — an enclosed track (`bg-muted rounded-lg p-1`) with a neutral raised chip (`bg-background shadow-sm`) behind the active item. In single-select mode the chip slides between items via a shared `layoutId` spring — same mechanic as Tabs segmented. Multi-select gives each active item its own static chip instead, but its background-color and box-shadow ease in on the same transition list as the item's other properties, so pressing an item in a multi-select group feels as smooth as the single-select slide.
 - **`outline`** — standalone bordered toggles in a row, reusing the Toggle outline recipe. Good for formatting toolbars where each control should read as its own button.
 
 Pass `isMultiple` to allow several items pressed at once; omit it (default `false`) for radio-like single selection.

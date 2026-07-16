@@ -54,6 +54,19 @@ export function AccordionDemo() {
           <span className="text-xs font-medium text-muted-foreground">{label}</span>
         </div>
       ))}
+      <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+        <Accordion isMultiple defaultValue={['installation', 'react-native']} className="w-full">
+          {faqs.map((faq) => (
+            <Accordion.Item key={faq.value} value={faq.value}>
+              <Accordion.Trigger>{faq.question}</Accordion.Trigger>
+              <Accordion.Content>{faq.answer}</Accordion.Content>
+            </Accordion.Item>
+          ))}
+        </Accordion>
+        <span className="text-xs font-medium text-muted-foreground">
+          isMultiple — two panels open
+        </span>
+      </div>
     </div>
   );
 }

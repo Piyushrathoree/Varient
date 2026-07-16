@@ -40,6 +40,7 @@ export function Example() {
     { name: 'pauseOnHover', type: 'boolean', defaultValue: 'true', description: 'Pause the animation while the pointer is over the track.' },
     { name: 'isReverse', type: 'boolean', defaultValue: 'false', description: 'Flip the scroll direction.' },
     { name: 'gap', type: 'number', defaultValue: '16', description: 'Gap between items in pixels.' },
+    { name: 'edgeFade', type: "'none' | 'sm' | 'md' | 'lg'", defaultValue: "'md'", description: 'Width of the edge fade masks. `none` removes them entirely.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
   ]}
 />
@@ -49,3 +50,4 @@ export function Example() {
 - Duplicate content in the loop is marked `aria-hidden` so screen readers do not hear the same items twice.
 - The track sets `aria-live="off"` to avoid announcing every scroll tick.
 - Under `prefers-reduced-motion`, the marquee renders a static row with no animation and no perpetual motion.
+- The scroll animation automatically pauses while the marquee is scrolled offscreen, resuming once it re-enters the viewport.

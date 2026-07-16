@@ -1,6 +1,6 @@
 ---
 title: Wavy Background
-description: Canvas sine-wave backdrop with blurred ember strokes and tunable speed.
+description: Canvas sine-wave backdrop with soft neutral strokes and tunable speed.
 ---
 
 <ComponentPreview name="wavy-background" />
@@ -37,7 +37,7 @@ export function Example() {
 <PropsTable
   props={[
     { name: 'children', type: 'ReactNode', description: 'Content rendered above the wave canvas.' },
-    { name: 'colors', type: 'string[]', description: 'Stroke colors for each wave layer — defaults to ember brand tints.' },
+    { name: 'colors', type: 'string[]', description: 'Stroke colors for each wave layer — defaults to neutral foreground/muted-foreground washes with a faint ember accent.' },
     { name: 'waveWidth', type: 'number', defaultValue: '50', description: 'Approximate vertical spacing between wave crests in pixels.' },
     { name: 'blur', type: 'number', defaultValue: '10', description: 'Canvas blur applied to wave strokes.' },
     { name: 'speed', type: "'slow' | 'fast'", defaultValue: "'slow'", description: 'Phase drift speed — slow is calmer, fast is more lively.' },
@@ -54,5 +54,8 @@ export function Example() {
 - Children render in a `relative z-10` wrapper and remain fully interactive.
 - Under `prefers-reduced-motion`, a single static frame is drawn and the
   requestAnimationFrame loop is not started.
+- The animation loop pauses automatically while the component is scrolled
+  offscreen (via `IntersectionObserver`) and resumes when it re-enters the
+  viewport, so background instances don't burn CPU while not visible.
 - A `ResizeObserver` keeps the canvas sized to the container and cleans up on
   unmount.

@@ -1,9 +1,9 @@
 ---
 title: Timeline
-description: A vertical milestone timeline with brand dots, optional badges, and staggered scroll-reveal animations.
+description: A vertical milestone timeline with brand dots, optional icons and status markers, and staggered scroll-reveal animations.
 ---
 
-<ComponentPreview name="timeline" />
+<ComponentPreview name="timeline" variant="section" />
 
 ## Installation
 
@@ -16,7 +16,34 @@ bun add motion clsx tailwind-merge
 ## Usage
 
 ```tsx
-import { Timeline } from '@/components/sections/timeline';
+import { Timeline, type TimelineItem } from '@/components/sections/timeline';
+import { Flag, Sparkles, Rocket } from 'lucide-react';
+
+const items: TimelineItem[] = [
+  {
+    date: 'Jan 2024',
+    title: 'Project kickoff',
+    description: 'Defined the component architecture.',
+    badge: 'Milestone',
+    icon: <Flag size={14} strokeWidth={1.75} />,
+    status: 'done',
+  },
+  {
+    date: 'Jun 2024',
+    title: 'Animated layer launched',
+    description: 'Added motion components with a11y fallbacks.',
+    badge: 'Launch',
+    icon: <Sparkles size={14} strokeWidth={1.75} />,
+    status: 'current',
+  },
+  {
+    date: 'Dec 2024',
+    title: 'Public 1.0',
+    description: 'Publish the library under MIT.',
+    icon: <Rocket size={14} strokeWidth={1.75} />,
+    status: 'upcoming',
+  },
+];
 
 export function AboutPage() {
   return (
@@ -29,25 +56,7 @@ export function AboutPage() {
         </>
       }
       description="Key milestones on the path from idea to shipped product."
-      items={[
-        {
-          date: 'Jan 2024',
-          title: 'Project kickoff',
-          description: 'Defined the component architecture.',
-          badge: 'Milestone',
-        },
-        {
-          date: 'Jun 2024',
-          title: 'Animated layer launched',
-          description: 'Added motion components with a11y fallbacks.',
-          badge: 'Launch',
-        },
-        {
-          date: 'Dec 2024',
-          title: 'Open source',
-          description: 'Published under MIT.',
-        },
-      ]}
+      items={items}
     />
   );
 }
@@ -71,17 +80,21 @@ export function AboutPage() {
   props={[
     { name: 'date', type: 'string', description: 'Date label shown above the title — rendered in a <time> element.' },
     { name: 'title', type: 'string', description: 'Milestone headline.' },
-    { name: 'description', type: 'string', description: 'Supporting copy for the milestone.' },
+    { name: 'description', type: 'string', description: 'Supporting copy for the milestone (renders in full, no truncation).' },
     { name: 'badge', type: 'string', description: 'Optional badge label rendered via Foundation Badge.' },
+    { name: 'icon', type: 'ReactNode', description: 'Optional icon rendered inside a brand-tinted circle in place of the plain dot.' },
+    { name: 'status', type: "'done' | 'current' | 'upcoming'", description: "Lifecycle state — 'current' renders an ember ring marker and a 'Current' label; 'upcoming' mutes the marker and title." },
   ]}
 />
 
 ## Accessibility
 
 Milestones are an ordered list (`<ol>`) with a left-rail border and brand dots
-marked `aria-hidden` (the text content carries the meaning). Dates use semantic
-`<time>` elements. Optional badges are plain text spans inside the Badge
-component. Scroll-reveal fade+rise per item respects `prefers-reduced-motion`.
+marked `aria-hidden` (the text content carries the meaning). Optional icons
+render inside the same `aria-hidden` marker — the milestone title and date
+still carry the meaning for assistive tech. Dates use semantic `<time>`
+elements. Optional badges are plain text spans inside the Badge component.
+Scroll-reveal fade+rise per item respects `prefers-reduced-motion`.
 
 | Element | Purpose |
 | --- | --- |

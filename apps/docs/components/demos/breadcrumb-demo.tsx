@@ -69,6 +69,24 @@ export function BreadcrumbDemo() {
         </Breadcrumb>
         <span className="text-xs font-medium text-muted-foreground">Custom separator</span>
       </div>
+
+      <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6 sm:col-span-2 lg:col-span-1">
+        <Breadcrumb.Auto
+          items={[
+            { label: 'Home', href: '#' },
+            { label: 'Workspace', href: '#' },
+            { label: 'Projects', href: '#' },
+            { label: 'Varient', href: '#' },
+            { label: 'Components', href: '#' },
+            { label: 'Foundation', href: '#' },
+            { label: 'Breadcrumb', isCurrent: true },
+          ]}
+          maxItems={4}
+        />
+        <span className="text-xs font-medium text-muted-foreground">
+          Auto-collapsed (click … to expand)
+        </span>
+      </div>
     </div>
   );
 }

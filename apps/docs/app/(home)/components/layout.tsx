@@ -12,12 +12,9 @@ const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 /**
- * Shell for the `/components` section — sidebar left, content right, per
- * SmoothUI's docs layout structure. SmoothUI collapses its own sidebar below
- * `lg` and relies on it being embedded in a fumadocs `DocsLayout` (which
- * supplies the mobile nav chrome); we don't route `/components` through
- * fumadocs, so this adds an equivalent hamburger + slide-over drawer for
- * small viewports, reusing the same `ComponentsSidebar` nav content.
+ * Shell for the `/components` section — sidebar left, content right. Below `lg`
+ * we add a hamburger + slide-over drawer for small viewports, reusing the same
+ * `ComponentsSidebar` nav content.
  */
 export default function ComponentsSectionLayout({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -53,8 +50,7 @@ export default function ComponentsSectionLayout({ children }: { children: ReactN
       <div className="mx-auto flex w-full max-w-[90rem]">
         <ComponentsSidebar />
 
-      {/* Mobile trigger — the hamburger fallback for the sidebar SmoothUI
-          hides below `lg`. */}
+      {/* Mobile trigger — hamburger fallback for the sidebar below `lg`. */}
       <button
         aria-controls="components-mobile-nav"
         aria-expanded={open}

@@ -11,14 +11,35 @@ export interface CtaLink {
   href: string;
 }
 
-export type CtaVariant = 'default' | 'brand';
+export interface CtaSocialProofAvatar {
+  src: string;
+  alt?: string;
+}
+
+export interface CtaSocialProof {
+  /** Small overlapping avatar stack rendered before the text line. */
+  avatars?: CtaSocialProofAvatar[];
+  /** e.g. "Trusted by 2,400+ engineering teams" */
+  text: string;
+}
+
+export type CtaVariant = 'default' | 'brand' | 'minimal';
+
+/** Visual emphasis of the secondary action. `ghost` — quiet filled hover. `link` — text-only underline. */
+export type CtaSecondaryEmphasis = 'outline' | 'ghost' | 'link';
 
 export interface CtaProps extends HTMLAttributes<HTMLElement> {
+  /** Small label rendered above the title, e.g. "Limited time" or a product name. */
+  eyebrow?: string;
   title?: string;
   description?: string;
   primaryCta?: CtaLink;
   secondaryCta?: CtaLink;
-  /** `default` — card surface. `brand` — subtle brand gradient border. */
+  /** Emphasis style for the secondary action button. Defaults to `outline`. */
+  secondaryCtaEmphasis?: CtaSecondaryEmphasis;
+  /** Optional avatar stack + trust line rendered below the actions. */
+  socialProof?: CtaSocialProof;
+  /** `default` — card surface. `brand` — subtle brand gradient border. `minimal` — borderless, transparent. */
   variant?: CtaVariant;
 }
 
@@ -31,16 +52,26 @@ const variantStyles: Record<CtaVariant, string> = {
   default: 'border border-border bg-card shadow-sm',
   brand:
     'border-2 border-transparent bg-card shadow-sm [background:linear-gradient(var(--color-card),var(--color-card))_padding-box,linear-gradient(135deg,var(--color-brand),var(--color-brand-secondary))_border-box]',
+  minimal: 'border-0 bg-transparent shadow-none',
+};
+
+const secondaryEmphasisToButtonVariant: Record<CtaSecondaryEmphasis, 'outline' | 'ghost' | 'link'> = {
+  outline: 'outline',
+  ghost: 'ghost',
+  link: 'link',
 };
 
 export const Cta = forwardRef<HTMLElement, CtaProps>(
   (
     {
       className,
+      eyebrow,
       title = DEFAULT_TITLE,
       description = DEFAULT_DESCRIPTION,
       primaryCta = DEFAULT_PRIMARY_CTA,
       secondaryCta,
+      secondaryCtaEmphasis = 'outline',
+      socialProof,
       variant = 'default',
       ...props
     },
@@ -72,9 +103,17 @@ export const Cta = forwardRef<HTMLElement, CtaProps>(
           )}
           {...motionProps}
         >
+          {eyebrow && (
+            <span className="text-xs font-semibold tracking-wide text-brand uppercase">
+              {eyebrow}
+            </span>
+          )}
           <h2
             id={headingId}
-            className="text-balance font-display text-2xl font-semibold tracking-tight text-foreground md:text-3xl"
+            className={cn(
+              'text-balance font-display text-2xl font-semibold tracking-tight text-foreground md:text-3xl',
+              eyebrow && 'mt-2',
+            )}
           >
             {title}
           </h2>
@@ -86,11 +125,29 @@ export const Cta = forwardRef<HTMLElement, CtaProps>(
               <a href={primaryCta.href}>{primaryCta.label}</a>
             </Button>
             {secondaryCta && (
-              <Button asChild size="lg" variant="outline">
+              <Button asChild size="lg" variant={secondaryEmphasisToButtonVariant[secondaryCtaEmphasis]}>
                 <a href={secondaryCta.href}>{secondaryCta.label}</a>
               </Button>
             )}
           </div>
+          {socialProof && (
+            <div className="mt-6 flex items-center gap-3">
+              {socialProof.avatars && socialProof.avatars.length > 0 && (
+                <div className="flex -space-x-2" aria-hidden="true">
+                  {socialProof.avatars.slice(0, 5).map((avatar, index) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      key={avatar.src + index}
+                      alt={avatar.alt ?? ''}
+                      className="h-7 w-7 rounded-full border-2 border-card object-cover"
+                      src={avatar.src}
+                    />
+                  ))}
+                </div>
+              )}
+              <span className="text-xs text-muted-foreground">{socialProof.text}</span>
+            </div>
+          )}
         </motion.div>
       </section>
     );

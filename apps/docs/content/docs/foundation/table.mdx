@@ -55,6 +55,15 @@ Use `Table.Footer` for summary rows and set `scope="row"` on `Table.Head` when l
 </Table.Row>
 ```
 
+`variant`, `size`, and `isStickyHeader` live on the root `Table` and flow down to every cell through
+context, so `Table.Head` / `Table.Cell` padding and `Table.Body` row striping stay in sync automatically:
+
+```tsx
+<Table variant="striped" size="compact" isStickyHeader className="max-h-72">
+  {/* ... */}
+</Table>
+```
+
 ## Props
 
 <PropsTable
@@ -62,17 +71,35 @@ Use `Table.Footer` for summary rows and set `scope="row"` on `Table.Head` when l
     {
       name: 'Table',
       type: 'HTMLAttributes<HTMLDivElement>',
-      description: 'Root wrapper — rounded-xl border, overflow-x-auto, and a full-width table inside.',
+      description: 'Root wrapper — rounded-xl border, overflow-x-auto, and a full-width table inside. Provides variant/size/isStickyHeader context to all children.',
+    },
+    {
+      name: 'variant',
+      type: "'default' | 'striped'",
+      defaultValue: "'default'",
+      description: '`striped` tints odd `Table.Body` rows with bg-muted/30 (Table root).',
+    },
+    {
+      name: 'size',
+      type: "'default' | 'compact'",
+      defaultValue: "'default'",
+      description: '`compact` tightens `Table.Head` height (h-8 px-3) and `Table.Cell` padding (px-3 py-1.5) (Table root).',
+    },
+    {
+      name: 'isStickyHeader',
+      type: 'boolean',
+      defaultValue: 'false',
+      description: 'Pins `Table.Header` to the top of the root\'s scroll container with sticky top-0, bg-background/95, and backdrop-blur (Table root).',
     },
     {
       name: 'Table.Header',
       type: 'HTMLAttributes<HTMLTableSectionElement>',
-      description: '`<thead>` section — header cells use bg-muted/50.',
+      description: '`<thead>` section — header cells use bg-muted/50; becomes sticky when the root sets isStickyHeader.',
     },
     {
       name: 'Table.Body',
       type: 'HTMLAttributes<HTMLTableSectionElement>',
-      description: '`<tbody>` section — rows get hover:bg-muted/30 and hairline dividers.',
+      description: '`<tbody>` section — rows get hover:bg-muted/30 and hairline dividers; odd rows tint too when the root sets variant="striped".',
     },
     {
       name: 'Table.Footer',
@@ -87,12 +114,12 @@ Use `Table.Footer` for summary rows and set `scope="row"` on `Table.Head` when l
     {
       name: 'Table.Head',
       type: 'ThHTMLAttributes<HTMLTableCellElement>',
-      description: 'Header cell — defaults to scope="col", text-muted-foreground, font-medium, text-left.',
+      description: 'Header cell — defaults to scope="col", text-muted-foreground, font-medium, text-left; height/padding follow the root\'s size.',
     },
     {
       name: 'Table.Cell',
       type: 'TdHTMLAttributes<HTMLTableCellElement>',
-      description: 'Data cell — px-4 py-3 padding with align-middle.',
+      description: 'Data cell — align-middle; padding follows the root\'s size (px-4 py-3 default, px-3 py-1.5 compact).',
     },
     {
       name: 'Table.Caption',
@@ -108,6 +135,7 @@ Use `Table.Footer` for summary rows and set `scope="row"` on `Table.Head` when l
 - Set `scope="col"` on column headers (the default on `Table.Head`) and `scope="row"` on row headers.
 - Pair header cells with data cells using `id` on headers and `headers` on cells when relationships are non-trivial.
 - The root wrapper uses `overflow-x-auto` so wide tables scroll horizontally on narrow viewports without breaking layout.
+- `isStickyHeader` only affects visual position (CSS `position: sticky`); it doesn't reorder the DOM, so it has no effect on how assistive tech reads the table.
 
 | Element | Purpose |
 | ------- | ------- |

@@ -1,435 +1,242 @@
+import dynamic from 'next/dynamic';
 import type { ComponentType } from 'react';
-import { ButtonDemo, ButtonPreviewCompact } from '@/components/demos/button-demo';
-import { InputDemo, InputPreviewCompact } from '@/components/demos/input-demo';
-import {
-  NumberTickerDemo,
-  NumberTickerPreviewCompact,
-} from '@/components/demos/number-ticker-demo';
-import { BadgeDemo, BadgePreviewCompact } from '@/components/demos/badge-demo';
-import { CardDemo, CardPreviewCompact } from '@/components/demos/card-demo';
-import { SwitchDemo, SwitchPreviewCompact } from '@/components/demos/switch-demo';
-import { TabsDemo, TabsPreviewCompact } from '@/components/demos/tabs-demo';
-import { AccordionDemo, AccordionPreviewCompact } from '@/components/demos/accordion-demo';
-import { DialogDemo, DialogPreviewCompact } from '@/components/demos/dialog-demo';
-import {
-  DropdownMenuDemo,
-  DropdownMenuPreviewCompact,
-} from '@/components/demos/dropdown-menu-demo';
-import { TooltipDemo, TooltipPreviewCompact } from '@/components/demos/tooltip-demo';
-import { SelectDemo, SelectPreviewCompact } from '@/components/demos/select-demo';
-import { CheckboxDemo, CheckboxPreviewCompact } from '@/components/demos/checkbox-demo';
-import { RadioGroupDemo, RadioGroupPreviewCompact } from '@/components/demos/radio-group-demo';
-import { ToastDemo, ToastPreviewCompact } from '@/components/demos/toast-demo';
-import { ButtonCopyDemo, ButtonCopyPreviewCompact } from '@/components/demos/button-copy-demo';
-import {
-  MagneticButtonDemo,
-  MagneticButtonPreviewCompact,
-} from '@/components/demos/magnetic-button-demo';
-import { TextareaDemo, TextareaPreviewCompact } from '@/components/demos/textarea-demo';
-import {
-  SkeletonLoaderDemo,
-  SkeletonLoaderPreviewCompact,
-} from '@/components/demos/skeleton-loader-demo';
-import { AvatarDemo, AvatarPreviewCompact } from '@/components/demos/avatar-demo';
-import { SliderDemo, SliderPreviewCompact } from '@/components/demos/slider-demo';
-import { ToggleDemo, TogglePreviewCompact } from '@/components/demos/toggle-demo';
-import {
-  ToggleGroupDemo,
-  ToggleGroupPreviewCompact,
-} from '@/components/demos/toggle-group-demo';
-import { PopoverDemo, PopoverPreviewCompact } from '@/components/demos/popover-demo';
-import { BreadcrumbDemo, BreadcrumbPreviewCompact } from '@/components/demos/breadcrumb-demo';
-import {
-  AlertDialogDemo,
-  AlertDialogPreviewCompact,
-} from '@/components/demos/alert-dialog-demo';
-import { DrawerDemo, DrawerPreviewCompact } from '@/components/demos/drawer-demo';
-import { TableDemo, TablePreviewCompact } from '@/components/demos/table-demo';
-import { PaginationDemo, PaginationPreviewCompact } from '@/components/demos/pagination-demo';
-import { MarqueeDemo, MarqueePreviewCompact } from '@/components/demos/marquee-demo';
-import { BorderBeamDemo, BorderBeamPreviewCompact } from '@/components/demos/border-beam-demo';
-import {
-  ShimmerButtonDemo,
-  ShimmerButtonPreviewCompact,
-} from '@/components/demos/shimmer-button-demo';
-import {
-  MeteorShowerDemo,
-  MeteorShowerPreviewCompact,
-} from '@/components/demos/meteor-shower-demo';
-import { SpotlightDemo, SpotlightPreviewCompact } from '@/components/demos/spotlight-demo';
-import { BlurFadeDemo, BlurFadePreviewCompact } from '@/components/demos/blur-fade-demo';
-import { TextRevealDemo, TextRevealPreviewCompact } from '@/components/demos/text-reveal-demo';
-import { WordRotateDemo, WordRotatePreviewCompact } from '@/components/demos/word-rotate-demo';
-import {
-  TypewriterTextDemo,
-  TypewriterTextPreviewCompact,
-} from '@/components/demos/typewriter-text-demo';
-import { FlipWordsDemo, FlipWordsPreviewCompact } from '@/components/demos/flip-words-demo';
-import {
-  GradientTextDemo,
-  GradientTextPreviewCompact,
-} from '@/components/demos/gradient-text-demo';
-import {
-  ConfettiBurstDemo,
-  ConfettiBurstPreviewCompact,
-} from '@/components/demos/confetti-burst-demo';
-import {
-  RippleButtonDemo,
-  RippleButtonPreviewCompact,
-} from '@/components/demos/ripple-button-demo';
-import {
-  AnimatedProgressRingDemo,
-  AnimatedProgressRingPreviewCompact,
-} from '@/components/demos/animated-progress-ring-demo';
-import {
-  AuroraBackgroundDemo,
-  AuroraBackgroundPreviewCompact,
-} from '@/components/demos/aurora-background-demo';
-import {
-  WavyBackgroundDemo,
-  WavyBackgroundPreviewCompact,
-} from '@/components/demos/wavy-background-demo';
-import { SparklesDemo, SparklesPreviewCompact } from '@/components/demos/sparkles-demo';
-import {
-  AnimatedBeamDemo,
-  AnimatedBeamPreviewCompact,
-} from '@/components/demos/animated-beam-demo';
-import { OrbitDemo, OrbitPreviewCompact } from '@/components/demos/orbit-demo';
-import { ParticlesDemo, ParticlesPreviewCompact } from '@/components/demos/particles-demo';
-import {
-  GridPatternDemo,
-  GridPatternPreviewCompact,
-} from '@/components/demos/grid-pattern-demo';
-import { DotPatternDemo, DotPatternPreviewCompact } from '@/components/demos/dot-pattern-demo';
-import {
-  CursorSpotlightDemo,
-  CursorSpotlightPreviewCompact,
-} from '@/components/demos/cursor-spotlight-demo';
-import {
-  FloatingNavbarDemo,
-  FloatingNavbarPreviewCompact,
-} from '@/components/demos/floating-navbar-demo';
-import {
-  ScrollProgressBarDemo,
-  ScrollProgressBarPreviewCompact,
-} from '@/components/demos/scroll-progress-bar-demo';
-import { BentoGridDemo, BentoGridPreviewCompact } from '@/components/demos/bento-grid-demo';
-import {
-  TiltCardWallDemo,
-  TiltCardWallPreviewCompact,
-} from '@/components/demos/tilt-card-wall-demo';
-import { HeroDemo, HeroPreviewCompact } from '@/components/demos/hero-demo';
-import { CtaDemo, CtaPreviewCompact } from '@/components/demos/cta-demo';
-import { FeaturesDemo, FeaturesPreviewCompact } from '@/components/demos/features-demo';
-import { PricingDemo, PricingPreviewCompact } from '@/components/demos/pricing-demo';
-import { FaqDemo, FaqPreviewCompact } from '@/components/demos/faq-demo';
-import { FooterDemo, FooterPreviewCompact } from '@/components/demos/footer-demo';
-import { TiltCardDemo, TiltCardPreviewCompact } from '@/components/demos/tilt-card-demo';
-import { GlobeDemo, GlobePreviewCompact } from '@/components/demos/globe-demo';
-import { NavbarDemo, NavbarPreviewCompact } from '@/components/demos/navbar-demo';
-import { LogoCloudDemo, LogoCloudPreviewCompact } from '@/components/demos/logo-cloud-demo';
-import { StatsBandDemo, StatsBandPreviewCompact } from '@/components/demos/stats-band-demo';
-import {
-  TestimonialsDemo,
-  TestimonialsPreviewCompact,
-} from '@/components/demos/testimonials-demo';
-import { TeamGridDemo, TeamGridPreviewCompact } from '@/components/demos/team-grid-demo';
-import { BlogGridDemo, BlogGridPreviewCompact } from '@/components/demos/blog-grid-demo';
-import {
-  NewsletterSignupDemo,
-  NewsletterSignupPreviewCompact,
-} from '@/components/demos/newsletter-signup-demo';
-import {
-  ContactFormDemo,
-  ContactFormPreviewCompact,
-} from '@/components/demos/contact-form-demo';
-import {
-  ComparisonTableDemo,
-  ComparisonTablePreviewCompact,
-} from '@/components/demos/comparison-table-demo';
-import {
-  BentoFeaturesDemo,
-  BentoFeaturesPreviewCompact,
-} from '@/components/demos/bento-features-demo';
-import { TimelineDemo, TimelinePreviewCompact } from '@/components/demos/timeline-demo';
-import {
-  IntegrationGridDemo,
-  IntegrationGridPreviewCompact,
-} from '@/components/demos/integration-grid-demo';
-import { ChangelogDemo, ChangelogPreviewCompact } from '@/components/demos/changelog-demo';
-import {
-  NotFoundPageDemo,
-  NotFoundPagePreviewCompact,
-} from '@/components/demos/404-page-demo';
-import { LineDrawDemo, LineDrawPreviewCompact } from '@/components/demos/line-draw-demo';
-import {
-  AnimatedListDemo,
-  AnimatedListPreviewCompact,
-} from '@/components/demos/animated-list-demo';
-import { RetroGridDemo, RetroGridPreviewCompact } from '@/components/demos/retro-grid-demo';
-import {
-  BentoShowcaseDemo,
-  BentoShowcasePreviewCompact,
-} from '@/components/demos/bento-showcase-demo';
-import {
-  HeroSpotlightDemo,
-  HeroSpotlightPreviewCompact,
-} from '@/components/demos/hero-spotlight-demo';
-import { HeroGridDemo, HeroGridPreviewCompact } from '@/components/demos/hero-grid-demo';
-import {
-  HeroShowcaseDemo,
-  HeroShowcasePreviewCompact,
-} from '@/components/demos/hero-showcase-demo';
-import { SidebarDemo, SidebarPreviewCompact } from '@/components/demos/sidebar-demo';
-import { DockDemo, DockPreviewCompact } from '@/components/demos/dock-demo';
-import {
-  BackgroundBeamsDemo,
-  BackgroundBeamsPreviewCompact,
-} from '@/components/demos/background-beams-demo';
-import { LampDemo, LampPreviewCompact } from '@/components/demos/lamp-demo';
-import {
-  MovingBorderDemo,
-  MovingBorderPreviewCompact,
-} from '@/components/demos/moving-border-demo';
-import {
-  HeroHighlightDemo,
-  HeroHighlightPreviewCompact,
-} from '@/components/demos/hero-highlight-demo';
-import { AuthPageDemo, AuthPagePreviewCompact } from '@/components/demos/auth-page-demo';
-import {
-  AnnouncementBannerDemo,
-  AnnouncementBannerPreviewCompact,
-} from '@/components/demos/announcement-banner-demo';
-import {
-  CommandPaletteDemo,
-  CommandPalettePreviewCompact,
-} from '@/components/demos/command-palette-demo';
-import { InputOTPDemo, InputOTPPreviewCompact } from '@/components/demos/input-otp-demo';
-import { ProgressDemo, ProgressPreviewCompact } from '@/components/demos/progress-demo';
-import { KbdDemo, KbdPreviewCompact } from '@/components/demos/kbd-demo';
-import { SeparatorDemo, SeparatorPreviewCompact } from '@/components/demos/separator-demo';
-import {
-  AvatarCirclesDemo,
-  AvatarCirclesPreviewCompact,
-} from '@/components/demos/avatar-circles-demo';
-import {
-  BrowserFrameDemo,
-  BrowserFramePreviewCompact,
-} from '@/components/demos/browser-frame-demo';
-import {
-  MorphingTextDemo,
-  MorphingTextPreviewCompact,
-} from '@/components/demos/morphing-text-demo';
-import { TerminalDemo, TerminalPreviewCompact } from '@/components/demos/terminal-demo';
+
+/**
+ * Every demo is a per-slug `next/dynamic` import so a route never ships all
+ * ~100 demo bundles up front — each mounts only once its LazyMount wrapper
+ * (see components/preview/lazy-mount.tsx) nears the viewport. `ssr: false`
+ * is reserved for demos that touch browser-only APIs at module scope (WebGL);
+ * everything else stays SSR so first paint isn't a blank placeholder.
+ */
 
 export const componentDemos: Record<string, ComponentType> = {
-  button: ButtonDemo,
-  input: InputDemo,
-  'number-ticker': NumberTickerDemo,
-  badge: BadgeDemo,
-  card: CardDemo,
-  switch: SwitchDemo,
-  tabs: TabsDemo,
-  accordion: AccordionDemo,
-  dialog: DialogDemo,
-  'dropdown-menu': DropdownMenuDemo,
-  tooltip: TooltipDemo,
-  select: SelectDemo,
-  checkbox: CheckboxDemo,
-  'radio-group': RadioGroupDemo,
-  toast: ToastDemo,
-  'button-copy': ButtonCopyDemo,
-  'magnetic-button': MagneticButtonDemo,
-  textarea: TextareaDemo,
-  'skeleton-loader': SkeletonLoaderDemo,
-  avatar: AvatarDemo,
-  slider: SliderDemo,
-  toggle: ToggleDemo,
-  'toggle-group': ToggleGroupDemo,
-  popover: PopoverDemo,
-  breadcrumb: BreadcrumbDemo,
-  'alert-dialog': AlertDialogDemo,
-  drawer: DrawerDemo,
-  table: TableDemo,
-  pagination: PaginationDemo,
-  marquee: MarqueeDemo,
-  'border-beam': BorderBeamDemo,
-  'shimmer-button': ShimmerButtonDemo,
-  'meteor-shower': MeteorShowerDemo,
-  spotlight: SpotlightDemo,
-  'blur-fade': BlurFadeDemo,
-  'text-reveal': TextRevealDemo,
-  'word-rotate': WordRotateDemo,
-  'typewriter-text': TypewriterTextDemo,
-  'flip-words': FlipWordsDemo,
-  'gradient-text': GradientTextDemo,
-  'confetti-burst': ConfettiBurstDemo,
-  'ripple-button': RippleButtonDemo,
-  'animated-progress-ring': AnimatedProgressRingDemo,
-  'aurora-background': AuroraBackgroundDemo,
-  'wavy-background': WavyBackgroundDemo,
-  sparkles: SparklesDemo,
-  'animated-beam': AnimatedBeamDemo,
-  orbit: OrbitDemo,
-  particles: ParticlesDemo,
-  'grid-pattern': GridPatternDemo,
-  'dot-pattern': DotPatternDemo,
-  'cursor-spotlight': CursorSpotlightDemo,
-  'floating-navbar': FloatingNavbarDemo,
-  'scroll-progress-bar': ScrollProgressBarDemo,
-  'bento-grid': BentoGridDemo,
-  'tilt-card-wall': TiltCardWallDemo,
-  hero: HeroDemo,
-  cta: CtaDemo,
-  features: FeaturesDemo,
-  pricing: PricingDemo,
-  faq: FaqDemo,
-  footer: FooterDemo,
-  'tilt-card': TiltCardDemo,
-  globe: GlobeDemo,
-  navbar: NavbarDemo,
-  'logo-cloud': LogoCloudDemo,
-  'stats-band': StatsBandDemo,
-  testimonials: TestimonialsDemo,
-  'team-grid': TeamGridDemo,
-  'blog-grid': BlogGridDemo,
-  'newsletter-signup': NewsletterSignupDemo,
-  'contact-form': ContactFormDemo,
-  'comparison-table': ComparisonTableDemo,
-  'bento-features': BentoFeaturesDemo,
-  timeline: TimelineDemo,
-  'integration-grid': IntegrationGridDemo,
-  changelog: ChangelogDemo,
-  '404-page': NotFoundPageDemo,
-  'line-draw': LineDrawDemo,
-  'animated-list': AnimatedListDemo,
-  'retro-grid': RetroGridDemo,
-  'bento-showcase': BentoShowcaseDemo,
-  'hero-spotlight': HeroSpotlightDemo,
-  'hero-grid': HeroGridDemo,
-  'hero-showcase': HeroShowcaseDemo,
-  sidebar: SidebarDemo,
-  dock: DockDemo,
-  'background-beams': BackgroundBeamsDemo,
-  lamp: LampDemo,
-  'moving-border': MovingBorderDemo,
-  'hero-highlight': HeroHighlightDemo,
-  'auth-page': AuthPageDemo,
-  'announcement-banner': AnnouncementBannerDemo,
-  'command-palette': CommandPaletteDemo,
-  'input-otp': InputOTPDemo,
-  progress: ProgressDemo,
-  kbd: KbdDemo,
-  separator: SeparatorDemo,
-  'avatar-circles': AvatarCirclesDemo,
-  'browser-frame': BrowserFrameDemo,
-  'morphing-text': MorphingTextDemo,
-  terminal: TerminalDemo,
+  button: dynamic(() => import('@/components/demos/button-demo').then((m) => m.ButtonDemo)),
+  input: dynamic(() => import('@/components/demos/input-demo').then((m) => m.InputDemo)),
+  'number-ticker': dynamic(() => import('@/components/demos/number-ticker-demo').then((m) => m.NumberTickerDemo)),
+  badge: dynamic(() => import('@/components/demos/badge-demo').then((m) => m.BadgeDemo)),
+  card: dynamic(() => import('@/components/demos/card-demo').then((m) => m.CardDemo)),
+  switch: dynamic(() => import('@/components/demos/switch-demo').then((m) => m.SwitchDemo)),
+  tabs: dynamic(() => import('@/components/demos/tabs-demo').then((m) => m.TabsDemo)),
+  accordion: dynamic(() => import('@/components/demos/accordion-demo').then((m) => m.AccordionDemo)),
+  dialog: dynamic(() => import('@/components/demos/dialog-demo').then((m) => m.DialogDemo)),
+  'dropdown-menu': dynamic(() => import('@/components/demos/dropdown-menu-demo').then((m) => m.DropdownMenuDemo)),
+  tooltip: dynamic(() => import('@/components/demos/tooltip-demo').then((m) => m.TooltipDemo)),
+  select: dynamic(() => import('@/components/demos/select-demo').then((m) => m.SelectDemo)),
+  checkbox: dynamic(() => import('@/components/demos/checkbox-demo').then((m) => m.CheckboxDemo)),
+  'radio-group': dynamic(() => import('@/components/demos/radio-group-demo').then((m) => m.RadioGroupDemo)),
+  toast: dynamic(() => import('@/components/demos/toast-demo').then((m) => m.ToastDemo)),
+  'button-copy': dynamic(() => import('@/components/demos/button-copy-demo').then((m) => m.ButtonCopyDemo)),
+  'magnetic-button': dynamic(() => import('@/components/demos/magnetic-button-demo').then((m) => m.MagneticButtonDemo)),
+  textarea: dynamic(() => import('@/components/demos/textarea-demo').then((m) => m.TextareaDemo)),
+  'skeleton-loader': dynamic(() => import('@/components/demos/skeleton-loader-demo').then((m) => m.SkeletonLoaderDemo)),
+  avatar: dynamic(() => import('@/components/demos/avatar-demo').then((m) => m.AvatarDemo)),
+  slider: dynamic(() => import('@/components/demos/slider-demo').then((m) => m.SliderDemo)),
+  toggle: dynamic(() => import('@/components/demos/toggle-demo').then((m) => m.ToggleDemo)),
+  'toggle-group': dynamic(() => import('@/components/demos/toggle-group-demo').then((m) => m.ToggleGroupDemo)),
+  popover: dynamic(() => import('@/components/demos/popover-demo').then((m) => m.PopoverDemo)),
+  breadcrumb: dynamic(() => import('@/components/demos/breadcrumb-demo').then((m) => m.BreadcrumbDemo)),
+  'alert-dialog': dynamic(() => import('@/components/demos/alert-dialog-demo').then((m) => m.AlertDialogDemo)),
+  drawer: dynamic(() => import('@/components/demos/drawer-demo').then((m) => m.DrawerDemo)),
+  table: dynamic(() => import('@/components/demos/table-demo').then((m) => m.TableDemo)),
+  pagination: dynamic(() => import('@/components/demos/pagination-demo').then((m) => m.PaginationDemo)),
+  marquee: dynamic(() => import('@/components/demos/marquee-demo').then((m) => m.MarqueeDemo)),
+  'border-beam': dynamic(() => import('@/components/demos/border-beam-demo').then((m) => m.BorderBeamDemo)),
+  'shimmer-button': dynamic(() => import('@/components/demos/shimmer-button-demo').then((m) => m.ShimmerButtonDemo)),
+  'meteor-shower': dynamic(() => import('@/components/demos/meteor-shower-demo').then((m) => m.MeteorShowerDemo)),
+  spotlight: dynamic(() => import('@/components/demos/spotlight-demo').then((m) => m.SpotlightDemo)),
+  'blur-fade': dynamic(() => import('@/components/demos/blur-fade-demo').then((m) => m.BlurFadeDemo)),
+  'text-reveal': dynamic(() => import('@/components/demos/text-reveal-demo').then((m) => m.TextRevealDemo)),
+  'word-rotate': dynamic(() => import('@/components/demos/word-rotate-demo').then((m) => m.WordRotateDemo)),
+  'typewriter-text': dynamic(() => import('@/components/demos/typewriter-text-demo').then((m) => m.TypewriterTextDemo)),
+  'flip-words': dynamic(() => import('@/components/demos/flip-words-demo').then((m) => m.FlipWordsDemo)),
+  'gradient-text': dynamic(() => import('@/components/demos/gradient-text-demo').then((m) => m.GradientTextDemo)),
+  'confetti-burst': dynamic(() => import('@/components/demos/confetti-burst-demo').then((m) => m.ConfettiBurstDemo)),
+  'ripple-button': dynamic(() => import('@/components/demos/ripple-button-demo').then((m) => m.RippleButtonDemo)),
+  'animated-progress-ring': dynamic(() => import('@/components/demos/animated-progress-ring-demo').then((m) => m.AnimatedProgressRingDemo)),
+  'aurora-background': dynamic(() => import('@/components/demos/aurora-background-demo').then((m) => m.AuroraBackgroundDemo)),
+  'wavy-background': dynamic(() => import('@/components/demos/wavy-background-demo').then((m) => m.WavyBackgroundDemo)),
+  sparkles: dynamic(() => import('@/components/demos/sparkles-demo').then((m) => m.SparklesDemo)),
+  'animated-beam': dynamic(() => import('@/components/demos/animated-beam-demo').then((m) => m.AnimatedBeamDemo)),
+  orbit: dynamic(() => import('@/components/demos/orbit-demo').then((m) => m.OrbitDemo)),
+  particles: dynamic(() => import('@/components/demos/particles-demo').then((m) => m.ParticlesDemo)),
+  'grid-pattern': dynamic(() => import('@/components/demos/grid-pattern-demo').then((m) => m.GridPatternDemo)),
+  'dot-pattern': dynamic(() => import('@/components/demos/dot-pattern-demo').then((m) => m.DotPatternDemo)),
+  'cursor-spotlight': dynamic(() => import('@/components/demos/cursor-spotlight-demo').then((m) => m.CursorSpotlightDemo)),
+  'floating-navbar': dynamic(() => import('@/components/demos/floating-navbar-demo').then((m) => m.FloatingNavbarDemo)),
+  'scroll-progress-bar': dynamic(() => import('@/components/demos/scroll-progress-bar-demo').then((m) => m.ScrollProgressBarDemo)),
+  'bento-grid': dynamic(() => import('@/components/demos/bento-grid-demo').then((m) => m.BentoGridDemo)),
+  'tilt-card-wall': dynamic(() => import('@/components/demos/tilt-card-wall-demo').then((m) => m.TiltCardWallDemo)),
+  hero: dynamic(() => import('@/components/demos/hero-demo').then((m) => m.HeroDemo)),
+  cta: dynamic(() => import('@/components/demos/cta-demo').then((m) => m.CtaDemo)),
+  features: dynamic(() => import('@/components/demos/features-demo').then((m) => m.FeaturesDemo)),
+  pricing: dynamic(() => import('@/components/demos/pricing-demo').then((m) => m.PricingDemo)),
+  faq: dynamic(() => import('@/components/demos/faq-demo').then((m) => m.FaqDemo)),
+  footer: dynamic(() => import('@/components/demos/footer-demo').then((m) => m.FooterDemo)),
+  'tilt-card': dynamic(() => import('@/components/demos/tilt-card-demo').then((m) => m.TiltCardDemo)),
+  globe: dynamic(() => import('@/components/demos/globe-demo').then((m) => m.GlobeDemo), { ssr: false }),
+  navbar: dynamic(() => import('@/components/demos/navbar-demo').then((m) => m.NavbarDemo)),
+  'logo-cloud': dynamic(() => import('@/components/demos/logo-cloud-demo').then((m) => m.LogoCloudDemo)),
+  'stats-band': dynamic(() => import('@/components/demos/stats-band-demo').then((m) => m.StatsBandDemo)),
+  testimonials: dynamic(() => import('@/components/demos/testimonials-demo').then((m) => m.TestimonialsDemo)),
+  'team-grid': dynamic(() => import('@/components/demos/team-grid-demo').then((m) => m.TeamGridDemo)),
+  'blog-grid': dynamic(() => import('@/components/demos/blog-grid-demo').then((m) => m.BlogGridDemo)),
+  'newsletter-signup': dynamic(() => import('@/components/demos/newsletter-signup-demo').then((m) => m.NewsletterSignupDemo)),
+  'contact-form': dynamic(() => import('@/components/demos/contact-form-demo').then((m) => m.ContactFormDemo)),
+  'comparison-table': dynamic(() => import('@/components/demos/comparison-table-demo').then((m) => m.ComparisonTableDemo)),
+  'bento-features': dynamic(() => import('@/components/demos/bento-features-demo').then((m) => m.BentoFeaturesDemo)),
+  timeline: dynamic(() => import('@/components/demos/timeline-demo').then((m) => m.TimelineDemo)),
+  'integration-grid': dynamic(() => import('@/components/demos/integration-grid-demo').then((m) => m.IntegrationGridDemo)),
+  changelog: dynamic(() => import('@/components/demos/changelog-demo').then((m) => m.ChangelogDemo)),
+  '404-page': dynamic(() => import('@/components/demos/404-page-demo').then((m) => m.NotFoundPageDemo)),
+  'line-draw': dynamic(() => import('@/components/demos/line-draw-demo').then((m) => m.LineDrawDemo)),
+  'animated-list': dynamic(() => import('@/components/demos/animated-list-demo').then((m) => m.AnimatedListDemo)),
+  'retro-grid': dynamic(() => import('@/components/demos/retro-grid-demo').then((m) => m.RetroGridDemo)),
+  'bento-showcase': dynamic(() => import('@/components/demos/bento-showcase-demo').then((m) => m.BentoShowcaseDemo)),
+  'hero-spotlight': dynamic(() => import('@/components/demos/hero-spotlight-demo').then((m) => m.HeroSpotlightDemo)),
+  'hero-grid': dynamic(() => import('@/components/demos/hero-grid-demo').then((m) => m.HeroGridDemo)),
+  'hero-showcase': dynamic(() => import('@/components/demos/hero-showcase-demo').then((m) => m.HeroShowcaseDemo)),
+  sidebar: dynamic(() => import('@/components/demos/sidebar-demo').then((m) => m.SidebarDemo)),
+  dock: dynamic(() => import('@/components/demos/dock-demo').then((m) => m.DockDemo)),
+  'background-beams': dynamic(() => import('@/components/demos/background-beams-demo').then((m) => m.BackgroundBeamsDemo)),
+  lamp: dynamic(() => import('@/components/demos/lamp-demo').then((m) => m.LampDemo)),
+  'moving-border': dynamic(() => import('@/components/demos/moving-border-demo').then((m) => m.MovingBorderDemo)),
+  'hero-highlight': dynamic(() => import('@/components/demos/hero-highlight-demo').then((m) => m.HeroHighlightDemo)),
+  'auth-page': dynamic(() => import('@/components/demos/auth-page-demo').then((m) => m.AuthPageDemo)),
+  'announcement-banner': dynamic(() => import('@/components/demos/announcement-banner-demo').then((m) => m.AnnouncementBannerDemo)),
+  'command-palette': dynamic(() => import('@/components/demos/command-palette-demo').then((m) => m.CommandPaletteDemo)),
+  'input-otp': dynamic(() => import('@/components/demos/input-otp-demo').then((m) => m.InputOTPDemo)),
+  progress: dynamic(() => import('@/components/demos/progress-demo').then((m) => m.ProgressDemo)),
+  kbd: dynamic(() => import('@/components/demos/kbd-demo').then((m) => m.KbdDemo)),
+  separator: dynamic(() => import('@/components/demos/separator-demo').then((m) => m.SeparatorDemo)),
+  'avatar-circles': dynamic(() => import('@/components/demos/avatar-circles-demo').then((m) => m.AvatarCirclesDemo)),
+  'browser-frame': dynamic(() => import('@/components/demos/browser-frame-demo').then((m) => m.BrowserFrameDemo)),
+  'morphing-text': dynamic(() => import('@/components/demos/morphing-text-demo').then((m) => m.MorphingTextDemo)),
+  terminal: dynamic(() => import('@/components/demos/terminal-demo').then((m) => m.TerminalDemo)),
+  'text-scramble': dynamic(() => import('@/components/demos/text-scramble-demo').then((m) => m.TextScrambleDemo)),
+  'sliding-number': dynamic(() => import('@/components/demos/sliding-number-demo').then((m) => m.SlidingNumberDemo)),
+  'expandable-card': dynamic(() => import('@/components/demos/expandable-card-demo').then((m) => m.ExpandableCardDemo)),
+  'morphing-dialog': dynamic(() => import('@/components/demos/morphing-dialog-demo').then((m) => m.MorphingDialogDemo)),
+  'dynamic-island': dynamic(() => import('@/components/demos/dynamic-island-demo').then((m) => m.DynamicIslandDemo)),
+  'prompt-input': dynamic(() => import('@/components/demos/prompt-input-demo').then((m) => m.PromptInputDemo)),
+  carousel: dynamic(() => import('@/components/demos/carousel-demo').then((m) => m.CarouselDemo)),
+  stepper: dynamic(() => import('@/components/demos/stepper-demo').then((m) => m.StepperDemo)),
+  'image-comparison': dynamic(() => import('@/components/demos/image-comparison-demo').then((m) => m.ImageComparisonDemo)),
+  'sortable-list': dynamic(() => import('@/components/demos/sortable-list-demo').then((m) => m.SortableListDemo)),
 };
 
 export const componentCompactDemos: Record<string, ComponentType> = {
-  button: ButtonPreviewCompact,
-  input: InputPreviewCompact,
-  'number-ticker': NumberTickerPreviewCompact,
-  badge: BadgePreviewCompact,
-  card: CardPreviewCompact,
-  switch: SwitchPreviewCompact,
-  tabs: TabsPreviewCompact,
-  accordion: AccordionPreviewCompact,
-  dialog: DialogPreviewCompact,
-  'dropdown-menu': DropdownMenuPreviewCompact,
-  tooltip: TooltipPreviewCompact,
-  select: SelectPreviewCompact,
-  checkbox: CheckboxPreviewCompact,
-  'radio-group': RadioGroupPreviewCompact,
-  toast: ToastPreviewCompact,
-  'button-copy': ButtonCopyPreviewCompact,
-  'magnetic-button': MagneticButtonPreviewCompact,
-  textarea: TextareaPreviewCompact,
-  'skeleton-loader': SkeletonLoaderPreviewCompact,
-  avatar: AvatarPreviewCompact,
-  slider: SliderPreviewCompact,
-  toggle: TogglePreviewCompact,
-  'toggle-group': ToggleGroupPreviewCompact,
-  popover: PopoverPreviewCompact,
-  breadcrumb: BreadcrumbPreviewCompact,
-  'alert-dialog': AlertDialogPreviewCompact,
-  drawer: DrawerPreviewCompact,
-  table: TablePreviewCompact,
-  pagination: PaginationPreviewCompact,
-  marquee: MarqueePreviewCompact,
-  'border-beam': BorderBeamPreviewCompact,
-  'shimmer-button': ShimmerButtonPreviewCompact,
-  'meteor-shower': MeteorShowerPreviewCompact,
-  spotlight: SpotlightPreviewCompact,
-  'blur-fade': BlurFadePreviewCompact,
-  'text-reveal': TextRevealPreviewCompact,
-  'word-rotate': WordRotatePreviewCompact,
-  'typewriter-text': TypewriterTextPreviewCompact,
-  'flip-words': FlipWordsPreviewCompact,
-  'gradient-text': GradientTextPreviewCompact,
-  'confetti-burst': ConfettiBurstPreviewCompact,
-  'ripple-button': RippleButtonPreviewCompact,
-  'animated-progress-ring': AnimatedProgressRingPreviewCompact,
-  'aurora-background': AuroraBackgroundPreviewCompact,
-  'wavy-background': WavyBackgroundPreviewCompact,
-  sparkles: SparklesPreviewCompact,
-  'animated-beam': AnimatedBeamPreviewCompact,
-  orbit: OrbitPreviewCompact,
-  particles: ParticlesPreviewCompact,
-  'grid-pattern': GridPatternPreviewCompact,
-  'dot-pattern': DotPatternPreviewCompact,
-  'cursor-spotlight': CursorSpotlightPreviewCompact,
-  'floating-navbar': FloatingNavbarPreviewCompact,
-  'scroll-progress-bar': ScrollProgressBarPreviewCompact,
-  'bento-grid': BentoGridPreviewCompact,
-  'tilt-card-wall': TiltCardWallPreviewCompact,
-  hero: HeroPreviewCompact,
-  cta: CtaPreviewCompact,
-  features: FeaturesPreviewCompact,
-  pricing: PricingPreviewCompact,
-  faq: FaqPreviewCompact,
-  footer: FooterPreviewCompact,
-  'tilt-card': TiltCardPreviewCompact,
-  globe: GlobePreviewCompact,
-  navbar: NavbarPreviewCompact,
-  'logo-cloud': LogoCloudPreviewCompact,
-  'stats-band': StatsBandPreviewCompact,
-  testimonials: TestimonialsPreviewCompact,
-  'team-grid': TeamGridPreviewCompact,
-  'blog-grid': BlogGridPreviewCompact,
-  'newsletter-signup': NewsletterSignupPreviewCompact,
-  'contact-form': ContactFormPreviewCompact,
-  'comparison-table': ComparisonTablePreviewCompact,
-  'bento-features': BentoFeaturesPreviewCompact,
-  timeline: TimelinePreviewCompact,
-  'integration-grid': IntegrationGridPreviewCompact,
-  changelog: ChangelogPreviewCompact,
-  '404-page': NotFoundPagePreviewCompact,
-  'line-draw': LineDrawPreviewCompact,
-  'animated-list': AnimatedListPreviewCompact,
-  'retro-grid': RetroGridPreviewCompact,
-  'bento-showcase': BentoShowcasePreviewCompact,
-  'hero-spotlight': HeroSpotlightPreviewCompact,
-  'hero-grid': HeroGridPreviewCompact,
-  'hero-showcase': HeroShowcasePreviewCompact,
-  sidebar: SidebarPreviewCompact,
-  dock: DockPreviewCompact,
-  'background-beams': BackgroundBeamsPreviewCompact,
-  lamp: LampPreviewCompact,
-  'moving-border': MovingBorderPreviewCompact,
-  'hero-highlight': HeroHighlightPreviewCompact,
-  'auth-page': AuthPagePreviewCompact,
-  'announcement-banner': AnnouncementBannerPreviewCompact,
-  'command-palette': CommandPalettePreviewCompact,
-  'input-otp': InputOTPPreviewCompact,
-  progress: ProgressPreviewCompact,
-  kbd: KbdPreviewCompact,
-  separator: SeparatorPreviewCompact,
-  'avatar-circles': AvatarCirclesPreviewCompact,
-  'browser-frame': BrowserFramePreviewCompact,
-  'morphing-text': MorphingTextPreviewCompact,
-  terminal: TerminalPreviewCompact,
+  button: dynamic(() => import('@/components/demos/button-demo').then((m) => m.ButtonPreviewCompact)),
+  input: dynamic(() => import('@/components/demos/input-demo').then((m) => m.InputPreviewCompact)),
+  'number-ticker': dynamic(() => import('@/components/demos/number-ticker-demo').then((m) => m.NumberTickerPreviewCompact)),
+  badge: dynamic(() => import('@/components/demos/badge-demo').then((m) => m.BadgePreviewCompact)),
+  card: dynamic(() => import('@/components/demos/card-demo').then((m) => m.CardPreviewCompact)),
+  switch: dynamic(() => import('@/components/demos/switch-demo').then((m) => m.SwitchPreviewCompact)),
+  tabs: dynamic(() => import('@/components/demos/tabs-demo').then((m) => m.TabsPreviewCompact)),
+  accordion: dynamic(() => import('@/components/demos/accordion-demo').then((m) => m.AccordionPreviewCompact)),
+  dialog: dynamic(() => import('@/components/demos/dialog-demo').then((m) => m.DialogPreviewCompact)),
+  'dropdown-menu': dynamic(() => import('@/components/demos/dropdown-menu-demo').then((m) => m.DropdownMenuPreviewCompact)),
+  tooltip: dynamic(() => import('@/components/demos/tooltip-demo').then((m) => m.TooltipPreviewCompact)),
+  select: dynamic(() => import('@/components/demos/select-demo').then((m) => m.SelectPreviewCompact)),
+  checkbox: dynamic(() => import('@/components/demos/checkbox-demo').then((m) => m.CheckboxPreviewCompact)),
+  'radio-group': dynamic(() => import('@/components/demos/radio-group-demo').then((m) => m.RadioGroupPreviewCompact)),
+  toast: dynamic(() => import('@/components/demos/toast-demo').then((m) => m.ToastPreviewCompact)),
+  'button-copy': dynamic(() => import('@/components/demos/button-copy-demo').then((m) => m.ButtonCopyPreviewCompact)),
+  'magnetic-button': dynamic(() => import('@/components/demos/magnetic-button-demo').then((m) => m.MagneticButtonPreviewCompact)),
+  textarea: dynamic(() => import('@/components/demos/textarea-demo').then((m) => m.TextareaPreviewCompact)),
+  'skeleton-loader': dynamic(() => import('@/components/demos/skeleton-loader-demo').then((m) => m.SkeletonLoaderPreviewCompact)),
+  avatar: dynamic(() => import('@/components/demos/avatar-demo').then((m) => m.AvatarPreviewCompact)),
+  slider: dynamic(() => import('@/components/demos/slider-demo').then((m) => m.SliderPreviewCompact)),
+  toggle: dynamic(() => import('@/components/demos/toggle-demo').then((m) => m.TogglePreviewCompact)),
+  'toggle-group': dynamic(() => import('@/components/demos/toggle-group-demo').then((m) => m.ToggleGroupPreviewCompact)),
+  popover: dynamic(() => import('@/components/demos/popover-demo').then((m) => m.PopoverPreviewCompact)),
+  breadcrumb: dynamic(() => import('@/components/demos/breadcrumb-demo').then((m) => m.BreadcrumbPreviewCompact)),
+  'alert-dialog': dynamic(() => import('@/components/demos/alert-dialog-demo').then((m) => m.AlertDialogPreviewCompact)),
+  drawer: dynamic(() => import('@/components/demos/drawer-demo').then((m) => m.DrawerPreviewCompact)),
+  table: dynamic(() => import('@/components/demos/table-demo').then((m) => m.TablePreviewCompact)),
+  pagination: dynamic(() => import('@/components/demos/pagination-demo').then((m) => m.PaginationPreviewCompact)),
+  marquee: dynamic(() => import('@/components/demos/marquee-demo').then((m) => m.MarqueePreviewCompact)),
+  'border-beam': dynamic(() => import('@/components/demos/border-beam-demo').then((m) => m.BorderBeamPreviewCompact)),
+  'shimmer-button': dynamic(() => import('@/components/demos/shimmer-button-demo').then((m) => m.ShimmerButtonPreviewCompact)),
+  'meteor-shower': dynamic(() => import('@/components/demos/meteor-shower-demo').then((m) => m.MeteorShowerPreviewCompact)),
+  spotlight: dynamic(() => import('@/components/demos/spotlight-demo').then((m) => m.SpotlightPreviewCompact)),
+  'blur-fade': dynamic(() => import('@/components/demos/blur-fade-demo').then((m) => m.BlurFadePreviewCompact)),
+  'text-reveal': dynamic(() => import('@/components/demos/text-reveal-demo').then((m) => m.TextRevealPreviewCompact)),
+  'word-rotate': dynamic(() => import('@/components/demos/word-rotate-demo').then((m) => m.WordRotatePreviewCompact)),
+  'typewriter-text': dynamic(() => import('@/components/demos/typewriter-text-demo').then((m) => m.TypewriterTextPreviewCompact)),
+  'flip-words': dynamic(() => import('@/components/demos/flip-words-demo').then((m) => m.FlipWordsPreviewCompact)),
+  'gradient-text': dynamic(() => import('@/components/demos/gradient-text-demo').then((m) => m.GradientTextPreviewCompact)),
+  'confetti-burst': dynamic(() => import('@/components/demos/confetti-burst-demo').then((m) => m.ConfettiBurstPreviewCompact)),
+  'ripple-button': dynamic(() => import('@/components/demos/ripple-button-demo').then((m) => m.RippleButtonPreviewCompact)),
+  'animated-progress-ring': dynamic(() => import('@/components/demos/animated-progress-ring-demo').then((m) => m.AnimatedProgressRingPreviewCompact)),
+  'aurora-background': dynamic(() => import('@/components/demos/aurora-background-demo').then((m) => m.AuroraBackgroundPreviewCompact)),
+  'wavy-background': dynamic(() => import('@/components/demos/wavy-background-demo').then((m) => m.WavyBackgroundPreviewCompact)),
+  sparkles: dynamic(() => import('@/components/demos/sparkles-demo').then((m) => m.SparklesPreviewCompact)),
+  'animated-beam': dynamic(() => import('@/components/demos/animated-beam-demo').then((m) => m.AnimatedBeamPreviewCompact)),
+  orbit: dynamic(() => import('@/components/demos/orbit-demo').then((m) => m.OrbitPreviewCompact)),
+  particles: dynamic(() => import('@/components/demos/particles-demo').then((m) => m.ParticlesPreviewCompact)),
+  'grid-pattern': dynamic(() => import('@/components/demos/grid-pattern-demo').then((m) => m.GridPatternPreviewCompact)),
+  'dot-pattern': dynamic(() => import('@/components/demos/dot-pattern-demo').then((m) => m.DotPatternPreviewCompact)),
+  'cursor-spotlight': dynamic(() => import('@/components/demos/cursor-spotlight-demo').then((m) => m.CursorSpotlightPreviewCompact)),
+  'floating-navbar': dynamic(() => import('@/components/demos/floating-navbar-demo').then((m) => m.FloatingNavbarPreviewCompact)),
+  'scroll-progress-bar': dynamic(() => import('@/components/demos/scroll-progress-bar-demo').then((m) => m.ScrollProgressBarPreviewCompact)),
+  'bento-grid': dynamic(() => import('@/components/demos/bento-grid-demo').then((m) => m.BentoGridPreviewCompact)),
+  'tilt-card-wall': dynamic(() => import('@/components/demos/tilt-card-wall-demo').then((m) => m.TiltCardWallPreviewCompact)),
+  hero: dynamic(() => import('@/components/demos/hero-demo').then((m) => m.HeroPreviewCompact)),
+  cta: dynamic(() => import('@/components/demos/cta-demo').then((m) => m.CtaPreviewCompact)),
+  features: dynamic(() => import('@/components/demos/features-demo').then((m) => m.FeaturesPreviewCompact)),
+  pricing: dynamic(() => import('@/components/demos/pricing-demo').then((m) => m.PricingPreviewCompact)),
+  faq: dynamic(() => import('@/components/demos/faq-demo').then((m) => m.FaqPreviewCompact)),
+  footer: dynamic(() => import('@/components/demos/footer-demo').then((m) => m.FooterPreviewCompact)),
+  'tilt-card': dynamic(() => import('@/components/demos/tilt-card-demo').then((m) => m.TiltCardPreviewCompact)),
+  globe: dynamic(() => import('@/components/demos/globe-demo').then((m) => m.GlobePreviewCompact), { ssr: false }),
+  navbar: dynamic(() => import('@/components/demos/navbar-demo').then((m) => m.NavbarPreviewCompact)),
+  'logo-cloud': dynamic(() => import('@/components/demos/logo-cloud-demo').then((m) => m.LogoCloudPreviewCompact)),
+  'stats-band': dynamic(() => import('@/components/demos/stats-band-demo').then((m) => m.StatsBandPreviewCompact)),
+  testimonials: dynamic(() => import('@/components/demos/testimonials-demo').then((m) => m.TestimonialsPreviewCompact)),
+  'team-grid': dynamic(() => import('@/components/demos/team-grid-demo').then((m) => m.TeamGridPreviewCompact)),
+  'blog-grid': dynamic(() => import('@/components/demos/blog-grid-demo').then((m) => m.BlogGridPreviewCompact)),
+  'newsletter-signup': dynamic(() => import('@/components/demos/newsletter-signup-demo').then((m) => m.NewsletterSignupPreviewCompact)),
+  'contact-form': dynamic(() => import('@/components/demos/contact-form-demo').then((m) => m.ContactFormPreviewCompact)),
+  'comparison-table': dynamic(() => import('@/components/demos/comparison-table-demo').then((m) => m.ComparisonTablePreviewCompact)),
+  'bento-features': dynamic(() => import('@/components/demos/bento-features-demo').then((m) => m.BentoFeaturesPreviewCompact)),
+  timeline: dynamic(() => import('@/components/demos/timeline-demo').then((m) => m.TimelinePreviewCompact)),
+  'integration-grid': dynamic(() => import('@/components/demos/integration-grid-demo').then((m) => m.IntegrationGridPreviewCompact)),
+  changelog: dynamic(() => import('@/components/demos/changelog-demo').then((m) => m.ChangelogPreviewCompact)),
+  '404-page': dynamic(() => import('@/components/demos/404-page-demo').then((m) => m.NotFoundPagePreviewCompact)),
+  'line-draw': dynamic(() => import('@/components/demos/line-draw-demo').then((m) => m.LineDrawPreviewCompact)),
+  'animated-list': dynamic(() => import('@/components/demos/animated-list-demo').then((m) => m.AnimatedListPreviewCompact)),
+  'retro-grid': dynamic(() => import('@/components/demos/retro-grid-demo').then((m) => m.RetroGridPreviewCompact)),
+  'bento-showcase': dynamic(() => import('@/components/demos/bento-showcase-demo').then((m) => m.BentoShowcasePreviewCompact)),
+  'hero-spotlight': dynamic(() => import('@/components/demos/hero-spotlight-demo').then((m) => m.HeroSpotlightPreviewCompact)),
+  'hero-grid': dynamic(() => import('@/components/demos/hero-grid-demo').then((m) => m.HeroGridPreviewCompact)),
+  'hero-showcase': dynamic(() => import('@/components/demos/hero-showcase-demo').then((m) => m.HeroShowcasePreviewCompact)),
+  sidebar: dynamic(() => import('@/components/demos/sidebar-demo').then((m) => m.SidebarPreviewCompact)),
+  dock: dynamic(() => import('@/components/demos/dock-demo').then((m) => m.DockPreviewCompact)),
+  'background-beams': dynamic(() => import('@/components/demos/background-beams-demo').then((m) => m.BackgroundBeamsPreviewCompact)),
+  lamp: dynamic(() => import('@/components/demos/lamp-demo').then((m) => m.LampPreviewCompact)),
+  'moving-border': dynamic(() => import('@/components/demos/moving-border-demo').then((m) => m.MovingBorderPreviewCompact)),
+  'hero-highlight': dynamic(() => import('@/components/demos/hero-highlight-demo').then((m) => m.HeroHighlightPreviewCompact)),
+  'auth-page': dynamic(() => import('@/components/demos/auth-page-demo').then((m) => m.AuthPagePreviewCompact)),
+  'announcement-banner': dynamic(() => import('@/components/demos/announcement-banner-demo').then((m) => m.AnnouncementBannerPreviewCompact)),
+  'command-palette': dynamic(() => import('@/components/demos/command-palette-demo').then((m) => m.CommandPalettePreviewCompact)),
+  'input-otp': dynamic(() => import('@/components/demos/input-otp-demo').then((m) => m.InputOTPPreviewCompact)),
+  progress: dynamic(() => import('@/components/demos/progress-demo').then((m) => m.ProgressPreviewCompact)),
+  kbd: dynamic(() => import('@/components/demos/kbd-demo').then((m) => m.KbdPreviewCompact)),
+  separator: dynamic(() => import('@/components/demos/separator-demo').then((m) => m.SeparatorPreviewCompact)),
+  'avatar-circles': dynamic(() => import('@/components/demos/avatar-circles-demo').then((m) => m.AvatarCirclesPreviewCompact)),
+  'browser-frame': dynamic(() => import('@/components/demos/browser-frame-demo').then((m) => m.BrowserFramePreviewCompact)),
+  'morphing-text': dynamic(() => import('@/components/demos/morphing-text-demo').then((m) => m.MorphingTextPreviewCompact)),
+  terminal: dynamic(() => import('@/components/demos/terminal-demo').then((m) => m.TerminalPreviewCompact)),
+  'text-scramble': dynamic(() => import('@/components/demos/text-scramble-demo').then((m) => m.TextScramblePreviewCompact)),
+  'sliding-number': dynamic(() => import('@/components/demos/sliding-number-demo').then((m) => m.SlidingNumberPreviewCompact)),
+  'expandable-card': dynamic(() => import('@/components/demos/expandable-card-demo').then((m) => m.ExpandableCardPreviewCompact)),
+  'morphing-dialog': dynamic(() => import('@/components/demos/morphing-dialog-demo').then((m) => m.MorphingDialogPreviewCompact)),
+  'dynamic-island': dynamic(() => import('@/components/demos/dynamic-island-demo').then((m) => m.DynamicIslandPreviewCompact)),
+  'prompt-input': dynamic(() => import('@/components/demos/prompt-input-demo').then((m) => m.PromptInputPreviewCompact)),
+  carousel: dynamic(() => import('@/components/demos/carousel-demo').then((m) => m.CarouselPreviewCompact)),
+  stepper: dynamic(() => import('@/components/demos/stepper-demo').then((m) => m.StepperPreviewCompact)),
+  'image-comparison': dynamic(() => import('@/components/demos/image-comparison-demo').then((m) => m.ImageComparisonPreviewCompact)),
+  'sortable-list': dynamic(() => import('@/components/demos/sortable-list-demo').then((m) => m.SortableListPreviewCompact)),
 };
 
 export function getDemo(slug: string, compact = false): ComponentType | null {

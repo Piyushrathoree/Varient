@@ -1,9 +1,9 @@
 ---
 title: Hero Showcase
-description: Split hero with copy and CTAs on the left, and a tilted floating product frame with a media slot on the right.
+description: Split hero with copy and CTAs on the left, and a tilted product frame that settles in with a media slot on the right.
 ---
 
-<ComponentPreview name="hero-showcase" />
+<ComponentPreview name="hero-showcase" variant="section" />
 
 ## Installation
 
@@ -39,11 +39,11 @@ export function LandingPage() {
     { name: 'subtitle', type: 'string', defaultValue: '(see source)', description: 'One-paragraph subhead below the title.' },
     { name: 'primaryCta', type: '{ label: string; href: string }', defaultValue: '(see source)', description: 'Primary brand button.' },
     { name: 'secondaryCta', type: '{ label: string; href: string }', defaultValue: '(see source)', description: 'Secondary outline button.' },
-    { name: 'media', type: 'ReactNode', description: 'Slot for screenshot, mock UI, or any media inside the framed panel. Defaults to a built-in dashboard mock.' },
+    { name: 'media', type: 'ReactNode', description: 'Slot for screenshot, mock UI, or any media inside the framed panel. Defaults to a built-in dotted-surface dashboard mock.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
   ]}
 />
 
 ## Accessibility
 
-The root is a `<section>` labelled by the h1. The product frame composes `TiltCard` — tilt and float animations are disabled under `prefers-reduced-motion`, falling back to a static perspective frame with hover shadow only.
+The root is a `<section>` labelled by the h1. The product frame composes `TiltCard` — tilt and the entrance spring are disabled under `prefers-reduced-motion`, falling back to a static perspective frame with hover shadow only. On enter, the frame settles from a slight vertical offset with a single quiet spring (no perpetual float) so it doesn't keep moving while people read the copy.

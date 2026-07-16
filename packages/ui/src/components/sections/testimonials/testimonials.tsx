@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { Card } from '../../foundation/card';
 import { Avatar } from '../../foundation/avatar';
 import { cn } from '../../../lib/utils';
+import { EASE_OUT } from '../../../lib/animation';
 
 export interface Testimonial {
   quote: string;
@@ -39,42 +40,36 @@ export const defaultTestimonials: Testimonial[] = [
       'We replaced three internal UI kits with Varient sections. Our landing page shipped in a day instead of a week.',
     name: 'Maya Chen',
     role: 'Product lead, Northline',
-    avatarSrc: 'https://i.pravatar.cc/150?img=1',
   },
   {
     quote:
       'Copy-paste DX is real — I own the Button and Card source, so design tweaks never wait on a package release.',
     name: 'James Okonkwo',
     role: 'Frontend engineer, Stackform',
-    avatarSrc: 'https://i.pravatar.cc/150?img=3',
   },
   {
     quote:
       'Reduced-motion fallbacks are baked in. Our accessibility review passed without a single animation caveat.',
     name: 'Elena Vasquez',
     role: 'Design systems, Meridian',
-    avatarSrc: 'https://i.pravatar.cc/150?img=5',
   },
   {
     quote:
       'The token system means dark mode just works. We changed one CSS file and every section repainted correctly.',
     name: 'Tom Bradley',
     role: 'CTO, Relay Labs',
-    avatarSrc: 'https://i.pravatar.cc/150?img=8',
   },
   {
     quote:
       'Foundation plus animated layers compose cleanly. We built a pricing page from sections without rewriting primitives.',
     name: 'Priya Nair',
     role: 'Founder, Craftboard',
-    avatarSrc: 'https://i.pravatar.cc/150?img=9',
   },
   {
     quote:
       'Radix-backed controls saved us from reinventing focus traps and keyboard nav on every dialog and menu.',
     name: 'Marcus Webb',
     role: 'Staff engineer, Openframe',
-    avatarSrc: 'https://i.pravatar.cc/150?img=11',
   },
 ];
 
@@ -94,7 +89,7 @@ function TestimonialCard({
         whileInView: { opacity: 1, y: 0 },
         transition: {
           duration: 0.3,
-          ease: [0.22, 1, 0.36, 1] as const,
+          ease: EASE_OUT,
           delay: index * 0.06,
         },
         viewport: { once: true, amount: 0.15 } as const,
@@ -104,9 +99,17 @@ function TestimonialCard({
     <motion.div className="mb-4 break-inside-avoid" {...motionProps}>
       <Card className="p-6">
         <QuoteGlyph className="size-5 text-muted-foreground/30" />
-        <blockquote className="mt-3 line-clamp-4 text-sm leading-relaxed text-foreground">
-          {testimonial.quote}
-        </blockquote>
+        <div
+          className="relative mt-3"
+          style={{
+            maskImage: 'linear-gradient(to bottom, black 82%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 82%, transparent 100%)',
+          }}
+        >
+          <blockquote className="line-clamp-4 text-sm leading-relaxed text-foreground">
+            {testimonial.quote}
+          </blockquote>
+        </div>
         <footer className="mt-4 flex items-center gap-3">
           <Avatar
             size="md"
@@ -145,7 +148,7 @@ export const Testimonials = forwardRef<HTMLElement, TestimonialsProps>(
       : {
           initial: { opacity: 0, y: 12 },
           whileInView: { opacity: 1, y: 0 },
-          transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const },
+          transition: { duration: 0.3, ease: EASE_OUT },
           viewport: { once: true, amount: 0.4 } as const,
         };
 

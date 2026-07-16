@@ -29,13 +29,27 @@ export function SeparatorDemo() {
         </DemoCard>
       </div>
 
-      <DemoCard label="Vertical">
-        <div className="flex h-16 items-center gap-4">
-          <span className="text-sm text-foreground">Left</span>
-          <Separator orientation="vertical" />
-          <span className="text-sm text-muted-foreground">Right</span>
-        </div>
-      </DemoCard>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <DemoCard label="Vertical">
+          <div className="flex h-16 items-center gap-4">
+            <span className="text-sm text-foreground">Left</span>
+            <Separator orientation="vertical" />
+            <span className="text-sm text-muted-foreground">Right</span>
+          </div>
+        </DemoCard>
+
+        <DemoCard label="Sidebar navigation">
+          <div className="flex w-full max-w-[220px] flex-col gap-1 rounded-lg border border-border bg-background p-3">
+            <span className="px-2 py-1 text-xs font-medium text-muted-foreground">Workspace</span>
+            <span className="rounded-md px-2 py-1.5 text-sm text-foreground">Overview</span>
+            <span className="rounded-md px-2 py-1.5 text-sm text-foreground">Projects</span>
+            <Separator className="my-1" />
+            <span className="px-2 py-1 text-xs font-medium text-muted-foreground">Account</span>
+            <span className="rounded-md px-2 py-1.5 text-sm text-foreground">Settings</span>
+            <span className="rounded-md px-2 py-1.5 text-sm text-foreground">Billing</span>
+          </div>
+        </DemoCard>
+      </div>
     </div>
   );
 }

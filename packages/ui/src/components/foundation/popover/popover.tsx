@@ -87,6 +87,8 @@ export interface PopoverContentProps
   side?: PopoverSide;
   align?: PopoverAlign;
   sideOffset?: number;
+  /** Renders a small pointer connecting the panel to its trigger. */
+  showArrow?: boolean;
 }
 
 // Small directional pull per side — pairs with scale/fade from the Radix
@@ -109,6 +111,7 @@ export const PopoverContent = forwardRef<
       side = 'bottom',
       align = 'center',
       sideOffset = 8,
+      showArrow = false,
       ...props
     },
     ref,
@@ -149,6 +152,15 @@ export const PopoverContent = forwardRef<
                 )}
               >
                 {children}
+                {showArrow && (
+                  <PopoverPrimitive.Arrow
+                    width={12}
+                    height={6}
+                    className="fill-popover stroke-border"
+                    strokeWidth={1}
+                    aria-hidden
+                  />
+                )}
               </motion.div>
             </PopoverPrimitive.Content>
           </PopoverPrimitive.Portal>

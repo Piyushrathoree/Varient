@@ -34,14 +34,35 @@ function DemoMedia() {
 
 export function HeroShowcaseDemo() {
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-border">
-      <HeroShowcase
-        media={<DemoMedia />}
-        primaryCta={{ label: 'Get started', href: '/components' }}
-        secondaryCta={{ label: 'Live preview', href: '/docs' }}
-        subtitle="Split hero with copy and CTAs on the left, and a tilted product frame with a custom media slot on the right."
-        title="Showcase your product with depth"
-      />
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
+        <span className="text-xs font-medium text-muted-foreground">
+          Custom media — content API with real copy, CTAs, and a bespoke media slot
+        </span>
+        <div className="w-full overflow-hidden rounded-xl border border-border">
+          <HeroShowcase
+            media={<DemoMedia />}
+            primaryCta={{ label: 'Get started', href: '/components' }}
+            secondaryCta={{ label: 'Live preview', href: '/docs' }}
+            subtitle="Split hero with copy and CTAs on the left, and a tilted product frame with a custom media slot on the right."
+            title="Showcase your product with depth"
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
+        <span className="text-xs font-medium text-muted-foreground">
+          Built-in fallback media — omit the media prop to use the default dashboard mock
+        </span>
+        <div className="w-full overflow-hidden rounded-xl border border-border">
+          <HeroShowcase
+            primaryCta={{ label: 'Create an account', href: '/components' }}
+            secondaryCta={{ label: 'Read the docs', href: '/docs' }}
+            subtitle="No media prop passed — the frame falls back to the built-in dotted-surface dashboard mock."
+            title="Ship product pages fast"
+          />
+        </div>
+      </div>
     </div>
   );
 }
@@ -53,7 +74,7 @@ export function HeroShowcasePreviewCompact() {
         className="py-8"
         primaryCta={{ label: 'Start', href: '#' }}
         secondaryCta={{ label: 'Preview', href: '#' }}
-        subtitle="Tilted product frame with floating motion."
+        subtitle="Tilted product frame with a settling entrance."
         title="Split hero showcase"
       />
     </div>

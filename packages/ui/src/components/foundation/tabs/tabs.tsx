@@ -180,7 +180,7 @@ export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           'disabled:pointer-events-none disabled:opacity-50',
           // The indicator (bar/pill/chip) carries the "selected" surface; the
-          // label itself only ever changes color, matching SmoothUI's tabs.
+          // label itself only ever changes color.
           variant === 'pills' && 'rounded-full',
           variant === 'segmented' && 'flex-1',
           isSelected ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',

@@ -1,3 +1,5 @@
+'use client';
+
 import { Slot } from '@radix-ui/react-slot';
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { cn } from '../../../lib/utils';
@@ -26,12 +28,11 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  // Hero CTA — SmoothUI's "candy" treatment: a brand gradient fill with a
-  // hairline highlight border and a soft ring, our ember hue in their brand
-  // slot. This is the one high-voltage signal, reserved for the primary action.
+  // Hero CTA — brand gradient fill with a hairline highlight border and a soft
+  // ring. Reserved for the primary action.
   primary:
     'border-[0.5px] border-white/25 bg-gradient-to-b from-brand to-brand-secondary text-white shadow-black/20 shadow-md ring-1 ring-(--ring-color) [--ring-color:color-mix(in_oklab,var(--color-foreground)_15%,var(--color-brand))] hover:from-brand-secondary hover:to-brand-secondary [&_svg]:drop-shadow-sm',
-  // Neutral high-contrast — SmoothUI's default button surface.
+  // Neutral high-contrast default button surface.
   default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
   secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
   ghost: 'hover:bg-background hover:text-foreground hover:shadow-sm',
@@ -99,7 +100,7 @@ function ButtonSpinner({ size }: { size: ButtonSize }) {
   return (
     <span
       className={cn(
-        'inline-block animate-spin rounded-full border-2 border-current border-t-transparent',
+        'inline-block animate-spin rounded-full border-2 border-current border-t-transparent motion-reduce:animate-none',
         iconSize,
       )}
       aria-hidden

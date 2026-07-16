@@ -1,8 +1,15 @@
 'use client';
 
-import { forwardRef, useMemo, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import {
+  forwardRef,
+  useMemo,
+  useRef,
+  type HTMLAttributes,
+  type ReactNode,
+} from 'react';
+import { motion, useReducedMotion, type MotionStyle } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 export interface AuroraBackgroundProps extends HTMLAttributes<HTMLDivElement> {
   /** Content rendered above the aurora layer. */
@@ -11,12 +18,17 @@ export interface AuroraBackgroundProps extends HTMLAttributes<HTMLDivElement> {
   showRadialGradient?: boolean;
   /** Blob fill colors — defaults to neutral foreground-alpha washes with a faint ember hint. */
   colors?: readonly string[];
+  /**
+   * Scales blob opacity and size, from 0 (barely there) to 1 (full presence).
+   * Clamped to [0, 1]. Defaults to 1.
+   */
+  intensity?: number;
 }
 
 interface AuroraBlobConfig {
   id: string;
   className: string;
-  style: CSSProperties;
+  style: MotionStyle;
   animate: { x: number[]; y: number[]; rotate: number[] };
   transition: { duration: number; repeat: number; ease: 'linear' };
 }
@@ -68,7 +80,9 @@ function buildStaticGradient(colors: readonly string[]): string {
   }).join(', ');
 }
 
-function buildAnimatedBlobs(colors: readonly string[]): AuroraBlobConfig[] {
+function buildAnimatedBlobs(colors: readonly string[], intensity: number): AuroraBlobConfig[] {
+  const opacity = 0.25 + 0.75 * intensity;
+  const scale = 0.75 + 0.25 * intensity;
   return BLOB_LAYOUTS.map((layout, index) => ({
     id: layout.id,
     className: layout.className,
@@ -78,7 +92,11 @@ function buildAnimatedBlobs(colors: readonly string[]): AuroraBlobConfig[] {
       y: [...layout.animate.y],
       rotate: [...layout.animate.rotate],
     },
-    style: { background: colors[index % colors.length] },
+    style: {
+      background: colors[index % colors.length],
+      opacity,
+      scale,
+    },
   }));
 }
 
@@ -88,21 +106,38 @@ function buildAnimatedBlobs(colors: readonly string[]): AuroraBlobConfig[] {
  * static gradient wash.
  */
 export const AuroraBackground = forwardRef<HTMLDivElement, AuroraBackgroundProps>(
-  ({ className, children, showRadialGradient = true, colors = DEFAULT_COLORS, ...props }, ref) => {
+  (
+    {
+      className,
+      children,
+      showRadialGradient = true,
+      colors = DEFAULT_COLORS,
+      intensity = 1,
+      ...props
+    },
+    ref,
+  ) => {
     const shouldReduceMotion = useReducedMotion();
+    const containerRef = useRef<HTMLDivElement>(null);
+    const isViewportActive = useViewportActive(containerRef);
     const resolvedColors = colors.length > 0 ? colors : DEFAULT_COLORS;
+    const resolvedIntensity = Math.min(1, Math.max(0, intensity));
     const staticGradient = useMemo(
       () => buildStaticGradient(resolvedColors),
       [resolvedColors],
     );
     const animatedBlobs = useMemo(
-      () => buildAnimatedBlobs(resolvedColors),
-      [resolvedColors],
+      () => buildAnimatedBlobs(resolvedColors, resolvedIntensity),
+      [resolvedColors, resolvedIntensity],
     );
 
     return (
       <div
-        ref={ref}
+        ref={(node) => {
+          containerRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+        }}
         className={cn('relative overflow-hidden bg-background', className)}
         {...props}
       >
@@ -130,7 +165,7 @@ export const AuroraBackground = forwardRef<HTMLDivElement, AuroraBackgroundProps
                     blob.className,
                   )}
                   style={blob.style}
-                  animate={blob.animate}
+                  animate={isViewportActive ? blob.animate : undefined}
                   transition={blob.transition}
                 />
               ))}

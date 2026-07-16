@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useId, type HTMLAttributes, type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { EASE_OUT } from '../../../lib/animation';
@@ -20,15 +20,50 @@ export interface BentoFeaturesProps extends Omit<HTMLAttributes<HTMLElement>, 't
   items?: BentoFeatureItem[];
 }
 
-function GradientVisual({ className }: { className?: string }) {
+function FrameVisual({ className }: { className?: string }) {
   return (
     <div
       aria-hidden
       className={cn(
-        'h-full min-h-24 w-full rounded-lg border border-border bg-muted/50',
+        'flex h-full min-h-24 w-full flex-col overflow-hidden rounded-lg border border-border bg-muted/30',
         className,
       )}
-    />
+    >
+      <div className="flex items-center gap-1.5 border-b border-border/70 px-3 py-2">
+        <span className="size-1.5 rounded-full bg-muted-foreground/30" />
+        <span className="size-1.5 rounded-full bg-muted-foreground/30" />
+        <span className="size-1.5 rounded-full bg-brand/60" />
+      </div>
+      <div className="flex flex-1 items-center justify-center gap-2 p-3">
+        <span className="h-6 w-6 rounded-md border border-border bg-card" />
+        <span className="h-6 w-10 rounded-md border border-border bg-card" />
+        <span className="h-6 w-6 rounded-md border border-brand/40 bg-brand/10" />
+      </div>
+    </div>
+  );
+}
+
+function SparklineVisual() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 120 80"
+      fill="none"
+      className="h-full min-h-24 w-full text-brand"
+    >
+      <path
+        d="M6 56 26 44 42 52 60 26 78 34 96 14 114 22"
+        className="stroke-brand"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6 56 26 44 42 52 60 26 78 34 96 14 114 22V72H6Z"
+        className="fill-brand/10"
+      />
+      <circle cx="114" cy="22" r="3.5" className="fill-brand" />
+    </svg>
   );
 }
 
@@ -87,7 +122,7 @@ function MotionVisual() {
   );
 }
 
-const defaultVisuals = [GradientVisual, DiagramVisual, StatVisual, LayersVisual, MotionVisual];
+const defaultVisuals = [FrameVisual, DiagramVisual, StatVisual, LayersVisual, SparklineVisual, MotionVisual];
 
 export const defaultBentoItems: BentoFeatureItem[] = [
   {
@@ -172,6 +207,7 @@ export const BentoFeatures = forwardRef<HTMLElement, BentoFeaturesProps>(
     ref,
   ) => {
     const shouldReduceMotion = useReducedMotion();
+    const headingId = useId();
 
     const headerMotion = shouldReduceMotion
       ? {}
@@ -186,7 +222,7 @@ export const BentoFeatures = forwardRef<HTMLElement, BentoFeaturesProps>(
       <section
         ref={ref}
         className={cn('w-full px-6 py-16 md:px-8 md:py-24', className)}
-        aria-labelledby="bento-features-heading"
+        aria-labelledby={headingId}
         {...props}
       >
         <motion.header className="max-w-2xl" {...headerMotion}>
@@ -194,7 +230,7 @@ export const BentoFeatures = forwardRef<HTMLElement, BentoFeaturesProps>(
             <p className="text-sm font-medium text-brand">{eyebrow}</p>
           )}
           <h2
-            id="bento-features-heading"
+            id={headingId}
             className="mt-2 font-display text-2xl font-semibold tracking-tight text-foreground md:text-3xl"
           >
             {title}

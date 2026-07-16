@@ -4,6 +4,7 @@ import { forwardRef, type HTMLAttributes } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { Avatar } from '../../foundation/avatar';
 import { cn } from '../../../lib/utils';
+import { EASE_OUT } from '../../../lib/animation';
 
 export interface TeamMemberSocials {
   github?: string;
@@ -68,37 +69,31 @@ export const defaultTeamMembers: TeamMember[] = [
   {
     name: 'Piyush Sharma',
     role: 'Founder & design',
-    avatarSrc: 'https://i.pravatar.cc/150?img=12',
     socials: { github: 'https://github.com', x: 'https://x.com', linkedin: 'https://linkedin.com' },
   },
   {
     name: 'Maya Chen',
     role: 'Engineering lead',
-    avatarSrc: 'https://i.pravatar.cc/150?img=1',
     socials: { github: 'https://github.com', linkedin: 'https://linkedin.com' },
   },
   {
     name: 'James Okonkwo',
     role: 'Frontend',
-    avatarSrc: 'https://i.pravatar.cc/150?img=3',
     socials: { github: 'https://github.com', x: 'https://x.com' },
   },
   {
     name: 'Elena Vasquez',
     role: 'Design systems',
-    avatarSrc: 'https://i.pravatar.cc/150?img=5',
     socials: { linkedin: 'https://linkedin.com' },
   },
   {
     name: 'Tom Bradley',
     role: 'Product',
-    avatarSrc: 'https://i.pravatar.cc/150?img=8',
     socials: { x: 'https://x.com', linkedin: 'https://linkedin.com' },
   },
   {
     name: 'Priya Nair',
     role: 'Developer relations',
-    avatarSrc: 'https://i.pravatar.cc/150?img=9',
     socials: { github: 'https://github.com', x: 'https://x.com', linkedin: 'https://linkedin.com' },
   },
 ];
@@ -147,7 +142,7 @@ function MemberCard({
         whileInView: { opacity: 1, y: 0 },
         transition: {
           duration: 0.3,
-          ease: [0.22, 1, 0.36, 1] as const,
+          ease: EASE_OUT,
           delay: index * 0.06,
         },
         viewport: { once: true, amount: 0.2 } as const,
@@ -187,7 +182,7 @@ export const TeamGrid = forwardRef<HTMLElement, TeamGridProps>(
       : {
           initial: { opacity: 0, y: 12 },
           whileInView: { opacity: 1, y: 0 },
-          transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const },
+          transition: { duration: 0.3, ease: EASE_OUT },
           viewport: { once: true, amount: 0.4 } as const,
         };
 

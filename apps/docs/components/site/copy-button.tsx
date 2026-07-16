@@ -31,6 +31,9 @@ export function CopyButton({ text, className }: CopyButtonProps) {
       )}
     >
       {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+      <span aria-live="polite" className="sr-only">
+        {copied ? 'Copied' : ''}
+      </span>
     </button>
   );
 }

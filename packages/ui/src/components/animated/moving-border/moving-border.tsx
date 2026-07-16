@@ -1,8 +1,9 @@
 'use client';
 
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { motion, useReducedMotion, type MotionStyle } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 export interface MovingBorderProps {
   /** Wrapped content — typically a button or card. */
@@ -17,6 +18,8 @@ export interface MovingBorderProps {
   colorFrom?: string;
   /** End color of the traveling highlight. */
   colorTo?: string;
+  /** Pauses the traveling highlight loop when true, regardless of viewport visibility. */
+  isPaused?: boolean;
   className?: string;
 }
 
@@ -26,6 +29,8 @@ export interface MovingBorderButtonProps extends ButtonHTMLAttributes<HTMLButton
   /** Corner radius in pixels. */
   borderRadius?: number;
   isDisabled?: boolean;
+  /** Pauses the traveling highlight loop when true, regardless of viewport visibility. */
+  isPaused?: boolean;
 }
 
 const DEFAULT_COLOR_FROM = 'var(--color-brand)';
@@ -55,15 +60,23 @@ export const MovingBorder = forwardRef<HTMLDivElement, MovingBorderProps>(
       highlightSize = 80,
       colorFrom = DEFAULT_COLOR_FROM,
       colorTo = DEFAULT_COLOR_TO,
+      isPaused = false,
       className,
     },
     ref,
   ) => {
     const shouldReduceMotion = useReducedMotion();
+    const containerRef = useRef<HTMLDivElement>(null);
+    const isViewportActive = useViewportActive(containerRef);
+    const isAnimating = !isPaused && isViewportActive;
 
     return (
       <div
-        ref={ref}
+        ref={(node) => {
+          containerRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+        }}
         className={cn('relative rounded-[inherit]', className)}
         style={{ borderRadius }}
       >
@@ -92,7 +105,7 @@ export const MovingBorder = forwardRef<HTMLDivElement, MovingBorderProps>(
                 } as MotionStyle
               }
               initial={{ offsetDistance: '0%' }}
-              animate={{ offsetDistance: ['0%', '100%'] }}
+              animate={isAnimating ? { offsetDistance: ['0%', '100%'] } : {}}
               transition={{
                 repeat: Infinity,
                 ease: 'linear',
@@ -123,13 +136,14 @@ export const MovingBorderButton = forwardRef<HTMLButtonElement, MovingBorderButt
       duration = 8,
       borderRadius = 10,
       isDisabled = false,
+      isPaused = false,
       type = 'button',
       ...props
     },
     ref,
   ) => {
     return (
-      <MovingBorder duration={duration} borderRadius={borderRadius}>
+      <MovingBorder duration={duration} borderRadius={borderRadius} isPaused={isPaused}>
         <button
           ref={ref}
           type={type}

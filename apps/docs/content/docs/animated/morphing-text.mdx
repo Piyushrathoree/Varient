@@ -41,4 +41,4 @@ export function Example() {
 
 ## Accessibility
 
-The outer wrapper is `aria-live="polite"` and `aria-atomic="true"`, so each word change is announced without interrupting the user. When `prefers-reduced-motion` is set, words still cycle on the same interval but swap instantly — no blur or translate animation. Distinct from `WordRotate`, which slides vertically rather than morphing with blur.
+The outer wrapper is `aria-live="polite"` and `aria-atomic="true"`, so each word change is announced without interrupting the user. When `prefers-reduced-motion` is set, the cycling timer itself is paused — the component settles on the first word instead of continuing to swap on an interval. Distinct from `WordRotate`, which slides vertically rather than morphing with blur.

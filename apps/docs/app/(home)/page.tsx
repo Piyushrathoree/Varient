@@ -20,8 +20,8 @@ export default function HomePage() {
   return (
     <>
       <HeroSection readyCount={readyCount} totalCount={components.length} />
-      <ComponentBentoShowcase />
       <Features />
+      <ComponentBentoShowcase />
       <StatsSection />
       <TechMarqueeSection />
       <CtaSection />

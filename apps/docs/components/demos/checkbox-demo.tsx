@@ -15,6 +15,10 @@ export function CheckboxDemo() {
   const [large, setLarge] = useState(false);
   const [unchecked, setUnchecked] = useState(false);
 
+  const [variantDefault, setVariantDefault] = useState(true);
+  const [variantRound, setVariantRound] = useState(true);
+  const [variantFilled, setVariantFilled] = useState(true);
+
   const [selected, setSelected] = useState<string[]>(['Design']);
   const allSelected = selected.length === TEAMS.length;
   const someSelected = selected.length > 0 && !allSelected;
@@ -55,6 +59,24 @@ export function CheckboxDemo() {
           <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
             <Checkbox isChecked onChange={noop} label="Disabled" isDisabled />
             <span className="text-xs font-medium text-muted-foreground">Disabled, on</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <p className="text-sm font-medium text-muted-foreground">Variants</p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+            <Checkbox variant="default" isChecked={variantDefault} onChange={setVariantDefault} label="Default" />
+            <span className="text-xs font-medium text-muted-foreground">default (square)</span>
+          </div>
+          <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+            <Checkbox variant="round" isChecked={variantRound} onChange={setVariantRound} label="Round" />
+            <span className="text-xs font-medium text-muted-foreground">round (circular)</span>
+          </div>
+          <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+            <Checkbox variant="filled" isChecked={variantFilled} onChange={setVariantFilled} label="Filled" />
+            <span className="text-xs font-medium text-muted-foreground">filled (solid-fill)</span>
           </div>
         </div>
       </div>

@@ -50,6 +50,15 @@ export function Example() {
   ]}
 />
 
+## Performance
+
+`filter: blur()` is a compositor-expensive property — noticeably heavier than
+animating `transform`/`opacity` alone. It's fine for a handful of staggered
+reveals, but stacking many `BlurFade` instances in one dense grid (dozens of
+cards animating blur simultaneously) can visibly tax lower-end devices.
+Prefer smaller `blur` values, stagger delays generously, or pass `blur="0px"`
+for large grids where only the slide/fade matters.
+
 ## Accessibility
 
 - Content is always present in the DOM — only opacity, blur, and transform animate.

@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 export type WavyBackgroundSpeed = 'slow' | 'fast';
 
@@ -69,7 +70,6 @@ function drawWaves(
   speed: WavyBackgroundSpeed,
 ): void {
   ctx.clearRect(0, 0, width, height);
-  ctx.filter = blur > 0 ? `blur(${blur}px)` : 'none';
 
   const phase = time * SPEED_FACTOR[speed];
 
@@ -79,9 +79,6 @@ function drawWaves(
     const strokeWidth = Math.max(1, waveWidth * 0.06);
 
     ctx.beginPath();
-    ctx.strokeStyle = color;
-    ctx.globalAlpha = waveOpacity;
-    ctx.lineWidth = strokeWidth;
 
     for (let x = 0; x <= width; x += 2) {
       const y =
@@ -94,17 +91,35 @@ function drawWaves(
       else ctx.lineTo(x, y);
     }
 
+    ctx.strokeStyle = color;
+
+    // Soft-thick-stroke blur approximation: stroke the same path a couple of
+    // extra times with a wider, fainter line before the crisp core stroke.
+    // A real `ctx.filter = 'blur()'` re-rasterizes the whole layer every
+    // frame (expensive); layered strokes reuse the already-built path and
+    // cost only a couple of extra `stroke()` calls.
+    if (blur > 0) {
+      const softPasses = 2;
+      for (let pass = softPasses; pass >= 1; pass -= 1) {
+        ctx.lineWidth = strokeWidth + blur * (pass / softPasses) * 1.2;
+        ctx.globalAlpha = (waveOpacity * 0.22) / pass;
+        ctx.stroke();
+      }
+    }
+
+    ctx.lineWidth = strokeWidth;
+    ctx.globalAlpha = waveOpacity;
     ctx.stroke();
   });
 
   ctx.globalAlpha = 1;
-  ctx.filter = 'none';
 }
 
 /**
- * Undulating sine-wave canvas backdrop. Layers several blurred strokes that
- * drift via requestAnimationFrame. Under `prefers-reduced-motion` a single
- * static frame is drawn with no animation loop.
+ * Undulating sine-wave canvas backdrop. Layers several softly blurred strokes
+ * that drift via requestAnimationFrame. The loop pauses while the component
+ * is scrolled offscreen and under `prefers-reduced-motion` only a single
+ * static frame is drawn.
  */
 export const WavyBackground = forwardRef<HTMLDivElement, WavyBackgroundProps>(
   (
@@ -125,7 +140,8 @@ export const WavyBackground = forwardRef<HTMLDivElement, WavyBackgroundProps>(
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
     const frameRef = useRef<number | null>(null);
-    const startTimeRef = useRef<number>(0);
+    const elapsedRef = useRef<number>(0);
+    const isViewportActive = useViewportActive(containerRef);
 
     const paint = useCallback(
       (time: number) => {
@@ -158,23 +174,32 @@ export const WavyBackground = forwardRef<HTMLDivElement, WavyBackgroundProps>(
       const container = containerRef.current;
       if (!container) return;
 
-      startTimeRef.current = performance.now();
+      // Reduced motion: paint one static frame, keep it in sync with
+      // container resizes, never start the loop.
+      if (shouldReduceMotion) {
+        paint(elapsedRef.current);
+        const handleResize = () => paint(elapsedRef.current);
+        const resizeObserver = new ResizeObserver(handleResize);
+        resizeObserver.observe(container);
+        return () => resizeObserver.disconnect();
+      }
+
+      // Offscreen: leave the last painted frame on the canvas and don't
+      // burn CPU animating something nobody can see.
+      if (!isViewportActive) return;
+
+      let frameStart = performance.now();
 
       const renderFrame = (now: number) => {
-        const elapsed = (now - startTimeRef.current) / 1000;
-        paint(elapsed);
-        if (!shouldReduceMotion) {
-          frameRef.current = requestAnimationFrame(renderFrame);
-        }
+        elapsedRef.current += (now - frameStart) / 1000;
+        frameStart = now;
+        paint(elapsedRef.current);
+        frameRef.current = requestAnimationFrame(renderFrame);
       };
 
-      const handleResize = () => {
-        const elapsed = (performance.now() - startTimeRef.current) / 1000;
-        paint(elapsed);
-      };
+      frameRef.current = requestAnimationFrame(renderFrame);
 
-      renderFrame(performance.now());
-
+      const handleResize = () => paint(elapsedRef.current);
       const resizeObserver = new ResizeObserver(handleResize);
       resizeObserver.observe(container);
 
@@ -182,7 +207,7 @@ export const WavyBackground = forwardRef<HTMLDivElement, WavyBackgroundProps>(
         if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
         resizeObserver.disconnect();
       };
-    }, [paint, shouldReduceMotion]);
+    }, [paint, shouldReduceMotion, isViewportActive]);
 
     return (
       <div

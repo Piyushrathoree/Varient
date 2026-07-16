@@ -49,6 +49,24 @@ export function AuroraBackgroundDemo() {
           </AuroraBackground>
           <span className="text-xs font-medium text-muted-foreground">colors prop</span>
         </div>
+
+        <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-4">
+          <AuroraBackground intensity={0.3} className="h-40 w-full rounded-lg border border-border">
+            <div className="flex h-full items-center justify-center">
+              <span className="text-sm font-medium text-foreground">Low intensity</span>
+            </div>
+          </AuroraBackground>
+          <span className="text-xs font-medium text-muted-foreground">intensity=0.3</span>
+        </div>
+
+        <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-4">
+          <AuroraBackground intensity={1} className="h-40 w-full rounded-lg border border-border">
+            <div className="flex h-full items-center justify-center">
+              <span className="text-sm font-medium text-foreground">Full intensity (default)</span>
+            </div>
+          </AuroraBackground>
+          <span className="text-xs font-medium text-muted-foreground">intensity=1</span>
+        </div>
       </div>
     </div>
   );

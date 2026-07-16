@@ -3,7 +3,7 @@ title: Stats Band
 description: A responsive grid of animated key metrics powered by NumberTicker, with optional section header.
 ---
 
-<ComponentPreview name="stats-band" />
+<ComponentPreview name="stats-band" variant="section" />
 
 ## Installation
 
@@ -36,24 +36,25 @@ export function LandingPage() {
 
 ## Anatomy
 
-Optional centered header (`title` + `description`), then a `grid grid-cols-2 lg:grid-cols-4` of stats. Each cell renders a large NumberTicker (`text-3xl/4xl font-semibold`) with a muted label below. On `lg`, hairline left dividers separate columns after the first.
+Optional centered header (`title` + `description`) that settles into view with a fade/rise on scroll, then a `grid grid-cols-2 lg:grid-cols-4` of stats. Each cell renders a large NumberTicker (`text-3xl/4xl font-semibold`) with a muted label below, and an optional icon in a brand-tinted roundel above the value. On `lg`, hairline left dividers separate columns after the first — replaced by a raised card surface per stat when `isRaised` is set.
 
-NumberTicker handles scroll-triggered count-up and reduced-motion fallbacks — this section does not duplicate that logic.
+NumberTicker handles scroll-triggered count-up and reduced-motion fallbacks — this section does not duplicate that logic. The header reveal is itself gated by `prefers-reduced-motion` and only plays once per scroll into view (no perpetual loop).
 
 ## Props
 
 <PropsTable
   props={[
-    { name: 'stats', type: '{ value: number; prefix?: string; suffix?: string; label: string; decimalPlaces?: number }[]', defaultValue: '(4 default metrics)', description: 'Metrics to display — each value animates via NumberTicker when scrolled into view.' },
-    { name: 'title', type: 'string', description: 'Optional section heading — rendered as an h2.' },
+    { name: 'stats', type: '{ value: number; prefix?: string; suffix?: string; label: string; decimalPlaces?: number; icon?: ReactNode }[]', defaultValue: '(4 default metrics)', description: 'Metrics to display — each value animates via NumberTicker when scrolled into view. Optional icon renders in a small roundel above the value.' },
+    { name: 'title', type: 'string', description: 'Optional section heading — rendered as an h2. Fades and rises into view once when scrolled into the viewport.' },
     { name: 'description', type: 'string', description: 'Optional one-line description below the title.' },
+    { name: 'isRaised', type: 'boolean', defaultValue: 'false', description: 'Renders each stat inside a raised card surface (border + bg-card + shadow) instead of plain text with hairline dividers.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
   ]}
 />
 
 ## Accessibility
 
-The root is a `<section>` labelled by the h2 when `title` is provided. The animated digits are `aria-hidden` inside NumberTicker; screen readers hear the final value via a visually hidden span.
+The root is a `<section>` labelled by the h2 when `title` is provided. The animated digits are `aria-hidden` inside NumberTicker; screen readers hear the final value via a visually hidden span. Per-stat icons are decorative and marked `aria-hidden`.
 
 | Key | Action |
 | --- | --- |

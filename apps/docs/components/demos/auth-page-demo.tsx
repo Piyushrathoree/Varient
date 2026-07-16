@@ -1,6 +1,7 @@
 'use client';
 
 import { type ReactNode } from 'react';
+import { KeyRound } from 'lucide-react';
 import { AuthPage, type AuthPageFormData } from '@varient/ui';
 
 function DemoCard({ label, children }: { label: string; children: ReactNode }) {
@@ -44,19 +45,51 @@ export function AuthPageDemo() {
           </DemoCard>
         </div>
       </div>
+
+      <div className="flex flex-col gap-3">
+        <p className="text-sm font-medium text-muted-foreground">
+          Content API — custom copy, SSO slot &amp; loading/success labels
+        </p>
+        <div className="grid grid-cols-1">
+          <DemoCard label="Custom headline, generic SSO provider, and submit-state labels">
+            <div className="w-full overflow-hidden rounded-t-xl border-b border-border">
+              <AuthPage
+                className="min-h-[36rem]"
+                description="Sign in with your work email or single sign-on."
+                forgotPasswordLabel="Trouble signing in?"
+                headline="Welcome to Northline"
+                loadingLabel="Verifying…"
+                onSocialAuth={(provider) => console.log('social auth:', provider)}
+                onSubmit={handleSubmit}
+                socialProviders={[
+                  {
+                    id: 'sso',
+                    label: 'SSO',
+                    icon: <KeyRound className="size-4" />,
+                  },
+                ]}
+                successLabel="You're in!"
+                variant="login"
+              />
+            </div>
+          </DemoCard>
+        </div>
+      </div>
     </div>
   );
 }
 
 export function AuthPagePreviewCompact() {
   return (
-    <div className="w-full max-w-xs [&_form>*:nth-child(4)]:hidden [&_form>*:nth-last-child(-n+2)]:hidden">
-      <AuthPage
-        className="min-h-0 [&>div:first-child]:px-0 [&>div:first-child]:py-0 [&_.mb-8]:mb-4 [&_form]:gap-3 [&_h1]:text-lg [&_p]:text-xs"
-        description="Access your workspace."
-        headline="Sign in"
-        variant="login"
-      />
+    <div className="h-40 w-full overflow-hidden bg-background">
+      <div className="origin-top-left scale-[0.42] [width:238%]">
+        <AuthPage
+          className="min-h-0"
+          description="Access your workspace."
+          headline="Sign in"
+          variant="login"
+        />
+      </div>
     </div>
   );
 }

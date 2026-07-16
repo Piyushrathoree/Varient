@@ -1,0 +1,82 @@
+---
+title: Expandable Card
+description: A card that morphs into a centered modal via a shared-layout transition.
+---
+
+<ComponentPreview name="expandable-card" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/expandable-card/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { ExpandableCard } from '@/components/animated/expandable-card';
+
+export function Example() {
+  return (
+    <ExpandableCard
+      title="Designing for orientation"
+      description="How wayfinding cues keep users grounded in deep navigation."
+      media={<img src="/cover.jpg" alt="" />}
+      footer={<span className="text-xs text-muted-foreground">5 min read</span>}
+    >
+      The full article body, revealed once the card has expanded into a
+      centered panel.
+    </ExpandableCard>
+  );
+}
+```
+
+The collapsed card shows `media` (optional), `title`, and `description`.
+Clicking it — or focusing it and pressing Enter/Space — morphs it into a
+centered dialog that also shows `footer` and the `children` passed as the
+expanded body. `media` and `title` share a `layoutId` between both states
+(scoped per instance via `useId`, so multiple cards on the same page never
+collide), so the shape animates continuously rather than cross-fading two
+unrelated elements.
+
+Omit `media` for a compact, text-only card:
+
+```tsx
+<ExpandableCard title="Release notes — v2.4" description="What shipped this week.">
+  Full changelog contents…
+</ExpandableCard>
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'ReactNode', description: 'Card and dialog heading. Shares a layoutId between both states.' },
+    { name: 'description', type: 'ReactNode', description: 'Short blurb under the title, shown collapsed and expanded.' },
+    { name: 'media', type: 'ReactNode', description: 'Optional media block (image, gradient, icon) shown above the title. Shares a layoutId between both states.' },
+    { name: 'footer', type: 'ReactNode', description: 'Rendered as a footer strip inside the expanded panel only.' },
+    { name: 'children', type: 'ReactNode', description: 'Expanded-only body content, revealed once the panel has settled (fades in ~50ms after the morph starts).' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Prevents the card from expanding.' },
+    { name: 'onExpandedChange', type: '(isExpanded: boolean) => void', description: 'Fires whenever the expanded state changes.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn() on the collapsed card.' },
+  ]}
+/>
+
+## Accessibility
+
+- The collapsed card is `role="button"` with `tabIndex={0}`, `aria-haspopup="dialog"`,
+  and `aria-expanded` — reachable and activatable by keyboard (Enter or Space)
+  as well as click, with a visible `focus-visible` ring.
+- The expanded panel is `role="dialog"` `aria-modal="true"`, labelled by its
+  title via `aria-labelledby`.
+- Opening focuses the visible close button; closing (via Escape, the overlay,
+  or the close button) restores focus to the collapsed card.
+- Escape closes the panel; body scroll is locked while it's open.
+- While expanded, the collapsed card is kept mounted (not unmounted) but made
+  `invisible` and `aria-hidden` with `tabIndex={-1}` — this keeps the grid
+  from reflowing and gives motion a stable origin to animate back to, without
+  leaving a second focusable/announced copy in the page.
+- Under `prefers-reduced-motion`, the shared `layoutId`s are omitted entirely
+  — the panel plain-fades open/closed in place instead of morphing.

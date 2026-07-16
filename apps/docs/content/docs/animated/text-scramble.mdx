@@ -1,0 +1,47 @@
+---
+title: Text Scramble
+description: Characters shuffle through a charset, resolving left to right into the real text.
+---
+
+<ComponentPreview name="text-scramble" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/text-scramble/` into your project.
+
+```bash
+bun add clsx tailwind-merge motion
+```
+
+## Usage
+
+```tsx
+import { TextScramble } from '@/components/animated/text-scramble';
+
+export function Example() {
+  return (
+    <h1 className="font-mono text-3xl font-semibold text-foreground">
+      <TextScramble text="Decrypt the message" />
+    </h1>
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'text', type: 'string', description: 'Required — the real text the effect resolves into, left to right.' },
+    { name: 'duration', type: 'number', defaultValue: '0.8', description: 'Total seconds for the scramble to fully resolve.' },
+    { name: 'speed', type: 'number', defaultValue: '0.04', description: 'Seconds between shuffle ticks.' },
+    { name: 'characterSet', type: 'string', defaultValue: "upper+lower+digits+'!<>-_\\\\/[]{}—=+*^?#'", description: 'Glyph pool used for unresolved characters.' },
+    { name: 'isTriggeredOnView', type: 'boolean', defaultValue: 'true', description: 'Fires once via useInView when true. When false, fires on mount instead.' },
+    { name: 'as', type: "'span' | 'p' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'label'", defaultValue: "'span'", description: 'Element tag rendered.' },
+    { name: 'onScrambleComplete', type: '() => void', description: 'Called once the full text has resolved.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+The wrapper element carries `aria-label={text}`, so assistive tech always gets the final, correct string regardless of animation state — the animating overlay span is `aria-hidden`. Layout stability comes from rendering the real text twice: an invisible sizer that reserves the box, and an absolutely-positioned overlay that actually animates, so surrounding layout never jitters as glyphs of different widths cycle through. Pair with a monospace font (e.g. `font-mono`) for the cleanest column alignment while shuffling. Under `prefers-reduced-motion`, the final text renders immediately with no shuffle. The interval timer is always cleared on unmount or when `text` changes.

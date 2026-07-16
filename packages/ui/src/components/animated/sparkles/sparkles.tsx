@@ -12,6 +12,8 @@ import {
 } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { seededUnit } from '../../../lib/random';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 export interface SparklesSizeRange {
   min?: number;
@@ -48,8 +50,8 @@ const STATIC_SPARKLES: Omit<SparkleParticle, 'id'>[] = [
   { x: 88, y: 78, size: 5, rotation: -15 },
 ];
 
-function randomBetween(min: number, max: number): number {
-  return min + Math.random() * (max - min);
+function seededBetween(seed: number, min: number, max: number): number {
+  return min + seededUnit(seed) * (max - min);
 }
 
 interface SparkleStarProps {
@@ -136,10 +138,10 @@ export const Sparkles = forwardRef<HTMLDivElement, SparklesProps>(
     {
       children,
       className,
-      density = 12,
+      density = 16,
       size,
       color = DEFAULT_COLOR,
-      sparkleDuration = 2200,
+      sparkleDuration = 1900,
       ...props
     },
     ref,
@@ -148,6 +150,8 @@ export const Sparkles = forwardRef<HTMLDivElement, SparklesProps>(
     const reactId = useId();
     const idCounter = useRef(0);
     const [particles, setParticles] = useState<SparkleParticle[]>([]);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const isViewportActive = useViewportActive(containerRef);
 
     const minSize = size?.min ?? 6;
     const maxSize = size?.max ?? 12;
@@ -157,22 +161,23 @@ export const Sparkles = forwardRef<HTMLDivElement, SparklesProps>(
     }, []);
 
     useEffect(() => {
-      if (shouldReduceMotion) return;
+      if (shouldReduceMotion || !isViewportActive) return;
 
-      const intervalMs = Math.max(180, sparkleDuration / density);
+      const intervalMs = Math.max(140, sparkleDuration / density);
       const intervalId = window.setInterval(() => {
         setParticles((current) => {
           if (current.length >= density) return current;
 
-          const id = `${reactId}-${idCounter.current}`;
+          const seed = idCounter.current;
           idCounter.current += 1;
+          const id = `${reactId}-${seed}`;
 
           const particle: SparkleParticle = {
             id,
-            x: randomBetween(4, 96),
-            y: randomBetween(4, 96),
-            size: randomBetween(minSize, maxSize),
-            rotation: randomBetween(-25, 25),
+            x: seededBetween(seed + 1, 4, 96),
+            y: seededBetween(seed + 501, 4, 96),
+            size: seededBetween(seed + 1001, minSize, maxSize),
+            rotation: seededBetween(seed + 1501, -25, 25),
           };
 
           return [...current, particle];
@@ -180,13 +185,17 @@ export const Sparkles = forwardRef<HTMLDivElement, SparklesProps>(
       }, intervalMs);
 
       return () => window.clearInterval(intervalId);
-    }, [density, maxSize, minSize, reactId, shouldReduceMotion, sparkleDuration]);
+    }, [density, isViewportActive, maxSize, minSize, reactId, shouldReduceMotion, sparkleDuration]);
 
     const showStaticLayer = shouldReduceMotion && !children;
 
     return (
       <div
-        ref={ref}
+        ref={(node) => {
+          containerRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+        }}
         className={cn('relative', className)}
         {...props}
       >

@@ -164,7 +164,7 @@ const RadioGroupItem = forwardRef<HTMLButtonElement, RadioGroupItemProps>(
         <label
           htmlFor={itemId}
           className={cn(
-            'flex items-start gap-3 rounded-xl border p-4 transition-colors',
+            'flex items-start gap-3 rounded-xl border p-4 transition-colors duration-200',
             disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
             isItemChecked ? 'border-brand bg-muted' : 'border-border hover:border-foreground/20',
           )}

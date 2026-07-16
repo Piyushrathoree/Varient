@@ -23,18 +23,25 @@ export function NewsletterSignupDemo() {
               <NewsletterSignup
                 className="px-0"
                 variant="inline"
-                description="Get product updates and release notes — no spam."
-                title="Stay in the loop"
+                title="Ship faster with the changelog"
+                description="One email a week — new components, breaking changes, nothing else."
+                placeholder="jane@startup.io"
+                buttonLabel="Notify me"
+                onSubscribe={(email) => console.log('subscribed:', email)}
               />
             </div>
           </DemoCard>
-          <DemoCard label="Card">
+          <DemoCard label="Card, with eyebrow">
             <div className="w-full">
               <NewsletterSignup
                 className="px-0"
                 variant="card"
-                description="Join thousands of builders shipping with Varient."
-                title="Stay in the loop"
+                eyebrow="Varient Insider"
+                title="Join the builder list"
+                description="Early access to new sections, animation notes, and release recaps."
+                placeholder="you@company.com"
+                buttonLabel="Join the list"
+                onSubscribe={(email) => console.log('subscribed:', email)}
               />
             </div>
           </DemoCard>

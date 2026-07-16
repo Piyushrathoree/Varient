@@ -6,6 +6,7 @@ import { Textarea, type TextareaResize, type TextareaVariant } from '@varient/ui
 const VARIANTS: { variant: TextareaVariant; label: string }[] = [
   { variant: 'default', label: 'Default' },
   { variant: 'filled', label: 'Filled' },
+  { variant: 'frame', label: 'Frame' },
 ];
 
 const RESIZE_OPTIONS: { resize: TextareaResize; label: string }[] = [

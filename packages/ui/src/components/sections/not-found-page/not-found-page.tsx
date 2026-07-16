@@ -2,11 +2,17 @@
 
 import { forwardRef, type HTMLAttributes } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
+import { DotPattern } from '../../animated/dot-pattern';
 import { Button } from '../../foundation/button';
 import { cn } from '../../../lib/utils';
 import { EASE_OUT } from '../../../lib/animation';
 
 export interface NotFoundPageSecondaryAction {
+  label: string;
+  href: string;
+}
+
+export interface NotFoundPagePopularLink {
   label: string;
   href: string;
 }
@@ -18,7 +24,14 @@ export interface NotFoundPageProps extends HTMLAttributes<HTMLElement> {
   homeHref?: string;
   homeLabel?: string;
   secondaryAction?: NotFoundPageSecondaryAction;
+  /** Optional second self-serve path — a short list of links rendered below the actions. */
+  popularLinks?: NotFoundPagePopularLink[];
 }
+
+/** Only fully-numeric codes get the split brand-accent digit — non-numeric
+ * codes (e.g. "Oops", "N/A") render as a single block so the last glyph
+ * isn't arbitrarily recolored. */
+const isNumericCode = (value: string) => /^\d+$/.test(value);
 
 export const NotFoundPage = forwardRef<HTMLElement, NotFoundPageProps>(
   (
@@ -30,11 +43,13 @@ export const NotFoundPage = forwardRef<HTMLElement, NotFoundPageProps>(
       homeHref = '/',
       homeLabel = 'Back to home',
       secondaryAction,
+      popularLinks,
       ...props
     },
     ref,
   ) => {
     const shouldReduceMotion = useReducedMotion();
+    const numeric = isNumericCode(code);
 
     const entrance = shouldReduceMotion
       ? { initial: { opacity: 1 }, animate: { opacity: 1 } }
@@ -58,12 +73,23 @@ export const NotFoundPage = forwardRef<HTMLElement, NotFoundPageProps>(
           className="mx-auto flex max-w-md flex-col items-center gap-6"
           {...entrance}
         >
-          <p
-            className="select-none font-display text-6xl font-semibold tracking-tight text-foreground md:text-7xl"
-          >
-            {code.slice(0, -1)}
-            <span className="text-brand">{code.slice(-1)}</span>
-          </p>
+          <div className="relative flex w-full items-center justify-center py-2">
+            <DotPattern
+              size={14}
+              radius={1}
+              className="[mask-image:radial-gradient(closest-side,black,transparent)]"
+            />
+            <p className="relative select-none font-display text-6xl font-semibold tracking-tight text-foreground md:text-7xl">
+              {numeric ? (
+                <>
+                  {code.slice(0, -1)}
+                  <span className="text-brand">{code.slice(-1)}</span>
+                </>
+              ) : (
+                code
+              )}
+            </p>
+          </div>
 
           <div className="space-y-2">
             <h1
@@ -85,6 +111,26 @@ export const NotFoundPage = forwardRef<HTMLElement, NotFoundPageProps>(
               </Button>
             )}
           </div>
+
+          {popularLinks && popularLinks.length > 0 && (
+            <nav aria-label="Popular links" className="flex flex-col items-center gap-2">
+              <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Popular pages
+              </span>
+              <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5">
+                {popularLinks.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      className="text-sm text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-brand hover:decoration-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
         </motion.div>
       </section>
     );

@@ -45,7 +45,7 @@ export function Example() {
     { name: 'delay', type: 'number', defaultValue: '0', description: 'Delay before drawing starts, in seconds.' },
     { name: 'strokeWidth', type: 'number', defaultValue: '2', description: 'Stroke width in pixels.' },
     { name: 'isLooping', type: 'boolean', defaultValue: 'false', description: 'When true, the draw animation repeats after completing.' },
-    { name: 'stroke', type: 'string', defaultValue: 'var(--color-brand)', description: 'Stroke color for preset/path mode.' },
+    { name: 'stroke', type: 'string', defaultValue: 'var(--color-foreground)', description: 'Stroke color for preset/path mode — pass var(--color-brand) for a brand-tinted stroke.' },
     { name: 'children', type: 'ReactNode', description: 'Custom SVG children — path elements are animated automatically.' },
     { name: 'className', type: 'string', description: 'Size and layout classes on the root SVG.' },
   ]}

@@ -46,7 +46,8 @@ export function Example() {
 - The wrapper exposes `role="progressbar"` with `aria-valuemin={0}`,
   `aria-valuemax={100}`, and `aria-valuenow` set to the current rounded value.
 - An `aria-label` describes the current progress percentage for screen readers.
-- The animating center digits are `aria-hidden` — the live `aria-valuenow`
-  on the progressbar is the authoritative value for assistive technology.
+- The SVG arc and the center digits are always `aria-hidden` — the accessible
+  value lives solely on the progressbar's `aria-valuenow`/`aria-label`, so it
+  is announced whether or not `showValue` renders the visual digits.
 - Under `prefers-reduced-motion` the ring and count jump directly to the
   target value with no sweep animation.

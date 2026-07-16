@@ -45,6 +45,23 @@ Use `Breadcrumb.Ellipsis` to collapse long trails, and pass children to `Breadcr
 <Breadcrumb.Separator>/</Breadcrumb.Separator>
 ```
 
+For data-driven trails that auto-collapse past a length, use `Breadcrumb.Auto` — pass `items` and it
+renders the first and last few, folding the middle behind a clickable ellipsis that expands the full
+trail in place.
+
+```tsx
+<Breadcrumb.Auto
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Workspace', href: '/workspace' },
+    { label: 'Projects', href: '/workspace/projects' },
+    { label: 'Varient', href: '/workspace/projects/varient' },
+    { label: 'Breadcrumb', isCurrent: true },
+  ]}
+  maxItems={4}
+/>
+```
+
 ## Props
 
 <PropsTable
@@ -84,6 +101,12 @@ Use `Breadcrumb.Ellipsis` to collapse long trails, and pass children to `Breadcr
       type: 'HTMLAttributes<HTMLSpanElement>',
       description: 'Collapsed-trail indicator with sr-only "More" text.',
     },
+    {
+      name: 'Breadcrumb.Auto',
+      type: 'BreadcrumbAutoProps',
+      description:
+        'Data-driven trail. `items: BreadcrumbAutoItem[]` (each `{ label, href?, isCurrent?, key? }`), `maxItems` (default 5) — full item count before collapsing kicks in, `itemsBeforeCollapse` (default 1), `itemsAfterCollapse` (default 2), `separator` — custom divider node.',
+    },
   ]}
 />
 
@@ -94,3 +117,6 @@ Use `Breadcrumb.Ellipsis` to collapse long trails, and pass children to `Breadcr
 - `Breadcrumb.Separator` uses `role="presentation"` and `aria-hidden="true"` so dividers are skipped by assistive tech.
 - `Breadcrumb.Ellipsis` includes visually hidden "More" text for screen readers.
 - Links receive a visible focus ring via `focus-visible:ring-ring`.
+- `Breadcrumb.Auto`'s collapse toggle is a real `<button aria-label="Show all breadcrumb items">` —
+  keyboard-reachable and focus-visible; expanding and item-count changes fade/reflow smoothly,
+  instantly under `prefers-reduced-motion`.

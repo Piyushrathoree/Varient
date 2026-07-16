@@ -15,8 +15,10 @@ bun add motion clsx tailwind-merge
 
 ## Usage
 
-`CursorSpotlight` renders two layers: a dimmed base and a full-brightness
-overlay clipped by a radial mask that follows the pointer:
+`CursorSpotlight` renders `children` exactly once, at full brightness and
+fully interactive. A decorative scrim overlay dims and desaturates the
+surrounding area, punched through by a circular hole that follows the
+pointer via a radial CSS mask:
 
 ```tsx
 import { CursorSpotlight } from '@/components/animated/cursor-spotlight';
@@ -48,10 +50,15 @@ export function Example() {
 
 ## Accessibility
 
-- The dimmed duplicate layer is `aria-hidden` so screen readers only encounter
-  the content once in the DOM tree (the visible overlay is also decorative).
+- `children` render exactly once in the DOM, at full opacity, with no
+  `aria-hidden` or `pointer-events-none` applied — every interactive element
+  inside stays keyboard-reachable and works the same as if it weren't
+  wrapped in `CursorSpotlight`.
+- The dim/reveal effect is achieved entirely by a decorative scrim overlay
+  (`aria-hidden="true"`, `pointer-events-none`) layered on top of the real
+  content; it never duplicates or intercepts it.
+- Requires a fine, hover-capable pointer (`(hover: hover) and (pointer:
+  fine)`, checked via `useFinePointer`) — touch devices render children
+  plainly with no scrim, since there's no cursor to drive the reveal.
 - Under `prefers-reduced-motion`, children render at full brightness with no
   mask and no pointer tracking listeners attached.
-- Requires a fine pointer for the reveal effect; touch users see the dimmed
-  base layer only — ensure underlying content remains readable without the
-  spotlight.

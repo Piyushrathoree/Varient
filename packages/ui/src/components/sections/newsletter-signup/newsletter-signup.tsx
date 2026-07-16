@@ -11,7 +11,7 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { Button } from '../../foundation/button';
 import { Input } from '../../foundation/input';
-import { DURATION_INSTANT, EASE_OUT, SPRING_DEFAULT } from '../../../lib/animation';
+import { DURATION_INSTANT, EASE_OUT, SPRING_DEFAULT, SPRING_SNAPPY } from '../../../lib/animation';
 import { cn } from '../../../lib/utils';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -21,10 +21,13 @@ const DEFAULT_TITLE = 'Stay in the loop';
 const DEFAULT_BUTTON_LABEL = 'Subscribe';
 const INVALID_EMAIL_MESSAGE = 'Enter a valid email address.';
 const SUCCESS_MESSAGE = "You're subscribed — check your inbox.";
+const RESET_LABEL = 'Subscribe another';
 
 export type NewsletterSignupVariant = 'inline' | 'card';
 
 export interface NewsletterSignupProps extends HTMLAttributes<HTMLElement> {
+  /** Small label above the title (card variant only) — header pattern parity with other sections. */
+  eyebrow?: string;
   title?: string;
   description?: string;
   placeholder?: string;
@@ -58,6 +61,7 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
   (
     {
       className,
+      eyebrow,
       title = DEFAULT_TITLE,
       description,
       placeholder = 'you@company.com',
@@ -76,10 +80,17 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
     const [emailError, setEmailError] = useState<string | undefined>();
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [shakeKey, setShakeKey] = useState(0);
 
     const handleEmailChange = useCallback((value: string) => {
       setEmail(value);
       setEmailError(undefined);
+    }, []);
+
+    const handleReset = useCallback(() => {
+      setEmail('');
+      setEmailError(undefined);
+      setIsSuccess(false);
     }, []);
 
     const handleSubmit = useCallback(
@@ -94,6 +105,7 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
 
         if (!trimmed || !isValidEmail(trimmed)) {
           setEmailError(INVALID_EMAIL_MESSAGE);
+          setShakeKey((key) => key + 1);
           return;
         }
 
@@ -130,6 +142,9 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
           transition: { duration: 0.25, ease: EASE_OUT },
         };
 
+    const shakeAnimate = shouldReduceMotion ? undefined : { x: [0, -6, 6, -4, 4, 0] };
+    const shakeTransition = shouldReduceMotion ? DURATION_INSTANT : SPRING_SNAPPY;
+
     const successEnter = shouldReduceMotion
       ? {
           initial: { opacity: 1, scale: 1 },
@@ -151,16 +166,23 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
       >
         <AnimatePresence mode="wait" initial={false}>
           {isSuccess ? (
-            <motion.div
-              key="success"
-              role="status"
-              className="flex items-center justify-center gap-3 rounded-lg bg-success/10 px-4 py-3 text-success"
-              {...successEnter}
-            >
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-success/15">
-                <CheckIcon className="size-4" />
-              </span>
-              <p className="text-sm font-medium">{SUCCESS_MESSAGE}</p>
+            <motion.div key="success" className="flex flex-col items-center gap-2" {...successEnter}>
+              <div
+                role="status"
+                className="flex items-center justify-center gap-3 rounded-lg bg-success/10 px-4 py-3 text-success"
+              >
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-success/15">
+                  <CheckIcon className="size-4" />
+                </span>
+                <p className="text-sm font-medium">{SUCCESS_MESSAGE}</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="text-xs font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:underline focus-visible:outline-none"
+              >
+                {RESET_LABEL}
+              </button>
             </motion.div>
           ) : (
             <motion.form
@@ -174,20 +196,26 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
               )}
               {...enterExit}
             >
-              <Input
-                type="email"
-                name="email"
-                autoComplete="email"
-                inputMode="email"
-                placeholder={placeholder}
-                value={email}
-                onChange={(event) => handleEmailChange(event.target.value)}
-                errorText={emailError}
-                isDisabled={isLoading}
-                isRequired
-                aria-label={variant === 'inline' ? 'Email address' : undefined}
+              <motion.div
+                key={shakeKey}
+                animate={shakeAnimate}
+                transition={shakeTransition}
                 className={cn(variant === 'inline' && 'min-w-0 flex-1')}
-              />
+              >
+                <Input
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  inputMode="email"
+                  placeholder={placeholder}
+                  value={email}
+                  onChange={(event) => handleEmailChange(event.target.value)}
+                  errorText={emailError}
+                  isDisabled={isLoading}
+                  isRequired
+                  aria-label={variant === 'inline' ? 'Email address' : undefined}
+                />
+              </motion.div>
               <Button
                 type="submit"
                 variant="primary"
@@ -213,6 +241,11 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
           {...props}
         >
           <div className="mx-auto max-w-lg rounded-2xl border border-border bg-card px-6 py-8 text-center shadow-sm sm:px-8 sm:py-10">
+            {eyebrow && (
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-brand">
+                {eyebrow}
+              </p>
+            )}
             <h2
               id={headingId}
               className="text-balance font-display text-lg font-semibold tracking-tight text-foreground"

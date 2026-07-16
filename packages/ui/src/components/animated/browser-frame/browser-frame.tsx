@@ -1,10 +1,27 @@
 'use client';
 
 import { forwardRef, useRef, type ReactNode } from 'react';
-import { Globe } from 'lucide-react';
 import { motion, useInView, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { DURATION, EASE_OUT } from '../../../lib/animation';
+
+function GlobeIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <circle cx="8" cy="8" r="6.5" />
+      <path d="M1.5 8h13M8 1.5c1.8 1.7 2.8 4 2.8 6.5s-1 4.8-2.8 6.5c-1.8-1.7-2.8-4-2.8-6.5S6.2 3.2 8 1.5Z" />
+    </svg>
+  );
+}
 
 export interface BrowserFrameProps {
   /** URL shown in the address bar. */
@@ -85,7 +102,7 @@ export const BrowserFrame = forwardRef<HTMLDivElement, BrowserFrameProps>(
               urlBarClassName,
             )}
           >
-            <Globe className="size-3 shrink-0 opacity-60" strokeWidth={1.5} aria-hidden="true" />
+            <GlobeIcon className="size-3 shrink-0 opacity-60" />
             <span className="truncate font-mono text-[11px] sm:text-xs">{url}</span>
           </div>
         </div>

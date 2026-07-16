@@ -16,6 +16,7 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { SPRING_DEFAULT } from '../../../lib/animation';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 const DEFAULT_INTERVAL_MS = 2500;
 const MAX_VISIBLE_ITEMS = 5;
@@ -39,11 +40,20 @@ interface VisibleEntry {
   childIndex: number;
 }
 
+/**
+ * Marker used to identify `AnimatedListItem` children instead of matching on
+ * `displayName` (a string that any wrapper/HOC can silently override, breaking
+ * item collection). Attached as a static property on the component below.
+ */
+const ANIMATED_LIST_ITEM_MARKER = Symbol.for('varient.animated-list-item');
+
+type MarkedComponentType = { [ANIMATED_LIST_ITEM_MARKER]?: true };
+
 function collectListItems(children: ReactNode): ReactElement<AnimatedListItemProps>[] {
   return Children.toArray(children).filter(
     (child): child is ReactElement<AnimatedListItemProps> =>
       isValidElement(child) &&
-      (child.type as { displayName?: string }).displayName === 'AnimatedListItem',
+      (child.type as MarkedComponentType)[ANIMATED_LIST_ITEM_MARKER] === true,
   );
 }
 
@@ -70,6 +80,14 @@ export const AnimatedList = forwardRef<HTMLDivElement, AnimatedListProps>(
     const shouldReduceMotion = useReducedMotion();
     const [cycleIndex, setCycleIndex] = useState(0);
     const [visibleEntries, setVisibleEntries] = useState<VisibleEntry[]>([]);
+    const innerRef = useRef<HTMLDivElement>(null);
+    const isViewportActive = useViewportActive(innerRef);
+
+    const setRefs = (node: HTMLDivElement | null) => {
+      innerRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    };
 
     useEffect(() => {
       if (shouldReduceMotion || childItems.length === 0) return;
@@ -84,7 +102,7 @@ export const AnimatedList = forwardRef<HTMLDivElement, AnimatedListProps>(
       pushEntry(0);
       setCycleIndex(0);
 
-      if (isPaused || childItems.length <= 1) return;
+      if (isPaused || childItems.length <= 1 || !isViewportActive) return;
 
       const timer = window.setInterval(() => {
         setCycleIndex((previous) => {
@@ -95,12 +113,12 @@ export const AnimatedList = forwardRef<HTMLDivElement, AnimatedListProps>(
       }, interval);
 
       return () => window.clearInterval(timer);
-    }, [childItems, interval, isPaused, maxVisible, shouldReduceMotion]);
+    }, [childItems, interval, isPaused, isViewportActive, maxVisible, shouldReduceMotion]);
 
     if (shouldReduceMotion) {
       return (
         <div
-          ref={ref}
+          ref={setRefs}
           className={cn('flex flex-col gap-3', className)}
           aria-live="polite"
           {...props}
@@ -114,7 +132,7 @@ export const AnimatedList = forwardRef<HTMLDivElement, AnimatedListProps>(
 
     return (
       <div
-        ref={ref}
+        ref={setRefs}
         className={cn('relative flex flex-col gap-3', className)}
         aria-live="polite"
         aria-relevant="additions"
@@ -173,3 +191,4 @@ export const AnimatedListItem = forwardRef<HTMLDivElement, AnimatedListItemProps
 );
 
 AnimatedListItem.displayName = 'AnimatedListItem';
+(AnimatedListItem as unknown as MarkedComponentType)[ANIMATED_LIST_ITEM_MARKER] = true;

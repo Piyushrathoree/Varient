@@ -1,9 +1,9 @@
 ---
 title: 404 Page
-description: A centered not-found page with a gradient status code, copy, and a way back home.
+description: A centered not-found page with a dot-pattern status code, copy, and a way back home.
 ---
 
-<ComponentPreview name="404-page" />
+<ComponentPreview name="404-page" variant="section" />
 
 ## Installation
 
@@ -27,6 +27,11 @@ export function NotFound() {
       homeHref="/"
       homeLabel="Back to home"
       secondaryAction={{ label: 'Browse components', href: '/docs' }}
+      popularLinks={[
+        { label: 'Docs', href: '/docs' },
+        { label: 'Status', href: '/status' },
+        { label: 'Support', href: '/support' },
+      ]}
     />
   );
 }
@@ -36,12 +41,13 @@ export function NotFound() {
 
 <PropsTable
   props={[
-    { name: 'code', type: 'string', defaultValue: "'404'", description: 'Large display code — rendered with a subtle brand gradient.' },
+    { name: 'code', type: 'string', defaultValue: "'404'", description: 'Large display code above the title. Fully numeric codes get a brand-accented last digit; non-numeric codes (e.g. "Oops") render as a single block.' },
     { name: 'title', type: 'string', defaultValue: "'Page not found'", description: 'Primary heading below the code.' },
     { name: 'description', type: 'string', defaultValue: "'The page you're looking for doesn't exist or has been moved.'", description: 'Supporting copy under the title.' },
     { name: 'homeHref', type: 'string', defaultValue: "'/'", description: 'Destination for the primary CTA link.' },
     { name: 'homeLabel', type: 'string', defaultValue: "'Back to home'", description: 'Label for the primary CTA button.' },
     { name: 'secondaryAction', type: '{ label: string; href: string }', description: 'Optional ghost button rendered beside the primary CTA.' },
+    { name: 'popularLinks', type: '{ label: string; href: string }[]', description: 'Optional second self-serve path — a short row of links rendered below the actions, e.g. for docs, status, or support pages.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
   ]}
 />
@@ -50,12 +56,14 @@ export function NotFound() {
 
 The root is a `<section>` with `aria-labelledby` pointing at the `<h1>` title.
 The status code is visible text — screen readers announce it before the title.
+A quiet, static `DotPattern` sits behind the code as `aria-hidden` decoration and never carries content.
 Primary and secondary actions render as real `<a>` elements via `Button asChild`, preserving native link semantics and keyboard activation.
+`popularLinks`, when provided, render inside a labeled `<nav aria-label="Popular links">` with real `<a>` elements and visible `focus-visible` rings.
 Focus rings follow the shared Button focus-visible styles.
 
-Entrance animation is a single fade-and-rise on the content column, gated behind `prefers-reduced-motion` — reduced-motion users see the layout immediately with no motion.
+Entrance animation is a single fade-and-rise on the content column, gated behind `prefers-reduced-motion` — reduced-motion users see the layout immediately with no motion. The background dot pattern is static by default (no perpetual loop), so there is nothing to pause offscreen.
 
 | Key | Action |
 | --- | --- |
-| `Tab` / `Shift + Tab` | Moves focus between the primary and secondary action links. |
+| `Tab` / `Shift + Tab` | Moves focus between the primary, secondary, and popular-link actions. |
 | `Enter` | Activates the focused link. |

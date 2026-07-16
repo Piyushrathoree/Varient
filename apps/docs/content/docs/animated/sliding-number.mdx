@@ -1,0 +1,57 @@
+---
+title: Sliding Number
+description: Odometer-style number where each digit column rolls to its new value.
+---
+
+<ComponentPreview name="sliding-number" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/sliding-number/` into your project.
+
+```bash
+bun add clsx tailwind-merge motion
+```
+
+## Usage
+
+```tsx
+import { SlidingNumber } from '@/components/animated/sliding-number';
+
+export function Example() {
+  return <SlidingNumber value={128} />;
+}
+```
+
+Compose separators and prefixes/suffixes around it as plain text — the component only owns the
+rolling digits:
+
+```tsx
+<div className="flex items-baseline gap-1">
+  <span>$</span>
+  <SlidingNumber value={1908} isGrouped />
+  <span className="text-muted-foreground">/yr</span>
+</div>
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'value', type: 'number', description: 'Required — the number displayed. Each digit column rolls vertically to its new value on change.' },
+    { name: 'padStart', type: 'number', defaultValue: '0', description: 'Left-pads the integer part with zeros to at least this many digits, e.g. padStart={2} -> "07".' },
+    { name: 'decimalPlaces', type: 'number', defaultValue: '0', description: 'Fixed decimal places shown — the value is rounded to this precision.' },
+    { name: 'isGrouped', type: 'boolean', defaultValue: 'false', description: 'Inserts thousands separators ("1,234") into the integer part as static characters.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the outer wrapper.' },
+  ]}
+/>
+
+## Accessibility
+
+The rolling digit columns live inside an `aria-hidden` wrapper — a mid-roll digit is not something
+a screen reader should narrate. The fully formatted value (including sign, grouping, and decimals)
+is always available through a visually-hidden `aria-live="polite"` span, so assistive tech announces
+the settled value once it changes rather than every intermediate frame. When
+`prefers-reduced-motion` is set, digits swap instantly with no roll or pop animation — including the
+column that pops in or out when the digit count grows or shrinks (e.g. 99 → 100). `tabular-nums` is
+applied throughout so digit columns never jitter in width.

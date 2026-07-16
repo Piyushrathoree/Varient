@@ -1,10 +1,11 @@
 'use client';
 
-import { forwardRef, useId, type HTMLAttributes } from 'react';
+import { forwardRef, useId, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { GridPattern } from '../../animated/grid-pattern';
 import { Button } from '../../foundation/button';
-import { DURATION_INSTANT, EASE_OUT } from '../../../lib/animation';
+import { EASE_OUT } from '../../../lib/animation';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 import { cn } from '../../../lib/utils';
 
 export interface HeroGridCtaLink {
@@ -24,6 +25,21 @@ export interface HeroGridProps extends Omit<HTMLAttributes<HTMLElement>, 'title'
   secondaryCta?: HeroGridCtaLink;
   /** Optional metrics row beneath the CTA pair. Pass `[]` to hide. */
   stats?: HeroGridStat[];
+  /**
+   * Replaces the default line-grid + glow-orb backdrop entirely. Pass any
+   * decorative node (image, video, solid tint, custom canvas) so the hero's
+   * background stops competing 1:1 with a page's primary `Hero`. Rendered
+   * inside the same `absolute inset-0` `aria-hidden` layer the default
+   * background occupies.
+   */
+  backgroundSlot?: ReactNode;
+  /**
+   * When `true`, the background glow orbs float in a perpetual loop (paused
+   * automatically while offscreen). Default `false`: orbs drift once into
+   * their resting position on mount and hold — a section backdrop should
+   * settle, not loop forever.
+   */
+  isAmbient?: boolean;
 }
 
 const DEFAULT_TITLE = 'Precision grids, premium motion';
@@ -42,16 +58,38 @@ const focusRing =
 
 const STAGGER_CHILDREN = 0.08;
 
-function GlowOrb({ className, isStatic }: { className?: string; isStatic: boolean }) {
+function GlowOrb({
+  className,
+  isStatic,
+  isAmbient,
+  isActive,
+}: {
+  className?: string;
+  isStatic: boolean;
+  /** Perpetual float loop opt-in — default false settles once and holds. */
+  isAmbient: boolean;
+  /** Whether the backdrop is currently in (or near) the viewport. */
+  isActive: boolean;
+}) {
+  const orbClassName = cn(
+    'pointer-events-none absolute size-48 rounded-full bg-brand/10 blur-3xl',
+    className,
+  );
+
   if (isStatic) {
+    return <div aria-hidden className={orbClassName} />;
+  }
+
+  if (!isAmbient) {
+    // Design law: sections settle, they don't loop forever. Drift once into
+    // the resting position on mount, then hold.
     return (
-      <div
+      <motion.div
         aria-hidden
-        className={cn(
-          'pointer-events-none absolute size-48 rounded-full blur-3xl',
-          'bg-brand/10',
-          className,
-        )}
+        animate={{ y: 0, opacity: 0.45 }}
+        className={orbClassName}
+        initial={{ y: -16, opacity: 0 }}
+        transition={{ duration: 1.2, delay: 0.2, ease: EASE_OUT }}
       />
     );
   }
@@ -59,13 +97,17 @@ function GlowOrb({ className, isStatic }: { className?: string; isStatic: boolea
   return (
     <motion.div
       aria-hidden
-      animate={{ y: [0, -12, 0], opacity: [0.35, 0.55, 0.35] }}
-      className={cn(
-        'pointer-events-none absolute size-48 rounded-full blur-3xl',
-        'bg-brand/10',
-        className,
-      )}
-      transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+      animate={
+        isActive
+          ? { y: [0, -12, 0], opacity: [0.35, 0.55, 0.35] }
+          : { y: 0, opacity: 0.45 }
+      }
+      className={orbClassName}
+      transition={{
+        duration: 8,
+        repeat: isActive ? Number.POSITIVE_INFINITY : 0,
+        ease: 'easeInOut',
+      }}
     />
   );
 }
@@ -79,6 +121,8 @@ export const HeroGrid = forwardRef<HTMLElement, HeroGridProps>(
       primaryCta = DEFAULT_PRIMARY_CTA,
       secondaryCta = DEFAULT_SECONDARY_CTA,
       stats = DEFAULT_STATS,
+      backgroundSlot,
+      isAmbient = false,
       ...props
     },
     ref,
@@ -86,6 +130,8 @@ export const HeroGrid = forwardRef<HTMLElement, HeroGridProps>(
     const shouldReduceMotion = useReducedMotion();
     const headingId = useId();
     const isStatic = shouldReduceMotion ?? false;
+    const backgroundRef = useRef<HTMLDivElement | null>(null);
+    const isBackgroundActive = useViewportActive(backgroundRef);
 
     const containerVariants = isStatic
       ? undefined
@@ -128,23 +174,42 @@ export const HeroGrid = forwardRef<HTMLElement, HeroGridProps>(
         className={cn('relative w-full overflow-hidden bg-background', className)}
         {...props}
       >
-        <div aria-hidden className="pointer-events-none absolute inset-0">
-          <GridPattern
-            className="opacity-60"
-            height={32}
-            isAnimated={!isStatic}
-            width={32}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'radial-gradient(ellipse 70% 55% at 50% 45%, transparent 0%, var(--color-background) 72%)',
-            }}
-          />
-          <GlowOrb className="left-[8%] top-[18%]" isStatic={isStatic} />
-          <GlowOrb className="right-[10%] top-[28%]" isStatic={isStatic} />
-          <GlowOrb className="bottom-[12%] left-1/2 -translate-x-1/2" isStatic={isStatic} />
+        <div ref={backgroundRef} aria-hidden className="pointer-events-none absolute inset-0">
+          {backgroundSlot ?? (
+            <>
+              <GridPattern
+                className="opacity-60"
+                height={32}
+                isAnimated={!isStatic}
+                width={32}
+              />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    'radial-gradient(ellipse 70% 55% at 50% 45%, transparent 0%, var(--color-background) 72%)',
+                }}
+              />
+              <GlowOrb
+                className="left-[8%] top-[18%]"
+                isActive={isBackgroundActive}
+                isAmbient={isAmbient}
+                isStatic={isStatic}
+              />
+              <GlowOrb
+                className="right-[10%] top-[28%]"
+                isActive={isBackgroundActive}
+                isAmbient={isAmbient}
+                isStatic={isStatic}
+              />
+              <GlowOrb
+                className="bottom-[12%] left-1/2 -translate-x-1/2"
+                isActive={isBackgroundActive}
+                isAmbient={isAmbient}
+                isStatic={isStatic}
+              />
+            </>
+          )}
         </div>
 
         <div className="relative z-10 mx-auto max-w-5xl px-6 py-20 sm:px-8 md:py-28 lg:py-32">
@@ -180,10 +245,10 @@ export const HeroGrid = forwardRef<HTMLElement, HeroGridProps>(
             {stats.length > 0 && (
               <ItemWrapper
                 {...itemProps}
-                className="grid w-full max-w-xl grid-cols-3 gap-4 border-t border-border pt-8"
+                className="grid w-full max-w-xl grid-cols-1 gap-4 divide-y divide-border border-t border-border pt-8 sm:grid-cols-3 sm:gap-4 sm:divide-y-0"
               >
                 {stats.map((stat) => (
-                  <div key={stat.label} className="space-y-1">
+                  <div key={stat.label} className="space-y-1 pt-4 first:pt-0 sm:pt-0">
                     <p className="font-display text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
                       {stat.value}
                     </p>

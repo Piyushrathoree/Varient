@@ -1,7 +1,16 @@
 'use client';
 
-import { forwardRef, type ButtonHTMLAttributes, type HTMLAttributes } from 'react';
+import {
+  createContext,
+  forwardRef,
+  useContext,
+  useId,
+  type ButtonHTMLAttributes,
+  type HTMLAttributes,
+} from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { DURATION_INSTANT, SPRING_DEFAULT } from '../../../lib/animation';
 
 export interface PaginationProps extends HTMLAttributes<HTMLElement> {
   /** Current page — 1-based. */
@@ -15,6 +24,14 @@ export interface PaginationProps extends HTMLAttributes<HTMLElement> {
   /** Always include the first and last page when truncating. */
   showEdges?: boolean;
 }
+
+// Shared indicator id — only present when PaginationButton renders inside
+// <Pagination>. This lets the active page's background be a single
+// `motion.span` sliding between buttons via `layoutId` (the same shared
+// layout pattern as Tabs' selected indicator) instead of two elements
+// cross-fading. Standalone `Pagination.Button` usage (no provider) falls
+// back to a plain, unanimated fill.
+const PaginationIndicatorContext = createContext<string | null>(null);
 
 type PaginationItem = number | 'ellipsis';
 
@@ -81,7 +98,7 @@ function generatePaginationRange(
 }
 
 const paginationButtonStyles = cn(
-  'inline-flex size-9 cursor-pointer items-center justify-center rounded-md text-sm font-medium whitespace-nowrap ring-offset-background transition-[transform,background-color,color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] motion-reduce:transition-none',
+  'relative inline-flex size-9 cursor-pointer items-center justify-center rounded-md text-sm font-medium whitespace-nowrap ring-offset-background transition-[transform,background-color,color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
   'disabled:pointer-events-none disabled:opacity-50',
 );
@@ -125,21 +142,37 @@ export interface PaginationButtonProps extends ButtonHTMLAttributes<HTMLButtonEl
 }
 
 const PaginationButton = forwardRef<HTMLButtonElement, PaginationButtonProps>(
-  ({ className, isActive = false, type = 'button', ...props }, ref) => (
-    <button
-      ref={ref}
-      type={type}
-      aria-current={isActive ? 'page' : undefined}
-      className={cn(
-        paginationButtonStyles,
-        isActive
-          ? 'bg-brand text-white'
-          : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-        className,
-      )}
-      {...props}
-    />
-  ),
+  ({ className, isActive = false, type = 'button', children, ...props }, ref) => {
+    const idBase = useContext(PaginationIndicatorContext);
+    const shouldReduceMotion = useReducedMotion();
+
+    return (
+      <button
+        ref={ref}
+        type={type}
+        aria-current={isActive ? 'page' : undefined}
+        className={cn(
+          paginationButtonStyles,
+          isActive
+            ? 'text-white'
+            : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+          className,
+        )}
+        {...props}
+      >
+        {isActive && (
+          <motion.span
+            aria-hidden
+            className="absolute inset-0 rounded-md bg-brand"
+            layout
+            layoutId={idBase ? `${idBase}-pagination-active` : undefined}
+            transition={shouldReduceMotion ? DURATION_INSTANT : SPRING_DEFAULT}
+          />
+        )}
+        <span className="relative z-10 inline-flex items-center justify-center">{children}</span>
+      </button>
+    );
+  },
 );
 PaginationButton.displayName = 'Pagination.Button';
 
@@ -176,6 +209,7 @@ const PaginationRoot = forwardRef<HTMLElement, PaginationProps>(
     },
     ref,
   ) => {
+    const idBase = useId();
     const safePage = Math.min(Math.max(page, 1), Math.max(pageCount, 1));
     const items = generatePaginationRange(safePage, pageCount, siblingCount, showEdges);
     const isPrevDisabled = safePage <= 1;
@@ -188,36 +222,38 @@ const PaginationRoot = forwardRef<HTMLElement, PaginationProps>(
         className={cn('flex items-center gap-1', className)}
         {...props}
       >
-        <PaginationButton
-          aria-label="Go to previous page"
-          disabled={isPrevDisabled}
-          onClick={() => onPageChange(safePage - 1)}
-        >
-          <ChevronLeftIcon className="size-4" />
-        </PaginationButton>
+        <PaginationIndicatorContext.Provider value={idBase}>
+          <PaginationButton
+            aria-label="Go to previous page"
+            disabled={isPrevDisabled}
+            onClick={() => onPageChange(safePage - 1)}
+          >
+            <ChevronLeftIcon className="size-4" />
+          </PaginationButton>
 
-        {items.map((item, index) =>
-          item === 'ellipsis' ? (
-            <PaginationEllipsis key={`ellipsis-${index}`} />
-          ) : (
-            <PaginationButton
-              key={item}
-              isActive={item === safePage}
-              aria-label={`Go to page ${item}`}
-              onClick={() => onPageChange(item)}
-            >
-              {item}
-            </PaginationButton>
-          ),
-        )}
+          {items.map((item, index) =>
+            item === 'ellipsis' ? (
+              <PaginationEllipsis key={`ellipsis-${index}`} />
+            ) : (
+              <PaginationButton
+                key={item}
+                isActive={item === safePage}
+                aria-label={`Go to page ${item}`}
+                onClick={() => onPageChange(item)}
+              >
+                {item}
+              </PaginationButton>
+            ),
+          )}
 
-        <PaginationButton
-          aria-label="Go to next page"
-          disabled={isNextDisabled}
-          onClick={() => onPageChange(safePage + 1)}
-        >
-          <ChevronRightIcon className="size-4" />
-        </PaginationButton>
+          <PaginationButton
+            aria-label="Go to next page"
+            disabled={isNextDisabled}
+            onClick={() => onPageChange(safePage + 1)}
+          >
+            <ChevronRightIcon className="size-4" />
+          </PaginationButton>
+        </PaginationIndicatorContext.Provider>
       </nav>
     );
   },

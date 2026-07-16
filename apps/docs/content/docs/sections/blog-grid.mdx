@@ -3,7 +3,7 @@ title: Blog Grid
 description: A card grid of blog post previews with category badges, excerpts, and author metadata.
 ---
 
-<ComponentPreview name="blog-grid" />
+<ComponentPreview name="blog-grid" variant="section" />
 
 ## Installation
 
@@ -33,6 +33,8 @@ export function BlogPage() {
           date: 'Jun 12, 2026',
           readingTime: '5 min read',
           author: { name: 'Maya Chen', avatarSrc: 'https://i.pravatar.cc/150?img=1' },
+          imageSrc: '/blog/copy-paste-cover.jpg',
+          imageAlt: 'Terminal window showing a component being copied into a project',
         },
       ]}
     />
@@ -47,7 +49,7 @@ export function BlogPage() {
     { name: 'eyebrow', type: 'string', defaultValue: "'Blog'", description: 'Small brand-colored label above the section title.' },
     { name: 'title', type: 'string', defaultValue: "'Latest from the team'", description: 'Section headline.' },
     { name: 'description', type: 'string', description: 'One-line supporting copy below the title.' },
-    { name: 'posts', type: 'BlogPost[]', description: 'Preview cards — each needs title, excerpt, href, and date; category, readingTime, and author are optional.' },
+    { name: 'posts', type: 'BlogPost[]', description: 'Preview cards — each needs title, excerpt, href, and date; category, readingTime, author, and cover image are optional.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
   ]}
 />
@@ -63,14 +65,17 @@ export function BlogPage() {
     { name: 'date', type: 'string', description: 'Publication date shown in the card footer.' },
     { name: 'readingTime', type: 'string', description: 'Optional reading duration (e.g. "5 min read").' },
     { name: 'author', type: '{ name: string; avatarSrc?: string }', description: 'Optional author name and avatar in the footer.' },
+    { name: 'imageSrc', type: 'string', description: 'Cover image URL rendered in the card header, cropped to fill and scaling gently on hover.' },
+    { name: 'imageAlt', type: 'string', description: 'Alt text for imageSrc — set this whenever the image conveys content, not just decoration.' },
+    { name: 'image', type: 'ReactNode', description: 'Full override for the card header — takes precedence over imageSrc/imageAlt. Falls back to a flat placeholder when none are set.' },
   ]}
 />
 
 ## Accessibility
 
-The section uses a semantic `<section>` with `aria-labelledby` pointing at the heading.
+The section uses a semantic `<section>` with `aria-labelledby` pointing at a `useId()`-generated heading id — safe to render multiple `BlogGrid` instances on one page.
 Each post is a single focusable link wrapping the card — keyboard users tab to the whole card, not nested controls.
-The gradient header is decorative (`aria-hidden`).
+The flat-color header placeholder is decorative (`aria-hidden`); a real `imageSrc` renders as an `<img>` and should carry a meaningful `imageAlt`.
 
 | Key | Action |
 | --- | --- |
@@ -78,4 +83,4 @@ The gradient header is decorative (`aria-hidden`).
 | `Enter` | Follows the focused post link. |
 
 Scroll-reveal animations are gated behind `prefers-reduced-motion` — reduced-motion users see content immediately without stagger or fade.
-Hover border and shadow transitions respect `motion-reduce:transition-none` on the underlying Card primitive.
+The cover image's hover scale and the Card primitive's hover border/shadow both respect `motion-reduce:transition-none`.

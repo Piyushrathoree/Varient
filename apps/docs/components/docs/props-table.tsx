@@ -10,9 +10,8 @@ interface PropsTableProps {
 }
 
 /**
- * SmoothUI's `AutoTypeTable` look, hand-authored: a rounded hairline card,
- * a quiet `bg-muted` header row, and a mono/brand treatment for the prop
- * name column so it reads distinctly from its type.
+ * Props table — hand-authored: a rounded hairline card, a quiet `bg-muted` header
+ * row, and a mono/brand treatment for the prop name column.
  */
 export function PropsTable({ props }: PropsTableProps) {
   return (

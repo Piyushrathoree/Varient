@@ -5,7 +5,7 @@
  * source of truth). If you change light/dark there, change it here too.
  * Codegen (TS → CSS) replaces this hand-sync in a later phase.
  *
- * Two modes only — light + dark — matching the SmoothUI port (.agent-docs/PORT-SPEC.md).
+ * Two modes only — light + dark — matching the web token system in themes.css/globals.css.
  * The old 4-identity engine (ThemeIdentity/identities/identityCssVars) is
  * gone; native picks up `light` or `dark` and passes its CSS-var object to
  * NativeWind's `vars()` on a root <View>, same as `.dark` does on web.

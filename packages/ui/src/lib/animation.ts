@@ -1,7 +1,7 @@
 /**
  * Shared animation constants for Varient components.
  *
- * Spring configs follow the SmoothUI motion language (see .agent-docs/PORT-SPEC.md):
+ * Spring configs follow the Varient motion language:
  * - Duration 0.2–0.25s for UI elements
  * - Bounce ≤ 0.1 for standard UI (higher only for playful/drag interactions)
  */

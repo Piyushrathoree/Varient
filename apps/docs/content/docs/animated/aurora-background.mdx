@@ -39,6 +39,8 @@ export function Example() {
     { name: 'children', type: 'ReactNode', description: 'Content rendered above the aurora layer.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
     { name: 'showRadialGradient', type: 'boolean', defaultValue: 'true', description: 'When true, a radial mask fades the aurora toward the center and bottom.' },
+    { name: 'colors', type: 'readonly string[]', description: 'Blob fill colors, cycled across the 4 animated blobs and the static gradient anchors. Defaults to neutral foreground-alpha washes with a faint ember hint.' },
+    { name: 'intensity', type: 'number', defaultValue: '1', description: 'Scales blob opacity and size from 0 (barely there) to 1 (full presence). Clamped to [0, 1].' },
   ]}
 />
 
@@ -50,3 +52,6 @@ export function Example() {
   `relative z-10` (applied automatically to `children`).
 - Under `prefers-reduced-motion`, animated blobs collapse into a static
   gradient wash — no translate or rotate loops run.
+- The 4 blob loops pause automatically while the container is scrolled
+  offscreen (via `useViewportActive`) and resume when it re-enters the
+  viewport, so mounted instances don't burn CPU off-screen.

@@ -2,16 +2,51 @@
 
 import { LogoCloud } from '@varient/ui';
 
+const PARTNER_LOGOS = [
+  { name: 'Meridian' },
+  { name: 'Fjord Labs' },
+  { name: 'Cascade' },
+  { name: 'Solace' },
+  { name: 'Lumenary' },
+];
+
 export function LogoCloudDemo() {
   return (
-    <div className="flex w-full flex-col gap-12 bg-background">
-      <LogoCloud title="Trusted by teams at" />
+    <div className="flex w-full flex-col gap-10 bg-background">
+      <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+        <LogoCloud
+          className="p-0"
+          logos={PARTNER_LOGOS}
+          title="Trusted by engineering teams at"
+        />
+        <span className="text-xs font-medium text-muted-foreground">
+          Static row — content API
+        </span>
+      </div>
 
-      <div className="flex flex-col gap-3">
-        <p className="text-center text-sm font-medium text-muted-foreground">
-          Marquee variant
-        </p>
-        <LogoCloud isMarquee title="Powering products worldwide" />
+      <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+        <LogoCloud
+          className="p-0"
+          durationSeconds={16}
+          isMarquee
+          logos={PARTNER_LOGOS}
+          title="Powering products worldwide"
+        />
+        <span className="text-xs font-medium text-muted-foreground">
+          Marquee — durationSeconds=16
+        </span>
+      </div>
+
+      <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+        <LogoCloud
+          className="p-0"
+          isIconOnly
+          logos={PARTNER_LOGOS}
+          title="Marks only"
+        />
+        <span className="text-xs font-medium text-muted-foreground">
+          isIconOnly
+        </span>
       </div>
     </div>
   );

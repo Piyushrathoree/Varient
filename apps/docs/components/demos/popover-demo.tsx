@@ -74,6 +74,20 @@ export function PopoverDemo() {
         </div>
         <span className="text-xs font-medium text-muted-foreground">Placement</span>
       </div>
+
+      <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+        <Popover>
+          <Popover.Trigger asChild>
+            <Button variant="outline">With arrow</Button>
+          </Popover.Trigger>
+          <Popover.Content showArrow className="w-64">
+            <p className="text-sm text-muted-foreground">
+              A pointer connects the panel back to its trigger.
+            </p>
+          </Popover.Content>
+        </Popover>
+        <span className="text-xs font-medium text-muted-foreground">Arrow</span>
+      </div>
     </div>
   );
 }

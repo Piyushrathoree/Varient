@@ -41,10 +41,10 @@ export function Example() {
   props={[
     { name: 'children', type: 'ReactNode', description: 'Content to decorate — sparkles render in an overlay above the background.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn().' },
-    { name: 'density', type: 'number', defaultValue: '12', description: 'Maximum concurrent sparkle particles.' },
+    { name: 'density', type: 'number', defaultValue: '16', description: 'Maximum concurrent sparkle particles.' },
     { name: 'size', type: '{ min?: number; max?: number }', defaultValue: '{ min: 6, max: 12 }', description: 'Pixel size range for each sparkle star.' },
-    { name: 'color', type: 'string', defaultValue: 'var(--color-brand)', description: 'Sparkle fill color.' },
-    { name: 'sparkleDuration', type: 'number', defaultValue: '2200', description: 'Lifecycle duration for each sparkle in milliseconds.' },
+    { name: 'color', type: 'string', defaultValue: 'color-mix(in oklab, var(--color-foreground) 55%, transparent)', description: 'Sparkle fill color.' },
+    { name: 'sparkleDuration', type: 'number', defaultValue: '1900', description: 'Lifecycle duration for each sparkle in milliseconds.' },
   ]}
 />
 
@@ -56,4 +56,7 @@ export function Example() {
 - Under `prefers-reduced-motion`, no animated sparkles spawn. When `children`
   are present, only the content renders. Standalone layers show a few static
   faint stars instead of the twinkle loop.
-- The spawn interval and particle pool are cleared on unmount.
+- Spawn positions are seeded via a deterministic PRNG, so server and client
+  markup match on first paint (no hydration mismatch).
+- The spawn interval pauses automatically while the component is scrolled
+  offscreen, and is cleared entirely on unmount along with the particle pool.

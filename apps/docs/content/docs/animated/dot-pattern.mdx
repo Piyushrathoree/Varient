@@ -51,3 +51,8 @@ export function Example() {
 - Decorative SVG layer is `aria-hidden` with `pointer-events-none`.
 - Under `prefers-reduced-motion`, the glow wave is disabled and dots render
   as a static pattern.
+- On large canvases the glow wave animates at most ~140 sampled dots (evenly
+  spread across the grid) over a full static base pattern — a hero-sized
+  surface never spawns a spring per dot.
+- The glow loop pauses while the pattern scrolls offscreen and resumes when
+  it re-enters the viewport.

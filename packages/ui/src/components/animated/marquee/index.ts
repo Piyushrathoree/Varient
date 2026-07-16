@@ -1,1 +1,1 @@
-export { Marquee, type MarqueeProps, type MarqueeDirection } from './marquee';
+export { Marquee, type MarqueeProps, type MarqueeDirection, type MarqueeEdgeFade } from './marquee';

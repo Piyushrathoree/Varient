@@ -6,6 +6,9 @@ const withMDX = createMDX();
 const config = {
   reactStrictMode: true,
   transpilePackages: ['@varient/ui'],
+  experimental: {
+    optimizePackageImports: ['@varient/ui', 'lucide-react'],
+  },
 };
 
 export default withMDX(config);

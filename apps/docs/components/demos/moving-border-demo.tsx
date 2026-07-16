@@ -40,6 +40,12 @@ export function MovingBorderDemo() {
             Ship faster
           </MovingBorderButton>
         </DemoCard>
+
+        <DemoCard label="Paused (isPaused)">
+          <MovingBorderButton isPaused className="max-w-xs">
+            Holding still
+          </MovingBorderButton>
+        </DemoCard>
       </div>
 
       <div className="flex flex-col gap-3">

@@ -18,8 +18,7 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   isClickable?: boolean;
 }
 
-// Default = SmoothUI's card surface: bg-card + a 1px hairline + a soft
-// ambient shadow (shadow-sm), never a colored fill.
+// Default card surface: bg-card + a 1px hairline + a soft ambient shadow (shadow-sm).
 const variantStyles: Record<CardVariant, string> = {
   default: 'border border-border bg-card shadow-sm',
   outline: 'border border-border bg-transparent',

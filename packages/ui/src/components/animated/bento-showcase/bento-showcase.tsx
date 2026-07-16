@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useRef, type ReactNode } from 'react';
+import { forwardRef, useRef, type CSSProperties, type ReactNode } from 'react';
 import { motion, useInView, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { EASE_OUT } from '../../../lib/animation';
@@ -51,6 +51,8 @@ export interface BentoShowcaseCardProps {
   footer?: ReactNode;
   colSpan?: 1 | 2 | 3;
   rowSpan?: 1 | 2;
+  /** Opacity applied to sibling cards while another card in the grid is hovered (0-1). @default 0.55 */
+  dimOpacity?: number;
   className?: string;
 }
 
@@ -114,6 +116,7 @@ export const BentoShowcaseCard = forwardRef<HTMLDivElement, BentoShowcaseCardPro
       footer,
       colSpan = 1,
       rowSpan = 1,
+      dimOpacity = 0.55,
       className,
     },
     ref,
@@ -123,12 +126,16 @@ export const BentoShowcaseCard = forwardRef<HTMLDivElement, BentoShowcaseCardPro
     const surfaceClassName = cn(
       'group/card relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card',
       'shadow-sm transition-[opacity,box-shadow,border-color] duration-300 ease-out',
-      'group-hover/showcase:opacity-55 hover:!opacity-100 hover:border-foreground/20 hover:shadow-xl',
+      'group-hover/showcase:opacity-[var(--bento-dim-opacity)] hover:!opacity-100 hover:border-foreground/20 hover:shadow-xl',
       'motion-reduce:transition-none',
       COL_SPAN_CLASSES[colSpan],
       ROW_SPAN_CLASSES[rowSpan],
       className,
     );
+
+    const surfaceStyle = {
+      '--bento-dim-opacity': dimOpacity,
+    } as CSSProperties;
 
     const content = (
       <>
@@ -175,14 +182,19 @@ export const BentoShowcaseCard = forwardRef<HTMLDivElement, BentoShowcaseCardPro
 
     if (shouldReduceMotion) {
       return (
-        <div ref={ref} className={surfaceClassName}>
+        <div ref={ref} className={surfaceClassName} style={surfaceStyle}>
           {content}
         </div>
       );
     }
 
     return (
-      <motion.div ref={ref} className={surfaceClassName} variants={cardVariants}>
+      <motion.div
+        ref={ref}
+        className={surfaceClassName}
+        style={surfaceStyle}
+        variants={cardVariants}
+      >
         {content}
       </motion.div>
     );

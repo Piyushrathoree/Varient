@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 export interface GlobeMarker {
   location: [number, number];
@@ -84,10 +85,16 @@ export const Globe = forwardRef<HTMLDivElement, GlobeProps>(
     const speedRef = useRef(speed);
     const shouldReduceMotionRef = useRef(false);
     const shouldReduceMotion = useReducedMotion();
+    const themeRef = useRef(getThemeColors());
+    const frameIdRef = useRef(0);
+    const isActiveRef = useRef(true);
+    const resumeLoopRef = useRef<(() => void) | null>(null);
+    const isViewportActive = useViewportActive(containerRef);
 
     markersRef.current = markers;
     speedRef.current = speed;
     shouldReduceMotionRef.current = shouldReduceMotion ?? false;
+    isActiveRef.current = isViewportActive;
 
     const setRefs = (node: HTMLDivElement | null) => {
       containerRef.current = node;
@@ -123,6 +130,25 @@ export const Globe = forwardRef<HTMLDivElement, GlobeProps>(
       phiRef.current += delta * 0.005;
     }, []);
 
+    // Theme reads happen once + on class changes, not on every rAF tick.
+    useEffect(() => {
+      if (typeof document === 'undefined') return;
+
+      const syncTheme = () => {
+        themeRef.current = getThemeColors();
+      };
+
+      syncTheme();
+
+      const observer = new MutationObserver(syncTheme);
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class'],
+      });
+
+      return () => observer.disconnect();
+    }, []);
+
     useEffect(() => {
       const container = containerRef.current;
       const canvas = canvasRef.current;
@@ -130,23 +156,32 @@ export const Globe = forwardRef<HTMLDivElement, GlobeProps>(
 
       let width = 0;
       let dimension = 0;
-      let frameId = 0;
       let globe: CobeGlobe | null = null;
 
+      const stopLoop = () => {
+        if (frameIdRef.current) {
+          cancelAnimationFrame(frameIdRef.current);
+          frameIdRef.current = 0;
+        }
+      };
+
       const destroyGlobe = () => {
-        cancelAnimationFrame(frameId);
+        stopLoop();
         globe?.destroy();
         globe = null;
       };
 
       const tick = () => {
+        frameIdRef.current = 0;
         if (!globe) return;
+        // Offscreen: stop scheduling frames until useViewportActive resumes us.
+        if (!isActiveRef.current) return;
 
         if (pointerRef.current === null && !shouldReduceMotionRef.current) {
           phiRef.current += speedRef.current;
         }
 
-        const theme = getThemeColors();
+        const theme = themeRef.current;
         globe.update({
           phi: phiRef.current,
           width: dimension,
@@ -158,13 +193,21 @@ export const Globe = forwardRef<HTMLDivElement, GlobeProps>(
           markers: markersRef.current as Marker[],
         });
 
-        frameId = requestAnimationFrame(tick);
+        frameIdRef.current = requestAnimationFrame(tick);
       };
+
+      const startLoop = () => {
+        if (globe && !frameIdRef.current) {
+          frameIdRef.current = requestAnimationFrame(tick);
+        }
+      };
+
+      resumeLoopRef.current = startLoop;
 
       const initGlobe = (size: number) => {
         destroyGlobe();
         width = size;
-        const theme = getThemeColors();
+        const theme = themeRef.current;
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
         dimension = Math.max(Math.floor(size * dpr), 1);
 
@@ -184,7 +227,7 @@ export const Globe = forwardRef<HTMLDivElement, GlobeProps>(
           markers: markersRef.current as Marker[],
         });
 
-        frameId = requestAnimationFrame(tick);
+        startLoop();
       };
 
       const resizeObserver = new ResizeObserver((entries) => {
@@ -201,8 +244,20 @@ export const Globe = forwardRef<HTMLDivElement, GlobeProps>(
       return () => {
         resizeObserver.disconnect();
         destroyGlobe();
+        resumeLoopRef.current = null;
       };
     }, [shouldReduceMotion]);
+
+    // Pause the rAF tick while offscreen; resume (without recreating the
+    // globe or losing drag state) once back in — or near — the viewport.
+    useEffect(() => {
+      if (isViewportActive) {
+        resumeLoopRef.current?.();
+      } else if (frameIdRef.current) {
+        cancelAnimationFrame(frameIdRef.current);
+        frameIdRef.current = 0;
+      }
+    }, [isViewportActive]);
 
     return (
       <div

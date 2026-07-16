@@ -1,7 +1,8 @@
 'use client';
 
 import { forwardRef, useId, type HTMLAttributes, type ReactNode } from 'react';
-import { useReducedMotion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
+import { EASE_OUT } from '../../../lib/animation';
 import { cn } from '../../../lib/utils';
 
 export interface LogoCloudLogo {
@@ -15,6 +16,10 @@ export interface LogoCloudProps extends HTMLAttributes<HTMLElement> {
   logos?: LogoCloudLogo[];
   /** Scroll the logo row in an infinite CSS translate loop. */
   isMarquee?: boolean;
+  /** Marquee loop duration in seconds. Only applies when `isMarquee` is true. */
+  durationSeconds?: number;
+  /** Hide logo name text and render marks only. */
+  isIconOnly?: boolean;
 }
 
 function LogoMarkDiamond({ className }: { className?: string }) {
@@ -141,7 +146,15 @@ const DEFAULT_LOGOS: LogoCloudLogo[] = [
   { name: 'Horizon' },
 ];
 
-function LogoItem({ logo, index }: { logo: LogoCloudLogo; index: number }) {
+function LogoItem({
+  logo,
+  index,
+  isIconOnly,
+}: {
+  logo: LogoCloudLogo;
+  index: number;
+  isIconOnly?: boolean;
+}) {
   const Mark = DEFAULT_MARKS[index % DEFAULT_MARKS.length];
 
   return (
@@ -150,18 +163,31 @@ function LogoItem({ logo, index }: { logo: LogoCloudLogo; index: number }) {
       title={logo.name}
     >
       {logo.icon ?? <Mark className="size-5 sm:size-6" />}
-      <span className="font-title text-sm font-semibold tracking-tight sm:text-base">
-        {logo.name}
-      </span>
+      {!isIconOnly && (
+        <span className="font-title text-sm font-semibold tracking-tight sm:text-base">
+          {logo.name}
+        </span>
+      )}
     </div>
   );
 }
 
-function LogoRow({ logos }: { logos: LogoCloudLogo[] }) {
+function LogoRow({
+  logos,
+  isIconOnly,
+}: {
+  logos: LogoCloudLogo[];
+  isIconOnly?: boolean;
+}) {
   return (
     <>
       {logos.map((logo, index) => (
-        <LogoItem key={`${logo.name}-${index}`} index={index} logo={logo} />
+        <LogoItem
+          key={`${logo.name}-${index}`}
+          index={index}
+          isIconOnly={isIconOnly}
+          logo={logo}
+        />
       ))}
     </>
   );
@@ -174,6 +200,8 @@ export const LogoCloud = forwardRef<HTMLElement, LogoCloudProps>(
       title = 'Trusted by teams at',
       logos = DEFAULT_LOGOS,
       isMarquee = false,
+      durationSeconds = 28,
+      isIconOnly = false,
       ...props
     },
     ref,
@@ -182,6 +210,15 @@ export const LogoCloud = forwardRef<HTMLElement, LogoCloudProps>(
     const animationId = useId().replace(/:/g, '');
     const trackClass = `logo-cloud-track-${animationId}`;
     const useMarquee = isMarquee && !shouldReduceMotion;
+
+    const rowMotionProps = shouldReduceMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 16 },
+          whileInView: { opacity: 1, y: 0 },
+          transition: { duration: 0.4, ease: EASE_OUT },
+          viewport: { once: true, amount: 0.3 } as const,
+        };
 
     return (
       <section
@@ -212,26 +249,29 @@ export const LogoCloud = forwardRef<HTMLElement, LogoCloudProps>(
                     to { transform: translateX(-50%); }
                   }
                   .${trackClass} {
-                    animation: logo-cloud-${animationId} 28s linear infinite;
+                    animation: logo-cloud-${animationId} ${durationSeconds}s linear infinite;
                   }
                 `}
               </style>
               <div className={cn('flex w-max', trackClass)}>
                 <div className="flex shrink-0 items-center gap-x-12 gap-y-8 pr-12">
-                  <LogoRow logos={logos} />
+                  <LogoRow isIconOnly={isIconOnly} logos={logos} />
                 </div>
                 <div
                   aria-hidden
                   className="flex shrink-0 items-center gap-x-12 gap-y-8 pr-12"
                 >
-                  <LogoRow logos={logos} />
+                  <LogoRow isIconOnly={isIconOnly} logos={logos} />
                 </div>
               </div>
             </div>
           ) : (
-            <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
-              <LogoRow logos={logos} />
-            </div>
+            <motion.div
+              className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8"
+              {...rowMotionProps}
+            >
+              <LogoRow isIconOnly={isIconOnly} logos={logos} />
+            </motion.div>
           )}
         </div>
       </section>

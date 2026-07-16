@@ -3,7 +3,7 @@ title: Bento Features
 description: An asymmetric bento-style feature showcase with varied grid spans, card surfaces, and scroll-reveal animations.
 ---
 
-<ComponentPreview name="bento-features" />
+<ComponentPreview name="bento-features" variant="section" />
 
 ## Installation
 
@@ -68,7 +68,7 @@ export function LandingPage() {
   props={[
     { name: 'title', type: 'string', description: 'Card headline.' },
     { name: 'description', type: 'string', description: 'Supporting copy below the title.' },
-    { name: 'visual', type: 'ReactNode', description: 'Optional visual slot — defaults to a built-in placeholder (gradient, diagram, or stat).' },
+    { name: 'visual', type: 'ReactNode', description: 'Optional visual slot — defaults to a built-in mini-illustration (window frame, diagram, stat, layers, sparkline, or motion dots), cycled by card index.' },
     { name: 'className', type: 'string', description: 'Grid placement classes, e.g. md:col-span-2 or md:row-span-2.' },
   ]}
 />

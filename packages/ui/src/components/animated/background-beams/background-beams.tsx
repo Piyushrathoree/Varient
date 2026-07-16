@@ -1,8 +1,9 @@
 'use client';
 
-import { forwardRef, useId, useMemo, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useId, useMemo, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 export interface BackgroundBeamsProps extends HTMLAttributes<HTMLDivElement> {
   /** Number of curved beam paths drawn in the SVG layer. */
@@ -56,7 +57,9 @@ const DEFAULT_ACCENT = 'var(--color-brand)';
 /**
  * Full-bleed backdrop of thin curved SVG paths with animated gradient strokes
  * traveling along them. Children render above the effect. Under
- * `prefers-reduced-motion` paths are static and faint with no travel.
+ * `prefers-reduced-motion` paths are static and faint with no travel. The
+ * per-path loops pause while the container is scrolled offscreen (via
+ * `useViewportActive`) and resume when it re-enters the viewport.
  */
 export const BackgroundBeams = forwardRef<HTMLDivElement, BackgroundBeamsProps>(
   (
@@ -76,9 +79,17 @@ export const BackgroundBeams = forwardRef<HTMLDivElement, BackgroundBeamsProps>(
       [pathCount],
     );
 
+    const containerRef = useRef<HTMLDivElement>(null);
+    const isViewportActive = useViewportActive(containerRef);
+    const isAnimating = !shouldReduceMotion && isViewportActive;
+
     return (
       <div
-        ref={ref}
+        ref={(node) => {
+          containerRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+        }}
         className={cn('relative overflow-hidden bg-background', className)}
         {...props}
       >
@@ -109,12 +120,16 @@ export const BackgroundBeams = forwardRef<HTMLDivElement, BackgroundBeamsProps>(
                         id={gradientId}
                         gradientUnits="userSpaceOnUse"
                         initial={{ x1: '0%', x2: '0%', y1: '0%', y2: '0%' }}
-                        animate={{
-                          x1: ['0%', '100%'],
-                          x2: ['10%', '110%'],
-                          y1: ['0%', '0%'],
-                          y2: ['0%', '0%'],
-                        }}
+                        animate={
+                          isAnimating
+                            ? {
+                                x1: ['0%', '100%'],
+                                x2: ['10%', '110%'],
+                                y1: ['0%', '0%'],
+                                y2: ['0%', '0%'],
+                              }
+                            : undefined
+                        }
                         transition={{
                           duration: path.duration,
                           repeat: Infinity,
@@ -138,7 +153,7 @@ export const BackgroundBeams = forwardRef<HTMLDivElement, BackgroundBeamsProps>(
                       strokeWidth={0.5}
                       strokeOpacity={path.opacity + 0.25}
                       initial={{ pathLength: 0.3, pathOffset: 0 }}
-                      animate={{ pathLength: 0.3, pathOffset: [0, 1] }}
+                      animate={isAnimating ? { pathLength: 0.3, pathOffset: [0, 1] } : undefined}
                       transition={{
                         duration: path.duration,
                         repeat: Infinity,

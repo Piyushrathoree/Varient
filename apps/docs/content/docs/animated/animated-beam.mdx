@@ -52,8 +52,8 @@ export function Example() {
     { name: 'delay', type: 'number', defaultValue: '0', description: 'Delay before the animation starts, in seconds.' },
     { name: 'pathColor', type: 'string', defaultValue: 'var(--color-border)', description: 'Base path stroke color.' },
     { name: 'pathWidth', type: 'number', defaultValue: '2', description: 'Base path stroke width in pixels.' },
-    { name: 'gradientStartColor', type: 'string', defaultValue: 'var(--color-brand)', description: 'Traveling gradient start color.' },
-    { name: 'gradientStopColor', type: 'string', defaultValue: 'var(--color-brand-secondary)', description: 'Traveling gradient end color.' },
+    { name: 'gradientStartColor', type: 'string', defaultValue: 'var(--color-foreground)', description: 'Traveling gradient start color.' },
+    { name: 'gradientStopColor', type: 'string', defaultValue: 'var(--color-muted-foreground)', description: 'Traveling gradient end color.' },
     { name: 'isReverse', type: 'boolean', defaultValue: 'false', description: 'Reverse the gradient travel direction.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(). Applied to the SVG overlay.' },
   ]}
@@ -64,3 +64,4 @@ export function Example() {
 - The SVG overlay is decorative and marked `aria-hidden` — it does not affect the accessible name or structure of connected elements.
 - Under `prefers-reduced-motion`, the traveling gradient is disabled and only a static base path is shown.
 - The beam layer uses `pointer-events-none` so endpoint elements remain fully interactive.
+- The gradient travel loop pauses automatically while the `containerRef` element is scrolled offscreen, and resumes when it re-enters the viewport.

@@ -13,7 +13,7 @@ import {
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
-import { SPRING_DEFAULT } from '../../../lib/animation';
+import { DURATION_INSTANT, SPRING_DEFAULT, SPRING_SNAPPY } from '../../../lib/animation';
 
 export type DropdownMenuProps = ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root>;
 
@@ -182,6 +182,135 @@ export type DropdownMenuGroupProps = ComponentPropsWithoutRef<typeof DropdownMen
 // related items.
 export const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 
+// Shared chassis for CheckboxItem/RadioItem — same look as DropdownMenu.Item
+// but with the left gutter reserved for the check/dot indicator instead of
+// an `icon` prop, since the indicator itself is the leading glyph.
+const indicatorItemClassName =
+  'relative flex cursor-default select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2.5 text-sm outline-none transition-colors data-[highlighted]:bg-muted data-[disabled]:pointer-events-none data-[disabled]:opacity-50';
+
+export type DropdownMenuCheckboxItemProps = ComponentPropsWithoutRef<
+  typeof DropdownMenuPrimitive.CheckboxItem
+>;
+
+export const DropdownMenuCheckboxItem = forwardRef<
+  ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
+  DropdownMenuCheckboxItemProps
+>(({ className, children, checked, ...props }, ref) => {
+  const shouldReduceMotion = useReducedMotion();
+  const isChecked = checked === true;
+
+  return (
+    <DropdownMenuPrimitive.CheckboxItem
+      ref={ref}
+      checked={checked}
+      className={cn(indicatorItemClassName, className)}
+      {...props}
+    >
+      <span className="absolute left-2.5 flex size-3.5 items-center justify-center text-brand">
+        <DropdownMenuPrimitive.ItemIndicator forceMount className="flex items-center justify-center">
+          <AnimatePresence>
+            {isChecked && (
+              <motion.svg
+                key="check"
+                aria-hidden
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={3}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="size-3.5"
+                initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={
+                  shouldReduceMotion
+                    ? { opacity: 0, transition: DURATION_INSTANT }
+                    : { opacity: 0, scale: 0.5 }
+                }
+                transition={shouldReduceMotion ? DURATION_INSTANT : SPRING_SNAPPY}
+              >
+                <path d="M4 12L9 17L20 6" />
+              </motion.svg>
+            )}
+          </AnimatePresence>
+        </DropdownMenuPrimitive.ItemIndicator>
+      </span>
+      {children}
+    </DropdownMenuPrimitive.CheckboxItem>
+  );
+});
+DropdownMenuCheckboxItem.displayName = 'DropdownMenu.CheckboxItem';
+
+interface DropdownMenuRadioGroupContextValue {
+  value?: string;
+}
+
+// Radix keeps the checked-vs-unchecked comparison for each RadioItem
+// internal, so — same reasoning as DropdownMenuContext above — we mirror
+// the selected value into our own context. RadioItem reads it to know
+// whether *it* is the checked item, which is what gates its AnimatePresence.
+const DropdownMenuRadioGroupContext = createContext<DropdownMenuRadioGroupContextValue>({});
+
+export type DropdownMenuRadioGroupProps = ComponentPropsWithoutRef<
+  typeof DropdownMenuPrimitive.RadioGroup
+>;
+
+export const DropdownMenuRadioGroup = forwardRef<
+  ElementRef<typeof DropdownMenuPrimitive.RadioGroup>,
+  DropdownMenuRadioGroupProps
+>(({ value, ...props }, ref) => (
+  <DropdownMenuRadioGroupContext.Provider value={{ value }}>
+    <DropdownMenuPrimitive.RadioGroup ref={ref} value={value} {...props} />
+  </DropdownMenuRadioGroupContext.Provider>
+));
+DropdownMenuRadioGroup.displayName = 'DropdownMenu.RadioGroup';
+
+export type DropdownMenuRadioItemProps = ComponentPropsWithoutRef<
+  typeof DropdownMenuPrimitive.RadioItem
+>;
+
+export const DropdownMenuRadioItem = forwardRef<
+  ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
+  DropdownMenuRadioItemProps
+>(({ className, children, value, ...props }, ref) => {
+  const shouldReduceMotion = useReducedMotion();
+  const { value: selectedValue } = useContext(DropdownMenuRadioGroupContext);
+  const isChecked = selectedValue === value;
+
+  return (
+    <DropdownMenuPrimitive.RadioItem
+      ref={ref}
+      value={value}
+      className={cn(indicatorItemClassName, className)}
+      {...props}
+    >
+      <span className="absolute left-2.5 flex size-3.5 items-center justify-center">
+        <DropdownMenuPrimitive.ItemIndicator forceMount className="flex items-center justify-center">
+          <AnimatePresence>
+            {isChecked && (
+              <motion.span
+                key="dot"
+                aria-hidden
+                className="block size-1.5 rounded-full bg-brand"
+                initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={
+                  shouldReduceMotion
+                    ? { opacity: 0, transition: DURATION_INSTANT }
+                    : { opacity: 0, scale: 0 }
+                }
+                transition={shouldReduceMotion ? DURATION_INSTANT : SPRING_SNAPPY}
+              />
+            )}
+          </AnimatePresence>
+        </DropdownMenuPrimitive.ItemIndicator>
+      </span>
+      {children}
+    </DropdownMenuPrimitive.RadioItem>
+  );
+});
+DropdownMenuRadioItem.displayName = 'DropdownMenu.RadioItem';
+
 export const DropdownMenu = Object.assign(DropdownMenuRoot, {
   Trigger: DropdownMenuTrigger,
   Content: DropdownMenuContent,
@@ -190,4 +319,7 @@ export const DropdownMenu = Object.assign(DropdownMenuRoot, {
   Separator: DropdownMenuSeparator,
   Shortcut: DropdownMenuShortcut,
   Group: DropdownMenuGroup,
+  CheckboxItem: DropdownMenuCheckboxItem,
+  RadioGroup: DropdownMenuRadioGroup,
+  RadioItem: DropdownMenuRadioItem,
 });

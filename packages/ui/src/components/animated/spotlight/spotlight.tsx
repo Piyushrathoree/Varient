@@ -16,10 +16,15 @@ import {
 } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { SPRING_SNAPPY } from '../../../lib/animation';
+import { useFinePointer } from '../../../lib/use-fine-pointer';
 
 const DEFAULT_SIZE = 350;
+const DEFAULT_BORDER_SIZE = 220;
+const DEFAULT_BORDER_WIDTH = 2;
 const DEFAULT_COLOR =
   'color-mix(in oklab, var(--color-foreground) 14%, transparent)';
+
+export type SpotlightVariant = 'default' | 'border';
 
 export interface SpotlightProps extends HTMLAttributes<HTMLDivElement> {
   /** Radius of the radial glow in pixels. */
@@ -28,55 +33,124 @@ export interface SpotlightProps extends HTMLAttributes<HTMLDivElement> {
   color?: string;
   /** Optional override for the gradient fill color (takes precedence over `color`). */
   fill?: string;
+  /**
+   * `'default'` is a free-floating radial glow that follows the pointer anywhere
+   * inside the surface. `'border'` clips the same glow to a thin ring that hugs
+   * the container's edge, projecting the pointer onto the nearest border point.
+   */
+  variant?: SpotlightVariant;
+  /** Ring thickness in pixels, only used when `variant="border"`. */
+  borderWidth?: number;
+}
+
+/**
+ * Nearest point on the container's perimeter to a local (x, y) coordinate,
+ * clamped to the container bounds. Used by `variant="border"` to make the
+ * glow hug the edge instead of floating freely.
+ */
+function projectToPerimeter(x: number, y: number, width: number, height: number) {
+  const clampedX = Math.min(Math.max(x, 0), width);
+  const clampedY = Math.min(Math.max(y, 0), height);
+
+  const distanceToLeft = clampedX;
+  const distanceToRight = width - clampedX;
+  const distanceToTop = clampedY;
+  const distanceToBottom = height - clampedY;
+
+  const minDistance = Math.min(
+    distanceToLeft,
+    distanceToRight,
+    distanceToTop,
+    distanceToBottom,
+  );
+
+  if (minDistance === distanceToLeft) return { x: 0, y: clampedY };
+  if (minDistance === distanceToRight) return { x: width, y: clampedY };
+  if (minDistance === distanceToTop) return { x: clampedX, y: 0 };
+  return { x: clampedX, y: height };
 }
 
 /**
  * Cursor-following radial glow meant to sit inside a `relative` parent.
  * Fades in on pointer enter and out on leave. Under `prefers-reduced-motion`
  * renders a static centered soft glow with no tracking.
+ *
+ * `variant="border"` clips the glow to a thin ring that travels the
+ * container's edge, projecting the pointer onto the nearest border point.
  */
 export const Spotlight = forwardRef<HTMLDivElement, SpotlightProps>(
   (
     {
       className,
-      size = DEFAULT_SIZE,
+      size,
       color,
       fill,
+      variant = 'default',
+      borderWidth = DEFAULT_BORDER_WIDTH,
       ...props
     },
     ref,
   ) => {
+    const isBorder = variant === 'border';
+    const resolvedSize = size ?? (isBorder ? DEFAULT_BORDER_SIZE : DEFAULT_SIZE);
+
     const nodeRef = useRef<HTMLDivElement | null>(null);
     const shouldReduceMotion = useReducedMotion();
+    const isFinePointer = useFinePointer();
     const [isActive, setIsActive] = useState(false);
 
-    const pointerX = useMotionValue(size);
-    const pointerY = useMotionValue(size);
+    const pointerX = useMotionValue(resolvedSize);
+    const pointerY = useMotionValue(resolvedSize);
     const x = useSpring(pointerX, SPRING_SNAPPY);
     const y = useSpring(pointerY, SPRING_SNAPPY);
-    const glowX = useTransform(x, (value) => value - size);
-    const glowY = useTransform(y, (value) => value - size);
+    const glowX = useTransform(x, (value) => value - resolvedSize);
+    const glowY = useTransform(y, (value) => value - resolvedSize);
 
     const spotlightColor = fill ?? color ?? DEFAULT_COLOR;
-    const diameter = size * 2;
+    const diameter = resolvedSize * 2;
 
     useEffect(() => {
       const node = nodeRef.current;
       const parent = node?.parentElement;
-      if (!parent || shouldReduceMotion) return;
+      if (!parent || shouldReduceMotion || !isFinePointer) return;
 
       const centerFallback = () => {
         const rect = parent.getBoundingClientRect();
-        pointerX.set(rect.width / 2);
-        pointerY.set(rect.height / 2);
+        if (isBorder) {
+          const projected = projectToPerimeter(
+            rect.width / 2,
+            0,
+            rect.width,
+            rect.height,
+          );
+          pointerX.set(projected.x);
+          pointerY.set(projected.y);
+        } else {
+          pointerX.set(rect.width / 2);
+          pointerY.set(rect.height / 2);
+        }
       };
 
       centerFallback();
 
       const handlePointerMove = (event: PointerEvent) => {
         const rect = parent.getBoundingClientRect();
-        pointerX.set(event.clientX - rect.left);
-        pointerY.set(event.clientY - rect.top);
+        const localX = event.clientX - rect.left;
+        const localY = event.clientY - rect.top;
+
+        if (isBorder) {
+          const projected = projectToPerimeter(
+            localX,
+            localY,
+            rect.width,
+            rect.height,
+          );
+          pointerX.set(projected.x);
+          pointerY.set(projected.y);
+        } else {
+          pointerX.set(localX);
+          pointerY.set(localY);
+        }
       };
 
       const handlePointerEnter = () => setIsActive(true);
@@ -99,9 +173,22 @@ export const Spotlight = forwardRef<HTMLDivElement, SpotlightProps>(
         parent.removeEventListener('pointerleave', handlePointerLeave);
         resizeObserver.disconnect();
       };
-    }, [shouldReduceMotion, pointerX, pointerY]);
+    }, [shouldReduceMotion, isFinePointer, isBorder, pointerX, pointerY]);
 
-    if (shouldReduceMotion) {
+    const ringMaskStyle = isBorder
+      ? {
+          padding: borderWidth,
+          WebkitMask:
+            'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+          WebkitMaskComposite: 'xor' as const,
+          mask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+          maskComposite: 'exclude' as const,
+        }
+      : undefined;
+
+    const showStatic = shouldReduceMotion || !isFinePointer;
+
+    if (showStatic) {
       return (
         <div
           ref={(node) => {
@@ -114,6 +201,7 @@ export const Spotlight = forwardRef<HTMLDivElement, SpotlightProps>(
             'pointer-events-none absolute inset-0 overflow-hidden',
             className,
           )}
+          style={ringMaskStyle}
           {...props}
         >
           <div
@@ -141,6 +229,7 @@ export const Spotlight = forwardRef<HTMLDivElement, SpotlightProps>(
           'pointer-events-none absolute inset-0 overflow-hidden',
           className,
         )}
+        style={ringMaskStyle}
         {...props}
       >
         <motion.div

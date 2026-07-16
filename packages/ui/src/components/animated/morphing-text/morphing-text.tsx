@@ -29,14 +29,14 @@ export const MorphingText = forwardRef<HTMLSpanElement, MorphingTextProps>(
     const currentWord = safeWords[index % safeWords.length] ?? '';
 
     useEffect(() => {
-      if (safeWords.length <= 1 || isPaused) return;
+      if (safeWords.length <= 1 || isPaused || shouldReduceMotion) return;
 
       const timer = window.setInterval(() => {
         setIndex((prev) => (prev + 1) % safeWords.length);
       }, interval);
 
       return () => window.clearInterval(timer);
-    }, [safeWords, interval, isPaused]);
+    }, [safeWords, interval, isPaused, shouldReduceMotion]);
 
     const motionTransition = shouldReduceMotion
       ? DURATION_INSTANT

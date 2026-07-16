@@ -9,9 +9,25 @@ import {
   type ReactNode,
 } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { X } from 'lucide-react';
 import { DURATION_INSTANT, EASE_OUT } from '../../../lib/animation';
 import { cn } from '../../../lib/utils';
+
+function CloseIcon(props: { className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      className={props.className}
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.75}
+      viewBox="0 0 16 16"
+    >
+      <path d="M12 4 4 12M4 4l8 8" />
+    </svg>
+  );
+}
 
 export type AnnouncementBannerVariant = 'neutral' | 'brand';
 
@@ -29,16 +45,20 @@ export interface AnnouncementBannerProps extends NativeDivProps {
   message: ReactNode;
   link?: AnnouncementBannerLink;
   variant?: AnnouncementBannerVariant;
+  /** Optional leading icon rendered before the message. */
+  icon?: ReactNode;
   /** Controlled dismiss state. Omit for uncontrolled behavior. */
   isDismissed?: boolean;
   onDismiss?: () => void;
   /** Slide-down entrance on mount. Defaults to true. */
   isAnimated?: boolean;
+  /** Accessible label for the dismiss button. Defaults to 'Dismiss announcement'. */
+  dismissLabel?: string;
 }
 
 const variantStyles: Record<AnnouncementBannerVariant, string> = {
   neutral: 'border-border bg-muted/50 text-foreground',
-  brand: 'border-border bg-muted/50 text-foreground',
+  brand: 'border-brand/25 bg-brand/5 text-foreground',
 };
 
 export const AnnouncementBanner = forwardRef<HTMLDivElement, AnnouncementBannerProps>(
@@ -48,9 +68,11 @@ export const AnnouncementBanner = forwardRef<HTMLDivElement, AnnouncementBannerP
       message,
       link,
       variant = 'neutral',
+      icon,
       isDismissed: isDismissedProp,
       onDismiss,
       isAnimated = true,
+      dismissLabel = 'Dismiss announcement',
       ...props
     },
     ref,
@@ -99,11 +121,23 @@ export const AnnouncementBanner = forwardRef<HTMLDivElement, AnnouncementBannerP
             {...props}
           >
             <div className="mx-auto flex max-w-6xl items-center gap-3 sm:gap-4">
-              {variant === 'brand' && (
+              {icon ? (
                 <span
                   aria-hidden
-                  className="size-1.5 shrink-0 rounded-full bg-brand"
-                />
+                  className={cn(
+                    'flex size-5 shrink-0 items-center justify-center [&>svg]:size-4',
+                    variant === 'brand' ? 'text-brand' : 'text-foreground',
+                  )}
+                >
+                  {icon}
+                </span>
+              ) : (
+                variant === 'brand' && (
+                  <span
+                    aria-hidden
+                    className="size-1.5 shrink-0 rounded-full bg-brand"
+                  />
+                )
               )}
 
               <p
@@ -130,16 +164,17 @@ export const AnnouncementBanner = forwardRef<HTMLDivElement, AnnouncementBannerP
               </p>
 
               <button
-                aria-label="Dismiss announcement"
+                aria-label={dismissLabel}
                 className={cn(
                   'inline-flex size-8 shrink-0 items-center justify-center rounded-md',
                   'text-muted-foreground transition-colors hover:bg-background hover:text-foreground',
+                  'motion-reduce:transition-none motion-reduce:active:scale-100 active:scale-90',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
                 )}
                 onClick={handleDismiss}
                 type="button"
               >
-                <X aria-hidden className="size-4" strokeWidth={1.75} />
+                <CloseIcon className="size-4" />
               </button>
             </div>
           </motion.div>

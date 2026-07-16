@@ -6,6 +6,7 @@ export {
   BreadcrumbPage,
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
+  BreadcrumbAuto,
   type BreadcrumbProps,
   type BreadcrumbListProps,
   type BreadcrumbItemProps,
@@ -13,4 +14,6 @@ export {
   type BreadcrumbPageProps,
   type BreadcrumbSeparatorProps,
   type BreadcrumbEllipsisProps,
+  type BreadcrumbAutoProps,
+  type BreadcrumbAutoItem,
 } from './breadcrumb';

@@ -3,7 +3,7 @@ title: Contact Form
 description: Multi-field contact section with client-side validation, loading state, and an animated success panel.
 ---
 
-<ComponentPreview name="contact-form" />
+<ComponentPreview name="contact-form" variant="section" />
 
 ## Installation
 
@@ -28,9 +28,13 @@ export function ContactPage() {
 
   return (
     <ContactForm
-      title="Get in touch"
-      description="We typically reply within two business days."
+      title="Contact sales"
+      description="Tell us about your team and what you're building."
       showCompanyField
+      showSubjectField
+      submitLabel="Talk to sales"
+      successTitle="We're on it"
+      successMessage="A member of our sales team will reach out within one business day."
       onSubmit={handleSubmit}
     />
   );
@@ -39,7 +43,11 @@ export function ContactPage() {
 
 ## Layout
 
-The form is constrained to `max-w-xl` and centers on the page. Name and email sit in a two-column row on `sm+`; message and privacy checkbox stack below. Pass `showCompanyField` to insert an optional company input between the name/email row and the message field.
+The form is constrained to `max-w-xl` and centers on the page. Name and email sit in a two-column row on `sm+`; message and privacy checkbox stack below. Pass `showCompanyField` to insert an optional company input between the name/email row and the message field, and `showSubjectField` to insert an optional subject input directly after it.
+
+## Escape hatch
+
+Pass `children` to render extra fields (a budget select, a file input, a phone number, anything not modeled natively) between the privacy checkbox and the submit button. Children are not included in `ContactFormData` — read their values yourself via your own state or a `ref` on the underlying `<input>`/`<select>`.
 
 ## Props
 
@@ -49,6 +57,11 @@ The form is constrained to `max-w-xl` and centers on the page. Name and email si
     { name: 'description', type: 'string', description: 'Supporting copy below the title.' },
     { name: 'onSubmit', type: '(data: ContactFormData) => void | Promise<void>', description: 'Called with validated form data on submit. If omitted, a ~800ms simulated delay runs before success.' },
     { name: 'showCompanyField', type: 'boolean', defaultValue: 'false', description: 'Renders an optional company input between the name/email row and the message field.' },
+    { name: 'showSubjectField', type: 'boolean', defaultValue: 'false', description: 'Renders an optional subject input between the company field and the message field.' },
+    { name: 'submitLabel', type: 'string', defaultValue: "'Send message'", description: 'Label rendered on the submit button.' },
+    { name: 'successTitle', type: 'string', description: 'Optional heading shown above the success message once the form has been submitted.' },
+    { name: 'successMessage', type: 'string', defaultValue: "\"Thanks — we'll get back to you within two business days.\"", description: 'Body copy shown in the success panel once the form has been submitted.' },
+    { name: 'children', type: 'ReactNode', description: 'Extra form fields rendered after the privacy checkbox and before the submit button.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section wrapper.' },
   ]}
 />
@@ -60,6 +73,7 @@ The form is constrained to `max-w-xl` and centers on the page. Name and email si
 | `name` | `string` | Yes |
 | `email` | `string` | Yes |
 | `company` | `string` | No — only present when `showCompanyField` is true and the user entered a value |
+| `subject` | `string` | No — only present when `showSubjectField` is true and the user entered a value |
 | `message` | `string` | Yes — minimum 10 characters |
 | `agreedToPrivacy` | `boolean` | Yes |
 

@@ -3,7 +3,7 @@ title: Pricing
 description: A three-tier pricing section with monthly/annual billing toggle and an emphasized popular plan.
 ---
 
-<ComponentPreview name="pricing" />
+<ComponentPreview name="pricing" variant="section" />
 
 ## Installation
 
@@ -31,6 +31,7 @@ export function LandingPage() {
       description="Start free, upgrade when you need more."
       defaultBillingPeriod="monthly"
       annualSavingsLabel="Save 20%"
+      popularLabel="Most popular"
       plans={[
         {
           id: 'starter',
@@ -38,7 +39,11 @@ export function LandingPage() {
           description: 'For side projects.',
           monthlyPrice: 0,
           annualPrice: 0,
-          features: ['Foundation components', 'Dark mode'],
+          features: [
+            'Foundation components',
+            'Dark mode',
+            { label: 'Private component registry', isIncluded: false },
+          ],
           ctaLabel: 'Get started',
         },
         {
@@ -48,7 +53,7 @@ export function LandingPage() {
           monthlyPrice: 29,
           annualPrice: 24,
           isPopular: true,
-          features: ['Animated layer', 'Section blocks'],
+          features: ['Animated layer', 'Section blocks', 'Private component registry'],
           ctaLabel: 'Start trial',
         },
       ]}
@@ -66,7 +71,8 @@ export function LandingPage() {
     { name: 'description', type: 'string', description: 'One-line supporting copy below the title.' },
     { name: 'plans', type: 'PricingPlan[]', description: 'Pricing tiers — compose Card, Button, and Badge internally.' },
     { name: 'defaultBillingPeriod', type: "'monthly' | 'annual'", defaultValue: "'monthly'", description: 'Initial billing period for the toggle.' },
-    { name: 'annualSavingsLabel', type: 'string', defaultValue: "'Save 20%'", description: 'Badge label shown beside the annual option.' },
+    { name: 'annualSavingsLabel', type: 'string', defaultValue: "'Save 20%'", description: 'Badge label that pops in beside "Annual" once the toggle is switched to annual.' },
+    { name: 'popularLabel', type: 'string', defaultValue: "'Most popular'", description: 'Badge label on the plan flagged with isPopular.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
   ]}
 />
@@ -81,9 +87,19 @@ export function LandingPage() {
     { name: 'monthlyPrice', type: 'number | string', description: 'Price when billing is monthly — 0 renders as "Free".' },
     { name: 'annualPrice', type: 'number | string', description: 'Price when billing is annual.' },
     { name: 'priceSuffix', type: 'string', defaultValue: "'/mo'", description: 'Suffix after the price (hidden for free plans).' },
-    { name: 'features', type: 'string[]', description: 'Bullet list rendered with inline check icons.' },
+    { name: 'features', type: 'PricingFeature[]', description: 'Bullet list — plain strings render as included; pass { label, isIncluded: false } to dim a row with a strikethrough and a minus glyph.' },
     { name: 'ctaLabel', type: 'string', defaultValue: "'Get started'", description: 'Button label at the bottom of the card.' },
-    { name: 'isPopular', type: 'boolean', defaultValue: 'false', description: 'Adds brand ring, "Most popular" badge, and primary CTA styling.' },
+    { name: 'isPopular', type: 'boolean', defaultValue: 'false', description: 'Adds brand ring, popularLabel badge, and primary CTA styling.' },
+  ]}
+/>
+
+### PricingFeature
+
+<PropsTable
+  props={[
+    { name: 'string', type: 'string', description: 'Shorthand for an included feature — renders with a check icon.' },
+    { name: 'label', type: 'string', description: 'Feature text, used when passing the object form.' },
+    { name: 'isIncluded', type: 'boolean', defaultValue: 'true', description: 'Set to false to render the row dimmed, struck through, with a minus glyph instead of a check.' },
   ]}
 />
 
@@ -91,6 +107,8 @@ export function LandingPage() {
 
 The billing toggle uses the Foundation `Switch` (`role="switch"`, `aria-checked`).
 Each plan card exposes its feature list as a `<ul>` with an `aria-label`.
+Excluded features (`isIncluded: false`) keep a visible minus glyph and strikethrough text,
+plus a screen-reader-only "(not included)" suffix so the omission isn't conveyed by dimming alone.
 CTA buttons are real `<button>` elements with visible focus rings.
 
 | Key | Action |

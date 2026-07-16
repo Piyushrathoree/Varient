@@ -1,5 +1,5 @@
 /*
- * Varient theme — light + dark, matching the SmoothUI port (PORT-SPEC.md).
+ * Varient theme — light + dark, neutral OKLCH ladder + semantic slots.
  *
  * The 4-identity engine (`data-theme`, Nocturne/Studio/Paper/Aurora) is gone.
  * Two modes only, switched by `.dark` on <html> (next-themes / fumadocs

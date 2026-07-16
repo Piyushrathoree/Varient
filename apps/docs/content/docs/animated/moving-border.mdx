@@ -47,6 +47,7 @@ export function Example() {
     { name: 'highlightSize', type: 'number', defaultValue: '80', description: 'Highlight blob size in pixels.' },
     { name: 'colorFrom', type: 'string', defaultValue: 'var(--color-brand)', description: 'Start color of the traveling highlight.' },
     { name: 'colorTo', type: 'string', defaultValue: 'var(--color-brand-secondary)', description: 'End color of the traveling highlight.' },
+    { name: 'isPaused', type: 'boolean', defaultValue: 'false', description: 'Pauses the traveling highlight loop regardless of viewport visibility.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes on the wrapper.' },
   ]}
 />
@@ -58,6 +59,7 @@ export function Example() {
     { name: 'duration', type: 'number', defaultValue: '8', description: 'Seconds for one full lap around the border track.' },
     { name: 'borderRadius', type: 'number', defaultValue: '10', description: 'Corner radius in pixels.' },
     { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables the button and sets aria-disabled.' },
+    { name: 'isPaused', type: 'boolean', defaultValue: 'false', description: 'Pauses the traveling highlight loop regardless of viewport visibility.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes on the button.' },
   ]}
 />
@@ -66,4 +68,5 @@ export function Example() {
 
 - The traveling highlight is decorative (`aria-hidden`) and does not affect the accessible name of wrapped content.
 - Under `prefers-reduced-motion`, a static subtle brand border replaces the traveling highlight.
+- The highlight loop automatically pauses while the component is scrolled offscreen, and can be paused explicitly via `isPaused`.
 - `MovingBorderButton` forwards standard button semantics including `disabled` and focus rings.

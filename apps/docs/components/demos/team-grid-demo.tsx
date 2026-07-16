@@ -2,37 +2,73 @@
 
 import { TeamGrid, type TeamMember } from '@varient/ui';
 
-const compactMembers: TeamMember[] = [
+const foundingMembers: TeamMember[] = [
   {
     name: 'Piyush Sharma',
-    role: 'Founder',
-    avatarSrc: 'https://i.pravatar.cc/150?img=12',
-    socials: { github: 'https://github.com', x: 'https://x.com' },
+    role: 'Founder & design',
+    socials: { github: 'https://github.com', x: 'https://x.com', linkedin: 'https://linkedin.com' },
   },
   {
     name: 'Maya Chen',
-    role: 'Engineering',
-    avatarSrc: 'https://i.pravatar.cc/150?img=1',
+    role: 'Engineering lead',
     socials: { github: 'https://github.com', linkedin: 'https://linkedin.com' },
   },
   {
     name: 'James Okonkwo',
     role: 'Frontend',
-    avatarSrc: 'https://i.pravatar.cc/150?img=3',
     socials: { x: 'https://x.com' },
   },
   {
     name: 'Elena Vasquez',
-    role: 'Design',
-    avatarSrc: 'https://i.pravatar.cc/150?img=5',
+    role: 'Design systems',
     socials: { linkedin: 'https://linkedin.com' },
+  },
+];
+
+const relationsTeam: TeamMember[] = [
+  {
+    name: 'Tom Bradley',
+    role: 'Product',
+    socials: { x: 'https://x.com', linkedin: 'https://linkedin.com' },
+  },
+  {
+    name: 'Priya Nair',
+    role: 'Developer relations',
+    socials: { github: 'https://github.com', x: 'https://x.com', linkedin: 'https://linkedin.com' },
+  },
+  {
+    name: 'Sofia Rossi',
+    role: 'Community',
+    socials: { github: 'https://github.com' },
   },
 ];
 
 export function TeamGridDemo() {
   return (
-    <div className="w-full bg-background">
-      <TeamGrid />
+    <div className="flex w-full flex-col gap-10 bg-background">
+      <div>
+        <span className="mb-3 block px-6 text-xs font-medium text-muted-foreground md:px-8">
+          Founding team
+        </span>
+        <TeamGrid
+          eyebrow="Team"
+          title="The people behind Varient"
+          description="A small team building copy-paste components so you can ship polished UI without the scaffolding tax."
+          members={foundingMembers}
+        />
+      </div>
+      <div>
+        <span className="mb-3 block px-6 text-xs font-medium text-muted-foreground md:px-8">
+          Relations & community
+        </span>
+        <TeamGrid
+          className="py-10 md:py-10"
+          eyebrow="Growing fast"
+          title="Relations and community"
+          description="The folks helping developers get the most out of Varient."
+          members={relationsTeam}
+        />
+      </div>
     </div>
   );
 }
@@ -44,8 +80,7 @@ export function TeamGridPreviewCompact() {
         className="px-4 py-6 md:py-6"
         description="Meet the core team."
         eyebrow="Team"
-        members={compactMembers.slice(0, 4)}
-        title="People behind Varient"
+        members={foundingMembers}
       />
     </div>
   );

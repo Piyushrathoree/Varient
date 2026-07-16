@@ -115,6 +115,35 @@ export function MarqueeDemo() {
       </div>
 
       <div className="flex flex-col gap-3">
+        <p className="text-sm font-medium text-muted-foreground">Edge fade</p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <DemoCard label="edgeFade='sm'">
+            <Marquee edgeFade="sm" gap={12} speed={18} className="w-full py-2">
+              {LOGOS.slice(0, 4).map((logo) => (
+                <LogoPill key={`fade-sm-${logo}`} label={logo} />
+              ))}
+            </Marquee>
+          </DemoCard>
+
+          <DemoCard label="edgeFade='lg' (wider mask)">
+            <Marquee edgeFade="lg" gap={12} speed={18} className="w-full py-2">
+              {LOGOS.slice(0, 4).map((logo) => (
+                <LogoPill key={`fade-lg-${logo}`} label={logo} />
+              ))}
+            </Marquee>
+          </DemoCard>
+
+          <DemoCard label="edgeFade='none'">
+            <Marquee edgeFade="none" gap={12} speed={18} className="w-full py-2">
+              {LOGOS.slice(0, 4).map((logo) => (
+                <LogoPill key={`fade-none-${logo}`} label={logo} />
+              ))}
+            </Marquee>
+          </DemoCard>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-3">
         <p className="text-sm font-medium text-muted-foreground">States</p>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <DemoCard label="Paused (isPaused)">

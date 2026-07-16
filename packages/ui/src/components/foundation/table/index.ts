@@ -15,4 +15,6 @@ export {
   type TableHeadProps,
   type TableCellProps,
   type TableCaptionProps,
+  type TableVariant,
+  type TableSize,
 } from './table';

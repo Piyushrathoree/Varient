@@ -1,0 +1,89 @@
+---
+title: Sortable List
+description: A drag-to-reorder list with spring-driven reflow, built on motion's Reorder — fully keyboard operable.
+---
+
+<ComponentPreview name="sortable-list" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/sortable-list/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { useState } from 'react';
+import { SortableList } from '@varient/ui';
+
+interface Task {
+  id: string;
+  label: string;
+}
+
+export function Example() {
+  const [items, setItems] = useState<Task[]>([
+    { id: 'a', label: 'Draft the release notes' },
+    { id: 'b', label: 'Tune the drag spring' },
+    { id: 'c', label: 'Ship it' },
+  ]);
+
+  return (
+    <SortableList
+      items={items}
+      onReorder={setItems}
+      renderItem={(task) => <span>{task.label}</span>}
+    />
+  );
+}
+```
+
+By default the whole row is the drag surface. Pass `showHandle` to restrict dragging to a grip
+icon on the left, leaving the rest of the row free for other interactive content (checkboxes,
+buttons, links):
+
+```tsx
+<SortableList items={items} onReorder={setItems} showHandle renderItem={(task) => ...} />
+```
+
+`getKey` controls the stable identity used for React/reorder keys — it defaults to `item.id` when
+present, otherwise the item itself (handy for lists of plain strings or numbers). Pass it whenever
+your items don't have an `id` field, or when the field is named something else:
+
+```tsx
+<SortableList items={items} getKey={(item) => item.slug} onReorder={setItems} renderItem={...} />
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'items', type: 'T[]', description: 'Required — the ordered data driving the list.' },
+    { name: 'onReorder', type: '(items: T[]) => void', description: 'Required — fires with the full new order after a drag, a keyboard move, or a row button click.' },
+    { name: 'renderItem', type: '(item: T) => ReactNode', description: 'Required — renders a row\'s content from its item.' },
+    { name: 'getKey', type: '(item: T) => string | number', defaultValue: 'item.id ?? item', description: 'Stable identity for list/React keys.' },
+    { name: 'showHandle', type: 'boolean', defaultValue: 'false', description: 'Restricts dragging to a grip handle instead of the whole row.' },
+    { name: 'isDisabled', type: 'boolean', defaultValue: 'false', description: 'Disables drag and keyboard reordering; rows stay visible and readable.' },
+    { name: 'aria-label', type: 'string', defaultValue: "'Sortable list'", description: 'Accessible name for the list.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged onto the list (`<ul>`) via cn().' },
+    { name: 'itemClassName', type: 'string', description: 'Additional Tailwind classes merged onto every row.' },
+  ]}
+/>
+
+## Accessibility
+
+- Every row is a focusable `<li>` (`tabIndex={0}`) with `aria-label="Item N of M"`, inside a
+  `<ul aria-label="Sortable list">` (override via the `aria-label` prop).
+- **ArrowUp / ArrowDown** move focus between rows (roving-focus, listbox-style) without reordering.
+- **Alt+ArrowUp / Alt+ArrowDown** reorder the focused row by one position — focus follows the row.
+- Per-row **↑ / ↓ buttons** perform the same move; they're always in the DOM and fade in on
+  hover or focus-within, so they're reachable via Tab even for pointer-only users who want precision
+  over free drag.
+- Every explicit move (Alt+Arrow or a row button) is announced through a polite live region, e.g.
+  *"Item 2 moved to position 1 of 4."* Free drag isn't announced per-frame — the row's own motion is
+  the feedback there, matching how drag-and-drop is announced elsewhere in the house.
+- Under `prefers-reduced-motion`, rows skip the drag lift/scale and the layout reflow becomes an
+  instant snap — reordering (drag, keyboard, and buttons) still fully works.

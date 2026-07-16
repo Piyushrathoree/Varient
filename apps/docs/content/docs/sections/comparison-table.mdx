@@ -3,7 +3,7 @@ title: Comparison Table
 description: A feature-by-feature plan comparison table with highlighted columns, category groups, and inline check/cross icons.
 ---
 
-<ComponentPreview name="comparison-table" />
+<ComponentPreview name="comparison-table" variant="section" />
 
 ## Installation
 
@@ -44,6 +44,7 @@ export function PricingPage() {
         { feature: 'Animated layer', values: [false, true, true] },
         { feature: 'Team members', values: ['1', '10', 'Unlimited'] },
       ]}
+      footnote="Prices shown in USD, billed monthly."
     />
   );
 }
@@ -58,6 +59,7 @@ export function PricingPage() {
     { name: 'description', type: 'string', description: 'One-line supporting copy below the title.' },
     { name: 'plans', type: 'ComparisonPlan[]', description: '2–3 pricing tiers shown as table columns with optional CTAs.' },
     { name: 'rows', type: 'ComparisonRow[]', description: 'Feature rows — boolean values render as check/cross icons, strings as text.' },
+    { name: 'footnote', type: 'ReactNode', description: 'Optional footnote or legend rendered below the table (e.g. asterisk explanations).' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
   ]}
 />

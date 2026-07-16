@@ -39,4 +39,4 @@ export function Example() {
 
 ## Accessibility
 
-The outer wrapper is `aria-live="polite"` and `aria-atomic="true"`, so each word change is announced without interrupting the user. When `prefers-reduced-motion` is set, words still cycle on the same interval but swap instantly — no opacity or translate animation. Only `transform` and `opacity` animate in the default motion path, keeping the transition GPU-friendly and predictable.
+The outer wrapper is `aria-live="polite"` and `aria-atomic="true"`, so each word change is announced without interrupting the user. When `prefers-reduced-motion` is set, the cycling interval itself is paused and the current word is shown with no opacity or translate animation. Only `transform` and `opacity` animate in the default motion path, keeping the transition GPU-friendly and predictable.

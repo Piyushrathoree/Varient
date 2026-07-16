@@ -1,0 +1,69 @@
+---
+title: Dynamic Island
+description: An iOS-style morphing status pill that auto-sizes and crossfades between named views.
+---
+
+<ComponentPreview name="dynamic-island" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/animated/dynamic-island/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { useState } from 'react';
+import { DynamicIsland } from '@varient/ui';
+
+export function Example() {
+  const [state, setState] = useState('idle');
+
+  return (
+    <DynamicIsland
+      state={state}
+      views={{
+        idle: <span className="px-1 text-xs text-foreground/70">Idle</span>,
+        timer: <span className="px-1 font-mono text-sm text-foreground">12:45</span>,
+      }}
+      onStateChange={(next) => console.log('island changed to', next)}
+    />
+  );
+}
+```
+
+Pass whatever `state` key is currently active — `DynamicIsland` is fully controlled, it has no
+internal state of its own. The pill measures the active view via a `layout` spring and resizes
+around it; swap `state` (e.g. from a timer, a push notification, or segmented buttons) and the
+pill morphs to fit the new content.
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'state', type: 'string', description: 'Required — key into `views` selecting the currently displayed content.' },
+    { name: 'views', type: 'Record<string, ReactNode>', description: 'Required — map of state key to the content rendered while that state is active.' },
+    { name: 'onStateChange', type: '(state: string) => void', description: 'Fires whenever the active state changes, including once on mount.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged onto the outer wrapper via cn().' },
+  ]}
+/>
+
+## Accessibility
+
+- The pill surface has `role="status"` and `aria-live="polite"`, so assistive tech announces the
+  region when the active view's content changes.
+- Interactive elements placed inside a view (buttons, links, etc.) keep their own semantics and
+  focus behavior — `DynamicIsland` never wraps them in anything that hides them from the
+  accessibility tree.
+- Under `prefers-reduced-motion`, the resize and crossfade both become instant swaps — no spring,
+  no scale/opacity transition.
+
+## Notes
+
+- The inner surface renders inside a `.dark`-classed subtree so the island reads as a dark pill in
+  both light and dark host themes, matching the real iOS Dynamic Island's always-dark chrome.
+- Sizing is driven entirely by the active view's intrinsic size — there's no `width`/`height` prop
+  to fight; wrap taller/wider content and the pill grows to match.

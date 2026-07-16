@@ -179,7 +179,7 @@ export const ToggleGroupItem = forwardRef<HTMLButtonElement, ToggleGroupItemProp
         value={value}
         disabled={isDisabled}
         className={cn(
-          'relative inline-flex flex-1 cursor-pointer items-center justify-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-[transform,color] duration-150 ease-out active:scale-[0.97] motion-reduce:transition-none',
+          'relative inline-flex flex-1 cursor-pointer items-center justify-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-[transform,color,background-color,box-shadow] duration-150 ease-out active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           'disabled:pointer-events-none disabled:opacity-50',
           itemSizeStyles[size],

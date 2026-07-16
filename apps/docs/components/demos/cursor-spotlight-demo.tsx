@@ -21,12 +21,14 @@ function KeywordGrid() {
   return (
     <div className="grid grid-cols-3 gap-3 p-6 sm:grid-cols-4">
       {KEYWORDS.map((word) => (
-        <span
+        <button
           key={word}
-          className="rounded-lg border border-border bg-card px-3 py-2 text-center text-sm font-medium text-foreground"
+          type="button"
+          onClick={() => {}}
+          className="rounded-lg border border-border bg-card px-3 py-2 text-center text-sm font-medium text-foreground transition-colors hover:border-brand/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           {word}
-        </span>
+        </button>
       ))}
     </div>
   );
@@ -37,7 +39,8 @@ export function CursorSpotlightDemo() {
     <div className="flex w-full flex-col items-center gap-6 py-6">
       <p className="max-w-md text-center text-sm font-medium text-muted-foreground">
         Move your cursor over the card — a circular mask reveals full-brightness
-        content beneath a dimmed layer.
+        content beneath a dimmed layer. Every keyword is a real, tabbable
+        button — try navigating with Tab.
       </p>
 
       <div className="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">

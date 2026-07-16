@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import { Fragment, forwardRef, useId, type HTMLAttributes, type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { EASE_OUT } from '../../../lib/animation';
@@ -28,6 +28,8 @@ export interface ComparisonTableProps extends Omit<HTMLAttributes<HTMLElement>, 
   description?: string;
   plans?: ComparisonPlan[];
   rows?: ComparisonRow[];
+  /** Optional footnote or legend rendered below the table (e.g. asterisk explanations). */
+  footnote?: ReactNode;
 }
 
 function CheckIcon({ className }: { className?: string }) {
@@ -154,11 +156,13 @@ export const ComparisonTable = forwardRef<HTMLElement, ComparisonTableProps>(
       description = 'See exactly what each tier includes before you commit.',
       plans = defaultComparisonPlans,
       rows = defaultComparisonRows,
+      footnote,
       ...props
     },
     ref,
   ) => {
     const shouldReduceMotion = useReducedMotion();
+    const headingId = useId();
 
     const headerMotion = shouldReduceMotion
       ? {}
@@ -175,7 +179,7 @@ export const ComparisonTable = forwardRef<HTMLElement, ComparisonTableProps>(
       <section
         ref={ref}
         className={cn('w-full px-6 py-16 md:px-8 md:py-24', className)}
-        aria-labelledby="comparison-table-heading"
+        aria-labelledby={headingId}
         {...props}
       >
         <motion.header className="max-w-2xl" {...headerMotion}>
@@ -183,7 +187,7 @@ export const ComparisonTable = forwardRef<HTMLElement, ComparisonTableProps>(
             <p className="text-sm font-medium text-brand">{eyebrow}</p>
           )}
           <h2
-            id="comparison-table-heading"
+            id={headingId}
             className="mt-2 font-display text-2xl font-semibold tracking-tight text-foreground md:text-3xl"
           >
             {title}
@@ -209,7 +213,7 @@ export const ComparisonTable = forwardRef<HTMLElement, ComparisonTableProps>(
                     scope="col"
                     className={cn(
                       'px-4 py-4 text-center',
-                      plan.isHighlighted && 'border-t-2 border-t-brand bg-muted/50',
+                      plan.isHighlighted && 'border-t-2 border-t-brand bg-brand/5',
                     )}
                   >
                     <div className="flex flex-col items-center gap-1">
@@ -271,7 +275,7 @@ export const ComparisonTable = forwardRef<HTMLElement, ComparisonTableProps>(
                             key={`${row.feature}-${colIndex}`}
                             className={cn(
                               'px-4 py-3 text-center',
-                              plan?.isHighlighted && 'bg-muted/50',
+                              plan?.isHighlighted && 'bg-brand/5',
                             )}
                           >
                             <FeatureValue value={value} />
@@ -285,6 +289,10 @@ export const ComparisonTable = forwardRef<HTMLElement, ComparisonTableProps>(
             </tbody>
           </table>
         </div>
+
+        {footnote && (
+          <p className="mt-4 text-xs text-muted-foreground">{footnote}</p>
+        )}
       </section>
     );
   },

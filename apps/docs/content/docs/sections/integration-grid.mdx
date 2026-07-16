@@ -3,7 +3,7 @@ title: Integration Grid
 description: A responsive grid of supported integrations with optional badges and outbound links.
 ---
 
-<ComponentPreview name="integration-grid" />
+<ComponentPreview name="integration-grid" variant="section" />
 
 ## Installation
 
@@ -70,6 +70,7 @@ export function IntegrationsPage() {
 
 The section uses a semantic `<section>` with `aria-labelledby` pointing at the heading.
 Tiles with `href` render as focusable links with visible focus rings and descriptive `aria-label` values combining name and description.
+Each tile carries a visually-hidden `<h3>` with the integration name so screen-reader users can navigate the grid by heading; the matching visible label is `aria-hidden` to avoid double announcement.
 Decorative placeholder SVG glyphs are `aria-hidden`.
 Outbound links use `rel="noopener noreferrer"`.
 

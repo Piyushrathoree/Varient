@@ -1,9 +1,10 @@
 'use client';
 
-import { forwardRef, useEffect, useMemo, useState } from 'react';
+import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { DURATION_INSTANT } from '../../../lib/animation';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 export interface TypewriterTextProps {
   /** Plain text or phrases to cycle (type → pause → delete → next). */
@@ -50,6 +51,8 @@ export const TypewriterText = forwardRef<HTMLSpanElement, TypewriterTextProps>(
     ref,
   ) => {
     const shouldReduceMotion = useReducedMotion();
+    const localRef = useRef<HTMLSpanElement>(null);
+    const isViewportActive = useViewportActive(localRef);
     const phrases = useMemo(() => normalizePhrases(text), [text]);
 
     const accessibleLabel = useMemo(
@@ -73,7 +76,7 @@ export const TypewriterText = forwardRef<HTMLSpanElement, TypewriterTextProps>(
     }, [phrases]);
 
     useEffect(() => {
-      if (shouldReduceMotion) return;
+      if (shouldReduceMotion || !isViewportActive) return;
 
       let timer: ReturnType<typeof setTimeout> | undefined;
 
@@ -123,6 +126,7 @@ export const TypewriterText = forwardRef<HTMLSpanElement, TypewriterTextProps>(
       };
     }, [
       shouldReduceMotion,
+      isViewportActive,
       phase,
       charIndex,
       phraseIndex,
@@ -140,9 +144,15 @@ export const TypewriterText = forwardRef<HTMLSpanElement, TypewriterTextProps>(
       ? (phrases[0] ?? '')
       : currentPhrase.slice(0, charIndex);
 
+    const isCursorAnimating = !shouldReduceMotion && isViewportActive;
+
     return (
       <span
-        ref={ref}
+        ref={(node) => {
+          localRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+        }}
         aria-label={accessibleLabel}
         className={cn('inline text-foreground', className)}
       >
@@ -153,19 +163,19 @@ export const TypewriterText = forwardRef<HTMLSpanElement, TypewriterTextProps>(
               aria-hidden="true"
               className="ml-px inline-block text-brand"
               animate={
-                shouldReduceMotion
-                  ? { opacity: 1 }
-                  : { opacity: [1, 1, 0, 0] }
+                isCursorAnimating
+                  ? { opacity: [1, 1, 0, 0] }
+                  : { opacity: 1 }
               }
               transition={
-                shouldReduceMotion
-                  ? DURATION_INSTANT
-                  : {
+                isCursorAnimating
+                  ? {
                       duration: 1,
                       repeat: Infinity,
                       ease: 'linear',
                       times: [0, 0.49, 0.5, 1],
                     }
+                  : DURATION_INSTANT
               }
             >
               |

@@ -52,6 +52,21 @@ Three track/thumb scales via the `size` prop — `sm`, `md` (default), and `lg`.
 <Slider defaultValue={[50]} size="lg" aria-label="Large slider" />
 ```
 
+## Show value label
+
+Set `showValue` to float a small value label above a thumb while it's pressed or focused — useful when the
+track alone doesn't communicate a precise number.
+
+```tsx
+<Slider value={value} onValueChange={setValue} showValue aria-label="Zoom" />
+```
+
+## Eased programmatic changes
+
+When `value` changes from outside (a "jump to" button, a reset, syncing from another control), the range
+fill and thumb position now ease over ~150ms instead of snapping, so external `setValue` calls read as a
+motion rather than a jump. This transition is disabled under `prefers-reduced-motion`.
+
 ## Props
 
 <PropsTable
@@ -65,6 +80,7 @@ Three track/thumb scales via the `size` prop — `sm`, `md` (default), and `lg`.
     { name: 'onValueChange', type: '(value: number[]) => void', description: 'Called continuously while a thumb is dragged or moved via keyboard.' },
     { name: 'size', type: 'SliderSize', defaultValue: "'md'", description: 'Track thickness and thumb diameter — sm, md, or lg.' },
     { name: 'orientation', type: "'horizontal' | 'vertical'", defaultValue: "'horizontal'", description: 'Layout direction of the track.' },
+    { name: 'showValue', type: 'boolean', defaultValue: 'false', description: 'Shows a small floating value label above the pressed or focused thumb.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root.' },
   ]}
 />
@@ -83,4 +99,7 @@ Built on `@radix-ui/react-slider` for correct roles, focus management, and point
 | `Page Up` | Increase the focused thumb by a larger step. |
 | `Tab` / `Shift + Tab` | Move focus to the next / previous focusable element. |
 
-Each thumb exposes `role="slider"` with `aria-valuemin`, `aria-valuemax`, and `aria-valuenow`. Thumb hover/active scale animations drop to instant when `prefers-reduced-motion` is set.
+Each thumb exposes `role="slider"` with `aria-valuemin`, `aria-valuemax`, and `aria-valuenow`. Thumb
+hover/active scale animations, the eased range/thumb transition on programmatic value changes, and the
+`showValue` label's spring pop all drop to instant/disabled when `prefers-reduced-motion` is set. The
+floating value label is `aria-hidden` — the value is already exposed via `aria-valuenow` on the thumb.

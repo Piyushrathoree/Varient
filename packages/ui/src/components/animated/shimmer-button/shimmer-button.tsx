@@ -1,8 +1,9 @@
 'use client';
 
-import { forwardRef, type ButtonHTMLAttributes } from 'react';
+import { forwardRef, useRef, type ButtonHTMLAttributes } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../../lib/utils';
+import { useViewportActive } from '../../../lib/use-viewport-active';
 
 export type ShimmerButtonSize = 'sm' | 'md' | 'lg';
 
@@ -11,6 +12,8 @@ export interface ShimmerButtonProps extends ButtonHTMLAttributes<HTMLButtonEleme
   shimmerColor?: string;
   /** Duration of one shimmer sweep, in seconds. */
   shimmerDuration?: number;
+  /** Width of the shimmer sweep band, as a CSS size (e.g. '40%', '3rem'). */
+  shimmerWidth?: string;
   /** Button fill — defaults to the brand candy gradient. Accepts any CSS background value. */
   background?: string;
   size?: ShimmerButtonSize;
@@ -43,6 +46,7 @@ export const ShimmerButton = forwardRef<HTMLButtonElement, ShimmerButtonProps>(
       children,
       shimmerColor = DEFAULT_SHIMMER_COLOR,
       shimmerDuration = 3,
+      shimmerWidth = '40%',
       background = DEFAULT_BACKGROUND,
       size = 'md',
       isDisabled = false,
@@ -53,10 +57,16 @@ export const ShimmerButton = forwardRef<HTMLButtonElement, ShimmerButtonProps>(
     ref,
   ) => {
     const shouldReduceMotion = useReducedMotion();
+    const internalRef = useRef<HTMLButtonElement>(null);
+    const isViewportActive = useViewportActive(internalRef);
 
     return (
       <button
-        ref={ref}
+        ref={(node) => {
+          internalRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+        }}
         type={type}
         disabled={isDisabled}
         aria-disabled={isDisabled || undefined}
@@ -69,7 +79,7 @@ export const ShimmerButton = forwardRef<HTMLButtonElement, ShimmerButtonProps>(
             aria-hidden
             className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
             initial={{ x: '-120%' }}
-            animate={{ x: '120%' }}
+            animate={isViewportActive ? { x: '120%' } : {}}
             transition={{
               duration: shimmerDuration,
               repeat: Infinity,
@@ -77,8 +87,9 @@ export const ShimmerButton = forwardRef<HTMLButtonElement, ShimmerButtonProps>(
             }}
           >
             <span
-              className="absolute inset-y-0 w-2/5 -skew-x-12 opacity-70"
+              className="absolute inset-y-0 -skew-x-12 opacity-70"
               style={{
+                width: shimmerWidth,
                 background: `linear-gradient(90deg, transparent, ${shimmerColor}, transparent)`,
               }}
             />

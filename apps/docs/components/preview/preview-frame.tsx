@@ -13,7 +13,7 @@ interface PreviewFrameProps {
 
 // Padding scales with height so a compact card preview doesn't drown in
 // whitespace while the full detail-page sandbox gets room to breathe.
-const sizeStyles = {
+export const previewFrameSizeStyles = {
   sm: 'min-h-[160px] p-6',
   md: 'min-h-[240px] p-8',
   lg: 'min-h-[360px] p-10 sm:p-14',
@@ -22,10 +22,22 @@ const sizeStyles = {
 } satisfies Record<NonNullable<PreviewFrameProps['minHeight']>, string>;
 
 /**
- * The sandboxed surface every live/looping demo renders inside — SmoothUI's
- * "frame-box" dotted canvas (app/global.css `.frame-box`), ported as a
- * self-contained utility stack rather than a global class: a rounded card on
- * `bg-background`/`border-border`, with a `currentColor`-driven dot-grid so
+ * The `currentColor`-driven dot grid painted behind every live preview —
+ * repaints correctly in light and dark without a `dark:` override. Shared by
+ * `PreviewFrame` and `PreviewStage` so both canvases stay pixel-identical.
+ */
+export function PreviewDotGrid() {
+  return (
+    <div
+      aria-hidden
+      className="absolute inset-0 text-foreground/[0.07] [background-image:radial-gradient(currentColor_1px,transparent_1px)] [background-size:18px_18px]"
+    />
+  );
+}
+
+/**
+ * The sandboxed surface every live/looping demo renders inside — a rounded card
+ * on `bg-background`/`border-border`, with a `currentColor`-driven dot-grid so
  * it repaints correctly in light and dark without a `dark:` override.
  */
 export function PreviewFrame({
@@ -48,14 +60,10 @@ export function PreviewFrame({
         className={cn(
           'relative isolate flex overflow-hidden bg-background',
           alignTop ? 'items-start justify-center' : 'items-center justify-center',
-          sizeStyles[minHeight],
+          previewFrameSizeStyles[minHeight],
         )}
       >
-        {/* Dotted canvas — currentColor keeps it theme-correct without dark: */}
-        <div
-          aria-hidden
-          className="absolute inset-0 text-foreground/[0.07] [background-image:radial-gradient(currentColor_1px,transparent_1px)] [background-size:18px_18px]"
-        />
+        <PreviewDotGrid />
         <div className="relative z-10 w-full">{children}</div>
       </div>
     </div>

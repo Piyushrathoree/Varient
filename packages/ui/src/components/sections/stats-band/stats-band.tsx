@@ -1,6 +1,10 @@
-import { forwardRef, useId, type HTMLAttributes } from 'react';
+'use client';
+
+import { forwardRef, useId, type HTMLAttributes, type ReactNode } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { NumberTicker } from '../../animated/number-ticker';
 import { cn } from '../../../lib/utils';
+import { EASE_OUT } from '../../../lib/animation';
 
 export interface StatsBandStat {
   value: number;
@@ -8,12 +12,16 @@ export interface StatsBandStat {
   suffix?: string;
   label: string;
   decimalPlaces?: number;
+  /** Optional icon rendered above the value — inline SVG or any node, 20×20 recommended. */
+  icon?: ReactNode;
 }
 
 export interface StatsBandProps extends HTMLAttributes<HTMLElement> {
   stats?: StatsBandStat[];
   title?: string;
   description?: string;
+  /** Renders each stat inside a raised card surface instead of plain text on the section background. */
+  isRaised?: boolean;
 }
 
 const DEFAULT_STATS: StatsBandStat[] = [
@@ -30,11 +38,22 @@ export const StatsBand = forwardRef<HTMLElement, StatsBandProps>(
       stats = DEFAULT_STATS,
       title,
       description,
+      isRaised = false,
       ...props
     },
     ref,
   ) => {
     const headingId = useId();
+    const shouldReduceMotion = useReducedMotion();
+
+    const headerMotion = shouldReduceMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 12 },
+          whileInView: { opacity: 1, y: 0 },
+          transition: { duration: 0.3, ease: EASE_OUT },
+          viewport: { once: true, amount: 0.4 } as const,
+        };
 
     return (
       <section
@@ -45,7 +64,10 @@ export const StatsBand = forwardRef<HTMLElement, StatsBandProps>(
       >
         <div className="mx-auto max-w-6xl space-y-10">
           {(title || description) && (
-            <div className="mx-auto max-w-2xl space-y-2 text-center">
+            <motion.div
+              className="mx-auto max-w-2xl space-y-2 text-center"
+              {...headerMotion}
+            >
               {title && (
                 <h2
                   id={headingId}
@@ -59,19 +81,35 @@ export const StatsBand = forwardRef<HTMLElement, StatsBandProps>(
                   {description}
                 </p>
               )}
-            </div>
+            </motion.div>
           )}
 
-          <div className="grid grid-cols-2 gap-8 lg:grid-cols-4" role="list">
+          <div
+            className={cn(
+              'grid grid-cols-2 gap-8 lg:grid-cols-4',
+              isRaised && 'gap-4',
+            )}
+            role="list"
+          >
             {stats.map((stat, index) => (
               <div
                 key={stat.label}
                 className={cn(
                   'flex flex-col items-center text-center',
-                  index > 0 && 'lg:border-l lg:border-border lg:pl-8',
+                  isRaised
+                    ? 'rounded-xl border border-border bg-card px-4 py-6 shadow-sm'
+                    : index > 0 && 'lg:border-l lg:border-border lg:pl-8',
                 )}
                 role="listitem"
               >
+                {stat.icon && (
+                  <div
+                    aria-hidden
+                    className="mb-2 flex h-9 w-9 items-center justify-center rounded-full bg-brand/10 text-brand"
+                  >
+                    {stat.icon}
+                  </div>
+                )}
                 <p className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
                   <NumberTicker
                     decimalPlaces={stat.decimalPlaces}

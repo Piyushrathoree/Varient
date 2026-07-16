@@ -3,6 +3,9 @@ import { ArrowUpRight } from 'lucide-react';
 import { cn } from '@varient/ui';
 import { Github } from '@/components/site/brand-icons';
 import { getReadyCount, layerLabels } from '@/lib/components/registry';
+import { gitConfig } from '@/lib/shared';
+
+const GITHUB_URL = `https://github.com/${gitConfig.user}/${gitConfig.repo}`;
 
 interface FooterLink {
   external?: boolean;
@@ -37,7 +40,7 @@ const guideColumn: FooterColumn = {
 const projectColumn: FooterColumn = {
   title: 'Project',
   links: [
-    { label: 'GitHub', href: 'https://github.com/piyush/varient', external: true },
+    { label: 'GitHub', href: GITHUB_URL, external: true },
     { label: 'Documentation', href: '/docs' },
   ],
 };
@@ -98,8 +101,9 @@ export function SiteFooter() {
               className={cn('inline-flex items-center gap-2 rounded-sm', focusRing)}
               href="/"
             >
-              <span className="font-semibold text-xl tracking-tight text-foreground">Varient</span>
-              <span aria-hidden className="size-1.5 rounded-full bg-brand" />
+              <span className="font-title text-xl font-semibold tracking-tight text-foreground">
+                Vari<span className="text-brand">ent</span>
+              </span>
             </Link>
             <p className="max-w-sm text-balance text-sm leading-relaxed text-muted-foreground">
               Copy-paste React components for utilities, animations, and full-page sections. You
@@ -122,7 +126,7 @@ export function SiteFooter() {
                     'inline-flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-foreground/15 hover:text-foreground',
                     focusRing,
                   )}
-                  href="https://github.com/piyush/varient"
+                  href={GITHUB_URL}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -140,17 +144,6 @@ export function SiteFooter() {
 
         <div className="flex flex-col gap-3 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {new Date().getFullYear()} Varient. All rights reserved.</p>
-          <p className="text-xs sm:text-sm">
-            Design language inspired by{' '}
-            <a
-              className={cn('text-foreground/80 underline-offset-4 transition-colors hover:text-brand hover:underline', focusRing, 'rounded-sm')}
-              href="https://smoothui.dev"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              SmoothUI (MIT)
-            </a>
-          </p>
         </div>
       </div>
     </footer>

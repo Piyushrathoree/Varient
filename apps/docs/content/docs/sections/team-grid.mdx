@@ -3,7 +3,7 @@ title: Team Grid
 description: A responsive grid of team member profiles with avatars and optional social links.
 ---
 
-<ComponentPreview name="team-grid" />
+<ComponentPreview name="team-grid" variant="section" />
 
 ## Installation
 
@@ -28,7 +28,6 @@ export function AboutPage() {
         {
           name: 'Maya Chen',
           role: 'Engineering lead',
-          avatarSrc: 'https://i.pravatar.cc/150?img=1',
           socials: { github: 'https://github.com', linkedin: 'https://linkedin.com' },
         },
       ]}
@@ -44,7 +43,7 @@ export function AboutPage() {
     { name: 'eyebrow', type: 'string', defaultValue: "'Team'", description: 'Small brand-colored label above the section title.' },
     { name: 'title', type: 'string', defaultValue: "'The people behind Varient'", description: 'Section headline.' },
     { name: 'description', type: 'string', description: 'One-line supporting copy below the title.' },
-    { name: 'members', type: 'TeamMember[]', description: 'Profile grid items — each needs name and role; avatarSrc and socials are optional.' },
+    { name: 'members', type: 'TeamMember[]', description: 'Profile grid items — each needs name and role; avatarSrc and socials are optional. Defaults to a 6-member roster with no avatarSrc (initials fallback).' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
   ]}
 />
@@ -53,12 +52,15 @@ export function AboutPage() {
 
 <PropsTable
   props={[
-    { name: 'name', type: 'string', description: 'Member display name.' },
+    { name: 'name', type: 'string', description: 'Member display name. Also used to derive the avatar initials fallback.' },
     { name: 'role', type: 'string', description: 'Role or title below the name.' },
-    { name: 'avatarSrc', type: 'string', description: 'Optional image URL for the profile avatar.' },
+    { name: 'avatarSrc', type: 'string', description: 'Optional image URL for the profile avatar. Omit it to show a token-colored initials avatar instead — the default roster ships with no avatarSrc so nothing hotlinks out at render time.' },
     { name: 'socials', type: '{ github?: string; x?: string; linkedin?: string }', description: 'Optional social profile URLs — only provided networks render as icon links.' },
   ]}
 />
+
+> Social icons always render in a fixed `github → x → linkedin` order regardless of the key order
+> you write in the `socials` object — this keeps every member card visually consistent.
 
 ## Accessibility
 

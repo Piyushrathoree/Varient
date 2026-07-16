@@ -57,14 +57,41 @@ export function CardDemo() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <p className="text-sm font-medium text-muted-foreground">Ghost</p>
-        <Card variant="ghost">
-          <Card.Body>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              No border, no fill — for content that should sit flush with the page.
-            </p>
-          </Card.Body>
-        </Card>
+        <p className="text-sm font-medium text-muted-foreground">Variants</p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+            <Card className="w-full" variant="default">
+              <Card.Body>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  Hairline border, filled surface, soft shadow.
+                </p>
+              </Card.Body>
+            </Card>
+            <span className="text-xs font-medium text-muted-foreground">Default</span>
+          </div>
+
+          <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+            <Card className="w-full" variant="outline">
+              <Card.Body>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  Hairline border only — no fill, no shadow.
+                </p>
+              </Card.Body>
+            </Card>
+            <span className="text-xs font-medium text-muted-foreground">Outline</span>
+          </div>
+
+          <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+            <Card className="w-full" variant="ghost">
+              <Card.Body>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  No border, no fill — sits flush with the page.
+                </p>
+              </Card.Body>
+            </Card>
+            <span className="text-xs font-medium text-muted-foreground">Ghost</span>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -85,6 +85,22 @@ function CommandPalettePanel({
   );
 }
 
+/** Static illustration of the CommandPalette.Empty state for an unmatched query. */
+function CommandPaletteEmptyStateCard() {
+  return (
+    <div className="w-full max-w-sm overflow-hidden rounded-lg border border-border bg-popover text-popover-foreground shadow-sm">
+      <div className="flex items-center border-b border-border px-3" cmdk-input-wrapper="">
+        <span className="flex h-11 w-full items-center py-3 text-sm text-foreground">
+          xylophone
+        </span>
+      </div>
+      <div className="p-1.5">
+        <p className="py-6 text-center text-sm text-muted-foreground">No results found.</p>
+      </div>
+    </div>
+  );
+}
+
 export function CommandPaletteDemo() {
   const [isOpen, setIsOpen] = useState(false);
   const [isThemeOpen, setIsThemeOpen] = useState(false);
@@ -104,7 +120,7 @@ export function CommandPaletteDemo() {
 
   return (
     <div className="flex w-full flex-col gap-8">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <DemoCard label="Keyboard shortcut">
           <Button variant="outline" onClick={() => setIsOpen(true)}>
             Open palette
@@ -138,6 +154,10 @@ export function CommandPaletteDemo() {
               </CommandPalette.Group>
             </CommandPalette.List>
           </CommandPalette>
+        </DemoCard>
+
+        <DemoCard label="No results">
+          <CommandPaletteEmptyStateCard />
         </DemoCard>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { Button, cn } from '@varient/ui';
 import { getDemo } from '@/lib/components/demos';
 import { getComponentBySlug, getComponentHref } from '@/lib/components/registry';
+import { LazyMount } from '@/components/preview/lazy-mount';
 import Divider from '@/components/marketing/divider';
 import { SectionHeader } from '@/components/marketing/section-header';
 
@@ -14,16 +15,17 @@ interface BentoCell {
   className?: string;
 }
 
-/** Asymmetric bento — visually strong shipped demos, compact previews. */
+/** Asymmetric bento — visually strong shipped demos, compact previews, rebalanced toward
+ * ambient/interactive "wow" over static text demos. */
 const BENTO_CELLS: BentoCell[] = [
   { slug: 'globe', className: 'lg:col-span-3 lg:row-span-2 min-h-[280px] lg:min-h-[360px]' },
-  { slug: 'border-beam', className: 'lg:col-span-3 min-h-[160px]' },
-  { slug: 'shimmer-button', className: 'lg:col-span-3 min-h-[160px]' },
+  { slug: 'hero-highlight', className: 'lg:col-span-3 min-h-[160px]' },
+  { slug: 'dock', className: 'lg:col-span-3 min-h-[160px]' },
   { slug: 'animated-beam', className: 'lg:col-span-2 min-h-[200px]' },
   { slug: 'tilt-card', className: 'lg:col-span-2 min-h-[200px]' },
-  { slug: 'number-ticker', className: 'lg:col-span-2 min-h-[200px]' },
+  { slug: 'sparkles', className: 'lg:col-span-2 min-h-[200px]' },
   { slug: 'marquee', className: 'lg:col-span-3 min-h-[140px]' },
-  { slug: 'typewriter-text', className: 'lg:col-span-3 min-h-[140px]' },
+  { slug: 'terminal', className: 'lg:col-span-3 min-h-[140px]' },
 ];
 
 const EASE_OUT = [0.25, 0.46, 0.45, 0.94] as const;
@@ -48,7 +50,9 @@ function BentoTile({ slug, className, index }: BentoCell & { index: number }) {
         className="pointer-events-none absolute inset-0 opacity-[0.04] [background-image:radial-gradient(circle,var(--color-border)_1px,transparent_1px)] [background-size:16px_16px]"
       />
       <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-lg p-4">
-        <Demo />
+        <LazyMount className="flex items-center justify-center" minHeight={96}>
+          <Demo />
+        </LazyMount>
       </div>
       <footer className="relative flex items-center justify-between gap-2 border-t border-border/60 px-3 py-2">
         <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">

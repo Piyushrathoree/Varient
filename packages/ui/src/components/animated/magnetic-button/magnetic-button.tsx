@@ -1,9 +1,10 @@
 'use client';
 
-import { forwardRef, useEffect, useRef, useState, type ButtonHTMLAttributes } from 'react';
+import { forwardRef, useEffect, useRef, type ButtonHTMLAttributes } from 'react';
 import { motion, useMotionValue, useReducedMotion, useSpring } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import { SPRING_BOUNCE } from '../../../lib/animation';
+import { useFinePointer } from '../../../lib/use-fine-pointer';
 
 // motion.button redefines these DOM event handlers with its own gesture/
 // animation signatures, so the native React ones must be omitted to spread
@@ -20,8 +21,7 @@ export interface MagneticButtonProps extends NativeButtonProps {
   distance?: number;
 }
 
-// SmoothUI's drag-language spring — the one case where SPRING_BOUNCE's
-// overshoot reads as physical rather than sloppy.
+// Drag-language spring — the one case where SPRING_BOUNCE's overshoot reads as physical.
 const springConfig = { duration: SPRING_BOUNCE.duration, bounce: SPRING_BOUNCE.bounce };
 
 /**
@@ -35,20 +35,12 @@ export const MagneticButton = forwardRef<HTMLButtonElement, MagneticButtonProps>
   ({ className, children, strength = 0.3, distance = 100, style, ...props }, ref) => {
     const nodeRef = useRef<HTMLButtonElement | null>(null);
     const shouldReduceMotion = useReducedMotion();
-    const [isFinePointer, setIsFinePointer] = useState(false);
+    const isFinePointer = useFinePointer();
 
     const rawX = useMotionValue(0);
     const rawY = useMotionValue(0);
     const x = useSpring(rawX, springConfig);
     const y = useSpring(rawY, springConfig);
-
-    useEffect(() => {
-      const mediaQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
-      setIsFinePointer(mediaQuery.matches);
-      const handleChange = (event: MediaQueryListEvent) => setIsFinePointer(event.matches);
-      mediaQuery.addEventListener('change', handleChange);
-      return () => mediaQuery.removeEventListener('change', handleChange);
-    }, []);
 
     const isEnabled = isFinePointer && !shouldReduceMotion;
 

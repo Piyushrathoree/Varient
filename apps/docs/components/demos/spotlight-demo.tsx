@@ -44,6 +44,34 @@ export function SpotlightDemo() {
           </div>
           <span className="text-xs font-medium text-muted-foreground">Smaller radius, lighter brand</span>
         </div>
+
+        <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+          <div className="relative h-32 w-full overflow-hidden rounded-lg border border-border bg-foreground">
+            <Spotlight variant="border" />
+            <div className="relative z-10 flex h-full items-center justify-center">
+              <span className="text-sm font-medium text-background">Border</span>
+            </div>
+          </div>
+          <span className="text-xs font-medium text-muted-foreground">
+            Glow hugs and travels the edge
+          </span>
+        </div>
+
+        <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6">
+          <div className="relative h-32 w-full overflow-hidden rounded-lg border border-border bg-foreground">
+            <Spotlight
+              variant="border"
+              borderWidth={3}
+              fill="color-mix(in oklab, var(--color-brand-light) 55%, transparent)"
+            />
+            <div className="relative z-10 flex h-full items-center justify-center">
+              <span className="text-sm font-medium text-background">Border, thicker + brand</span>
+            </div>
+          </div>
+          <span className="text-xs font-medium text-muted-foreground">
+            borderWidth 3, brand-light fill
+          </span>
+        </div>
       </div>
     </div>
   );

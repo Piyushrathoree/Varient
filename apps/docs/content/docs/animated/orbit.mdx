@@ -44,6 +44,7 @@ export function Example() {
     { name: 'duration', type: 'number', defaultValue: '20', description: 'Seconds for one full revolution.' },
     { name: 'isReverse', type: 'boolean', defaultValue: 'false', description: 'Reverse the orbit direction.' },
     { name: 'showPath', type: 'boolean', defaultValue: 'true', description: 'Show a faint circular path behind the orbit.' },
+    { name: 'startAngle', type: 'number', defaultValue: '0', description: 'Starting angle in degrees (0 = top, clockwise) applied to the whole ring before children are distributed evenly — offset multiple orbits or a single asymmetric composition.' },
     { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(). Applied to the orbit container.' },
   ]}
 />
@@ -53,3 +54,4 @@ export function Example() {
 - The optional path ring is decorative and marked `aria-hidden` with `pointer-events-none`.
 - Under `prefers-reduced-motion`, items are statically distributed around the circle with no rotation animation.
 - Orbiting children remain in the tab order and can receive focus if they are interactive elements.
+- The orbit loop pauses while scrolled offscreen to avoid burning CPU on animations no one can see, and resumes when back in view.

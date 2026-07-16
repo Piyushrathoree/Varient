@@ -3,7 +3,7 @@ title: Hero
 description: Two-column landing hero with announcement pill, dual CTAs, and a live component showcase grid.
 ---
 
-<ComponentPreview name="hero" />
+<ComponentPreview name="hero" variant="section" />
 
 ## Installation
 
@@ -40,7 +40,9 @@ export function LandingPage() {
 
 Per the landing spec: two columns on `lg` (`lg:grid-cols-2`). The left column carries an announcement pill, display headline, subhead, primary + outline CTAs, and an optional "built with" row. The right column renders a grid of real foundation components (Card, Badge, Switch, Input, NumberTicker) — the product demos itself, not a screenshot.
 
-Pass `visual` to replace the default showcase with your own node. Pass `builtWith={[]}` to hide the tech stack row.
+Pass `visual` to replace the default showcase with your own node. Pass `builtWith={[]}` to hide the tech stack row, and `announcement={null}` to hide the pill entirely (omitting the prop still renders the default announcement).
+
+The announcement pill's shimmer sweeps once on mount, then replays once per hover — it never loops perpetually. The visual showcase grid collapses to a single column below `sm` so it stays legible on narrow phones.
 
 ## Props
 
@@ -48,7 +50,7 @@ Pass `visual` to replace the default showcase with your own node. Pass `builtWit
   props={[
     { name: 'title', type: 'string', defaultValue: "'Animated components you can copy and own'", description: 'Display headline — rendered as the page h1.' },
     { name: 'subtitle', type: 'string', defaultValue: '(see source)', description: 'One-paragraph subhead below the title.' },
-    { name: 'announcement', type: '{ badge?: string; label: string; href?: string }', defaultValue: '(see source)', description: 'Announcement pill above the headline. `badge` is the brand-tinted chip; `label` is the trailing copy. `href` makes the pill a link.' },
+    { name: 'announcement', type: '{ badge?: string; label: string; href?: string } | null', defaultValue: '(see source)', description: 'Announcement pill above the headline. `badge` is the brand-tinted chip; `label` is the trailing copy. `href` makes the pill a link. Pass `null` to hide it.' },
     { name: 'primaryCta', type: '{ label: string; href: string }', defaultValue: "'Browse components'", description: 'Primary brand button — top of the CTA pair.' },
     { name: 'secondaryCta', type: '{ label: string; href: string }', defaultValue: "'Read the docs'", description: 'Secondary outline button beside the primary CTA.' },
     { name: 'builtWith', type: 'string[]', defaultValue: "['Next.js', 'React', 'Tailwind CSS', 'Motion']", description: 'Tech stack names in the "built with" row. Pass an empty array to hide.' },
@@ -66,4 +68,4 @@ The root is a `<section>` labelled by the h1 via `aria-labelledby`. CTA links ar
 | `Tab` / `Shift + Tab` | Moves focus through the announcement link, CTA buttons, and interactive elements in the visual grid. |
 | `Enter` / `Space` | Activates the focused link or button. |
 
-Entrance animations respect `prefers-reduced-motion` — reduced-motion users see content immediately without translate or fade delays. The announcement shimmer is omitted when reduced motion is preferred.
+Entrance animations respect `prefers-reduced-motion` — reduced-motion users see content immediately without translate or fade delays. The announcement shimmer is omitted when reduced motion is preferred, and otherwise plays once on mount plus once per hover rather than looping forever.

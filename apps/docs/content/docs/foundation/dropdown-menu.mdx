@@ -100,6 +100,31 @@ Uncontrolled by default — the menu tracks its own open state. Pass `open` toge
   ]}
 />
 
+### DropdownMenu.CheckboxItem
+
+Same chassis as `DropdownMenu.Item`, with a reserved left gutter for an animated check mark instead of an `icon` prop. Fully controlled — always pass `checked` and `onCheckedChange`.
+
+<PropsTable
+  props={[
+    { name: 'checked', type: "boolean | 'indeterminate'", description: 'Controlled checked state.' },
+    { name: 'onCheckedChange', type: '(checked: boolean) => void', description: 'Called when the item is toggled via click, Enter, or Space.' },
+    { name: 'disabled', type: 'boolean', defaultValue: 'false', description: 'Disables the item — no toggle, no highlight.' },
+  ]}
+/>
+
+### DropdownMenu.RadioGroup / DropdownMenu.RadioItem
+
+`RadioGroup` wraps a set of mutually-exclusive `RadioItem`s (same chassis as `Item`, with a reserved left gutter for an animated dot). Fully controlled — always pass `value` and `onValueChange` on the group.
+
+<PropsTable
+  props={[
+    { name: 'DropdownMenu.RadioGroup value', type: 'string', description: 'Currently selected value, shared with all child RadioItems.' },
+    { name: 'DropdownMenu.RadioGroup onValueChange', type: '(value: string) => void', description: 'Called when a RadioItem is selected.' },
+    { name: 'DropdownMenu.RadioItem value', type: 'string', description: 'This item’s value — checked when it matches the group’s value.' },
+    { name: 'DropdownMenu.RadioItem disabled', type: 'boolean', defaultValue: 'false', description: 'Disables the item — no select, no highlight.' },
+  ]}
+/>
+
 ## Accessibility
 
 DropdownMenu follows the WAI-ARIA menu pattern via Radix:
@@ -109,4 +134,5 @@ DropdownMenu follows the WAI-ARIA menu pattern via Radix:
 - Typeahead — typing jumps to the next item whose label starts with those characters.
 - Escape closes the menu and returns focus to the trigger; clicking outside does the same.
 - `modal` (default `true`) traps focus inside the open menu and blocks pointer events on the rest of the page.
-- The scale + fade transition is skipped in favor of an instant swap when `prefers-reduced-motion` is set.
+- `CheckboxItem` gets `role="menuitemcheckbox"` and `aria-checked`; `RadioItem` gets `role="menuitemradio"` and `aria-checked` — both keyboard-reachable via the same Arrow/Home/End/typeahead navigation as plain items.
+- The scale + fade transition, and the check-mark / dot pop, are skipped in favor of an instant swap when `prefers-reduced-motion` is set.
