@@ -19,6 +19,7 @@ npm-debug.log*
 
 # TypeScript
 next-env.d.ts
+*.tsbuildinfo
 
 # OS
 .DS_Store
@@ -27,8 +28,11 @@ Thumbs.db
 # Reference scaffold (local only)
 _fumadocs-ref/
 
+# Code-graph analysis output (local only)
+graphify-out/
+
 # AI tooling — personal, not for upstream
-# Orchestration / design scaffolding docs (HANDOFF, PORT-SPEC, DESIGN-DNA, IMPROVEMENT-SPEC, …)
+# Orchestration / design scaffolding docs (HANDOFF, DESIGN-DNA, IMPROVEMENT-SPEC, …)
 .agent-docs/
 CONTEXT.md
 AGENTS.md
