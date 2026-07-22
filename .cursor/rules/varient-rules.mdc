@@ -1,0 +1,33 @@
+---
+description: Varient rules
+alwaysApply: true
+---
+
+## Project Identity
+Varient — OSS React UI component library. Three layers: Foundation (25 Radix-powered components), Animated (30 Framer Motion components), Sections (20 full-page blocks). Copy-paste DX model — users own the code, no per-component npm installs. Owner: Piyush.
+
+## Non-Negotiables
+- TypeScript strict, zero `any` — no exceptions
+- Prop naming: `isDisabled` not `disabled`, `isLoading` not `loading`, `isOpen` not `open`
+- Design tokens only: `--brand-500` not `#6366f1` — never raw hex or Tailwind slate/zinc names
+- `cn()` for all className merging — import from `@/lib/utils`, never concatenate strings
+- Never import shadcn defaults — Varient has its own color system and token names
+- Every Layer 2 animated component requires `useReducedMotion()` — non-negotiable accessibility
+
+## Technical Accuracy
+- Before calling a component complete, verify every item in DESIGN.md §10 build checklist passes
+- Tailwind v4 syntax differs from v3 — verify config format before writing
+- Radix UI primitives handle a11y for Layer 1 — always check Radix before building native
+- Live playground (DESIGN.md §9) is required for every Layer 2 component — do not ship without it
+- Layer 3 Sections compose from Layer 1 + Layer 2 only — never duplicate logic inside a section file
+- Next.js 16 requires Node.js 20+; Turbopack is the default bundler
+
+## Session Behavior
+At session start:
+1. Read CONTEXT.md §0 — orient to current focus before anything else
+2. Check .agents/skills/ for any SKILL.md matching the current task — load it
+3. If any loaded skill has `stale: true` — warn the user, recommend /update-skills
+
+Before changes in an unfamiliar area:
+- Read 2-3 existing examples of similar functionality first
+- Follow patterns found, not patterns assumed

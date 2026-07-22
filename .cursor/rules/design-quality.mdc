@@ -1,0 +1,49 @@
+---
+description: Varient design-quality law — color discipline, demo standards, icons, alignment, and the mandatory 3-pass polish loop
+alwaysApply: true
+---
+
+# Design Quality Law
+
+## Color discipline — orange is an accent, never a wash
+
+- Canvas is neutral (aceternity/magicui grade): near-black dark, crisp white light, hairline `border-border`, texture via neutral dot/line grids (`.bg-dot-grid`, `.bg-grid-fine`, foreground-alpha), never colored tints.
+- Ember `--color-brand` (#FF5A1F) appears ONLY as: solid fill on small interactive elements (primary button, active pill, dot indicators), `text-brand` / `border-brand` accents, focus rings, at most ONE highlighted word or CTA per view.
+
+```tsx
+// ❌ BAD — orange washes over areas
+<div className="bg-brand/10 ...">          // tinted surface
+<div className="bg-gradient-to-br from-brand/20 ...">  // gradient wash
+// ✅ GOOD — neutral surface, crisp accent
+<div className="bg-muted ...">
+<span className="text-brand">highlight</span>
+<span className="size-1.5 rounded-full bg-brand" />   // small solid dot
+```
+
+- Exception: icon wells may use `bg-brand/10` at icon size (≤ size-10) — nothing larger.
+
+## Demo standards (every component demo)
+
+- Compact preview (`XPreviewCompact`) must fully fit a ~200–260px tall frame: no clipping, no horizontal overflow, visually centered, the component's point visible without interaction.
+- Full-page `sections` demos render inside a scaled wrapper (`section-preview-scale.tsx`) in gallery cards — never raw.
+- Full demo: padded, responsive, shows a realistic use, not lorem soup.
+
+## Icons
+
+- `lucide-react` only. Sizes `size-4` (inline/buttons) or `size-5` (feature/icon wells), `strokeWidth={1.5}`–`1.75`, semantically correct choice (no generic Zap/Star filler when a precise icon exists).
+
+## Alignment & rhythm
+
+- Spacing from the scale only: gap/p/m of 1, 1.5, 2, 3, 4, 6, 8, 12, 16. No arbitrary values without cause.
+- Text: one `font-display` heading level per block, `text-muted-foreground` for support copy, `line-clamp-*` any user-length text, `tracking-tight` on display sizes.
+- Grids: equal-height cards (`h-full` on card + flex column), `items-center` intent explicit, no orphan overflow at sm/md/lg breakpoints.
+
+## Mandatory 3-pass polish loop
+
+Any visual work ships only after three explicit self-review passes:
+
+1. **Structure** — alignment, overflow, sizing, responsive breakage, equal heights.
+2. **Color** — orange discipline above, contrast in both themes, borders are hairline not heavy.
+3. **Detail** — icon choice/size, hover/focus states, motion gated by `useReducedMotion`, typography rhythm.
+
+Never call visual work done after a single pass.

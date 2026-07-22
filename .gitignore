@@ -33,12 +33,12 @@ graphify-out/
 
 # AI tooling — personal, not for upstream
 # Orchestration / design scaffolding docs (HANDOFF, DESIGN-DNA, IMPROVEMENT-SPEC, …)
-.agent-docs/
-CONTEXT.md
-AGENTS.md
-WORKSPACE.md
-.agents/
-.agentsignore
-.cursorignore
-.cursor
-/DESIGN.md
+# # .agent-docs/
+# CONTEXT.md
+# AGENTS.md
+# WORKSPACE.md
+# .agents/
+# .agentsignore
+# .cursorignore
+# .cursor
+# /DESIGN.md
