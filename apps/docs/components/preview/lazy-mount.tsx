@@ -58,7 +58,7 @@ export function LazyMount({ children, minHeight, rootMargin = '250px', className
     <div
       ref={ref}
       aria-hidden
-      className={cn('w-full', className)}
+      className={cn('skeleton-shimmer w-full rounded-xl border border-border bg-smooth-100', className)}
       style={minHeight !== undefined ? { minHeight } : undefined}
     />
   );

@@ -5,26 +5,20 @@ interface DotGridMaskProps {
 }
 
 /**
- * Subtle dot texture with a radial fade — used behind CTA and section accents.
- * Pure CSS, no raw hex; relies on semantic foreground tokens.
+ * Subtle dot texture with a radial fade — used behind the CTA panel and
+ * section accents. Composes the global `bg-dot-grid` texture with
+ * `mask-fade-radial`; pure CSS, no raw hex, semantic tokens only.
  */
 export function DotGridMask({ className }: DotGridMaskProps) {
   return (
     <div
       aria-hidden
       className={cn(
-        'pointer-events-none absolute inset-0 overflow-hidden',
-        '[mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]',
+        'pointer-events-none absolute inset-0 overflow-hidden mask-fade-radial',
         className,
       )}
     >
-      <div
-        className={cn(
-          'absolute inset-0 opacity-[0.35]',
-          '[background-image:radial-gradient(circle,var(--color-border)_1px,transparent_1px)]',
-          '[background-size:20px_20px]',
-        )}
-      />
+      <div className="absolute inset-0 bg-dot-grid opacity-70" />
     </div>
   );
 }

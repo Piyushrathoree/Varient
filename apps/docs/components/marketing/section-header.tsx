@@ -12,6 +12,22 @@ export interface SectionHeaderProps {
   title: ReactNode;
 }
 
+/** Prefixes the eyebrow with `// ` (mono, drafting-table style). Callers pass a
+ * plain string ("why varient"); any leading `//` they already included is
+ * stripped first so the prefix never doubles up. Non-string nodes are left
+ * as-is aside from the visual `// ` lead-in. */
+function withCommentPrefix(eyebrow: ReactNode): ReactNode {
+  if (typeof eyebrow === 'string') {
+    return `// ${eyebrow.replace(/^\/\/\s*/, '')}`;
+  }
+  return (
+    <>
+      {'// '}
+      {eyebrow}
+    </>
+  );
+}
+
 export function SectionHeader({
   eyebrow,
   title,
@@ -36,17 +52,17 @@ export function SectionHeader({
       {eyebrow && (
         <motion.p
           className={cn(
-            'mb-3 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground',
+            'mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-brand',
             isCenter && 'text-center',
           )}
           {...fadeUp(0)}
         >
-          {eyebrow}
+          {withCommentPrefix(eyebrow)}
         </motion.p>
       )}
       <motion.h2
         className={cn(
-          'text-balance font-display font-semibold text-3xl tracking-tight text-foreground md:text-4xl',
+          'font-title font-semibold text-3xl text-foreground tracking-[-0.03em] [text-wrap:balance] sm:text-4xl',
           isCenter && 'text-center',
         )}
         {...fadeUp(0.05)}
@@ -56,8 +72,8 @@ export function SectionHeader({
       {description && (
         <motion.p
           className={cn(
-            'mt-4 text-balance text-muted-foreground md:text-lg',
-            isCenter && 'text-center',
+            'mt-4 max-w-[56ch] text-smooth-900 [text-wrap:balance] md:text-lg',
+            isCenter && 'mx-auto text-center',
           )}
           {...fadeUp(0.1)}
         >

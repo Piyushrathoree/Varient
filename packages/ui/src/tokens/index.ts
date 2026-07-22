@@ -5,6 +5,10 @@
  * source of truth). If you change light/dark there, change it here too.
  * Codegen (TS → CSS) replaces this hand-sync in a later phase.
  *
+ * SIGNAL identity: EMBER (#ff5a1f) is dead — the one accent is now JADE
+ * (#10b981/#059669) with a cyan gradient partner. `ember`/`brand` below keep
+ * their exported names for RN parity; only the values were retextured.
+ *
  * Two modes only — light + dark — matching the web token system in themes.css/globals.css.
  * The old 4-identity engine (ThemeIdentity/identities/identityCssVars) is
  * gone; native picks up `light` or `dark` and passes its CSS-var object to
@@ -15,36 +19,43 @@
 
 /* ── Static scales — identical in both modes ── */
 
+/**
+ * LEGACY: `ember` is retained as the exported name/shape so every RN consumer
+ * keeps working untouched, but the values now mirror the jade scale — SIGNAL
+ * identity, ember (#ff5a1f) is dead. Prefer semantic `accent` tokens (or the
+ * `brand` alias below) in new code over reaching into `ember` directly.
+ */
 export const ember = {
-  50: '#fff4ee',
-  100: '#ffe4d5',
-  200: '#ffc6a8',
-  300: '#ffa377',
-  400: '#ff7e44',
-  500: '#ff5a1f',
-  600: '#f03e0c',
-  700: '#c22f08',
-  800: '#94240a',
-  900: '#6b1c0c',
+  50: '#ecfdf5',
+  100: '#d1fae5',
+  200: '#a7f3d0',
+  300: '#6ee7b7',
+  400: '#34d399',
+  500: '#10b981',
+  600: '#059669',
+  700: '#047857',
+  800: '#065f46',
+  900: '#064e3b',
 } as const;
 
-/** `brand` aliases `ember` — indigo (#6366f1) retired: the "AI purple" tell. */
+/** `brand` aliases `ember` (now jade values) — indigo (#6366f1) retired: the "AI purple" tell. */
 export const brand = ember;
 
+/** Cool graphite ladder (SIGNAL) — hue-shifted off the old warm/neutral grays. */
 export const neutral = {
   0: '#ffffff',
-  50: '#fafafa',
-  100: '#f4f4f5',
-  200: '#e4e4e7',
-  300: '#d1d1d6',
-  400: '#a1a1aa',
-  500: '#71717a',
-  600: '#52525b',
-  700: '#3f3f46',
-  800: '#27272a',
-  850: '#1c1c1f',
-  900: '#131316',
-  950: '#0a0a0d',
+  50: '#f9fafc',
+  100: '#f2f4f7',
+  200: '#e2e6ec',
+  300: '#ccd2da',
+  400: '#9fa7b2',
+  500: '#6f7784',
+  600: '#505866',
+  700: '#3d434e',
+  800: '#242933',
+  850: '#1a1e25',
+  900: '#12151b',
+  950: '#0b0e13',
 } as const;
 
 export const semantic = {
@@ -89,8 +100,8 @@ export const light: ThemeTokens = {
   textPrimary: neutral[950],
   textSecondary: neutral[500],
   textTertiary: neutral[400],
-  accent: brand[500],
-  accentHover: brand[600],
+  accent: brand[600], // jade-600 — legible ink on light
+  accentHover: brand[700],
   accentContrast: '#ffffff',
   radiusTheme: 10,
   motionDuration: 160,
@@ -108,9 +119,9 @@ export const dark: ThemeTokens = {
   textPrimary: neutral[50],
   textSecondary: neutral[400],
   textTertiary: neutral[600],
-  accent: brand[500],
-  accentHover: brand[400],
-  accentContrast: '#1a0f08',
+  accent: brand[400], // jade-400 — luminous on graphite
+  accentHover: brand[300],
+  accentContrast: '#052e22',
   radiusTheme: 10,
   motionDuration: 160,
   motionDurationSlow: 220,

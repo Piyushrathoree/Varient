@@ -37,7 +37,7 @@ export const DEFAULT_GLOBE_MARKERS: GlobeMarker[] = [
 ];
 
 // Canvas cannot read CSS variables — RGB triplets mirror semantic tokens:
-// brand #ff5a1f (--color-brand), brand-light #ff7e44 (--color-brand-light),
+// brand #10b981 (--color-brand), brand-light #34d399 (--color-brand-light),
 // smooth-300 light base, smooth-400 dark base, smooth-50 / smooth-700 glows.
 const GLOBE_COLORS = {
   light: {

@@ -1,84 +1,101 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
-import {
-  components,
-  getComponentsByLayer,
-  getReadyCount,
-  LAYER_COUNT,
-  layerLabels,
-} from '@/lib/components/registry';
-import Divider from '@/components/marketing/divider';
+import { NumberTicker, cn } from '@varient/ui';
+import { getReadyCount } from '@/lib/components/registry';
 
-interface StatItem {
+interface StatSlot {
+  key: string;
   label: string;
-  value: string;
-  detail: string;
+  render: () => ReactNode;
 }
 
-function buildStats(): StatItem[] {
-  const readyCount = getReadyCount();
-  const foundationCount = getComponentsByLayer('foundation').filter((c) => c.status === 'shipped').length;
-  const animatedCount = getComponentsByLayer('animated').filter((c) => c.status === 'shipped').length;
-  const sectionsCount = getComponentsByLayer('sections').filter((c) => c.status === 'shipped').length;
-
-  return [
-    {
-      label: 'Components',
-      value: String(readyCount),
-      detail: `${readyCount} of ${components.length} shipped`,
-    },
-    {
-      label: 'Layers',
-      value: String(LAYER_COUNT),
-      detail: `${foundationCount} · ${animatedCount} · ${sectionsCount}`,
-    },
-    {
-      label: 'License',
-      value: 'MIT',
-      detail: 'Copy-paste, you own the code',
-    },
-  ];
-}
+const SPRING = { type: 'spring', stiffness: 260, damping: 30 } as const;
 
 export function StatsSection() {
   const shouldReduceMotion = useReducedMotion();
-  const stats = buildStats();
+  const readyCount = getReadyCount();
+
+  const slots: StatSlot[] = [
+    {
+      key: 'shipped',
+      label: 'components shipped',
+      render: () => (
+        <>
+          <NumberTicker value={readyCount} />
+          <span className="text-brand">+</span>
+        </>
+      ),
+    },
+    {
+      key: 'platforms',
+      label: 'web + native',
+      render: () => (
+        <>
+          2<span className="text-brand"> platforms</span>
+        </>
+      ),
+    },
+    {
+      key: 'physics',
+      label: 'spring physics',
+      render: () => (
+        <>
+          60<span className="text-brand">fps</span>
+        </>
+      ),
+    },
+    {
+      key: 'license',
+      label: 'zero lock-in',
+      render: () => 'MIT',
+    },
+  ];
 
   return (
-    <section className="relative border-y border-border bg-card/30 px-6 py-16 md:px-8 md:py-20">
-      <Divider className="opacity-0" />
-      <div className="mx-auto max-w-7xl">
-        <ul className="grid gap-8 sm:grid-cols-3 sm:gap-6">
-          {stats.map((stat, index) => (
+    <section className="relative w-full border-y border-border bg-background">
+      <ul className="mx-auto grid max-w-7xl grid-cols-2 px-6 sm:grid-cols-4 sm:px-8" role="list">
+        {slots.map((slot, index) => {
+          const col = index % 2;
+          const row = Math.floor(index / 2);
+
+          return (
             <motion.li
-              key={stat.label}
-              className="list-none text-center sm:text-left"
+              key={slot.key}
+              className={cn(
+                'relative list-none px-4 py-10 text-center border-border sm:px-6 sm:py-14',
+                col === 1 && 'border-l',
+                row === 1 && 'border-t',
+                index > 0 && 'sm:border-l sm:border-t-0',
+              )}
               initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 12 }}
-              transition={
-                shouldReduceMotion
-                  ? { duration: 0 }
-                  : { duration: 0.4, delay: index * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }
-              }
+              transition={shouldReduceMotion ? { duration: 0 } : { ...SPRING, delay: index * 0.08 }}
               viewport={{ once: true, amount: 0.5 }}
               whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
             >
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                {stat.label}
-              </p>
-              <p className="mt-2 font-display text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
-                {stat.value}
-              </p>
-              <p className="mt-2 text-sm text-muted-foreground">{stat.detail}</p>
-              {stat.label === 'Layers' && (
-                <p className="mt-1 text-xs text-muted-foreground/80">
-                  {layerLabels.foundation} · {layerLabels.animated} · {layerLabels.sections}
-                </p>
+              {index > 0 && (
+                <span
+                  aria-hidden
+                  className="plus-mark absolute -top-[4.5px] -left-[4.5px] hidden sm:block"
+                />
               )}
+              {index > 0 && (
+                <span
+                  aria-hidden
+                  className="plus-mark absolute -bottom-[4.5px] -left-[4.5px] hidden sm:block"
+                />
+              )}
+              <p className="font-title text-4xl font-semibold tabular-nums tracking-[-0.03em] text-foreground">
+                {slot.render()}
+              </p>
+              <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-smooth-800">
+                {slot.label}
+              </p>
             </motion.li>
-          ))}
-        </ul>
-      </div>
+          );
+        })}
+      </ul>
     </section>
   );
 }

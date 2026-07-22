@@ -22,23 +22,18 @@ export const previewFrameSizeStyles = {
 } satisfies Record<NonNullable<PreviewFrameProps['minHeight']>, string>;
 
 /**
- * The `currentColor`-driven dot grid painted behind every live preview —
+ * The quiet dot-grid canvas painted behind every live preview — built on the
+ * shared `bg-dot-grid` utility (keyed off `--color-foreground`), so it
  * repaints correctly in light and dark without a `dark:` override. Shared by
  * `PreviewFrame` and `PreviewStage` so both canvases stay pixel-identical.
  */
 export function PreviewDotGrid() {
-  return (
-    <div
-      aria-hidden
-      className="absolute inset-0 text-foreground/[0.07] [background-image:radial-gradient(currentColor_1px,transparent_1px)] [background-size:18px_18px]"
-    />
-  );
+  return <div aria-hidden className="absolute inset-0 bg-dot-grid opacity-70" />;
 }
 
 /**
- * The sandboxed surface every live/looping demo renders inside — a rounded card
- * on `bg-background`/`border-border`, with a `currentColor`-driven dot-grid so
- * it repaints correctly in light and dark without a `dark:` override.
+ * The sandboxed surface every live/looping demo renders inside — a hairline
+ * `bg-smooth-100` drafting-table canvas with a quiet dot-grid texture.
  */
 export function PreviewFrame({
   children,
@@ -48,17 +43,17 @@ export function PreviewFrame({
   alignTop = false,
 }: PreviewFrameProps) {
   return (
-    <div className={cn('overflow-hidden rounded-2xl border border-border bg-background', className)}>
+    <div className={cn('overflow-hidden rounded-xl border border-border bg-smooth-100', className)}>
       {label && (
-        <div className="flex items-center justify-between border-b border-border bg-muted/40 px-4 py-2.5">
-          <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+        <div className="flex items-center justify-between border-b border-border bg-smooth-50 px-4 py-2.5">
+          <span className="font-mono text-[11px] uppercase tracking-wider text-smooth-800">
             {label}
           </span>
         </div>
       )}
       <div
         className={cn(
-          'relative isolate flex overflow-hidden bg-background',
+          'relative isolate flex overflow-hidden bg-smooth-100',
           alignTop ? 'items-start justify-center' : 'items-center justify-center',
           previewFrameSizeStyles[minHeight],
         )}

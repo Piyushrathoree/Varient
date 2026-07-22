@@ -42,7 +42,7 @@ export interface ConfettiBurstProps extends Omit<ButtonHTMLAttributes<HTMLButton
 const DEFAULT_PARTICLE_COUNT = 80;
 const DEFAULT_SPREAD = 70;
 
-const FALLBACK_BRAND_COLORS = ['#ff5a1f', '#f03e0c', '#ff7e44', '#ffa377'];
+const FALLBACK_BRAND_COLORS = ['#10b981', '#059669', '#34d399', '#22d3ee'];
 
 /** Read brand hues from CSS custom properties at fire-time. */
 export function getBrandConfettiColors(element?: HTMLElement | null): string[] {

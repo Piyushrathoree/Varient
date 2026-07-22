@@ -27,7 +27,7 @@ export function getMDXComponents(components?: MDXComponents) {
         <code
           className={cn(
             isInline
-              ? 'rounded-md bg-muted px-1.5 py-0.5 text-xs font-mono text-brand'
+              ? 'rounded bg-smooth-200 px-1 py-0.5 font-mono text-xs text-brand'
               : 'font-mono text-muted-foreground',
             className,
           )}
@@ -38,7 +38,7 @@ export function getMDXComponents(components?: MDXComponents) {
     h1: ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
       <h1
         className={cn(
-          'font-display mt-2 mb-6 text-3xl font-bold tracking-tight text-foreground',
+          'font-title mt-2 mb-6 text-3xl font-bold tracking-tight text-foreground',
           className,
         )}
         {...props}
@@ -47,7 +47,7 @@ export function getMDXComponents(components?: MDXComponents) {
     h2: ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
       <h2
         className={cn(
-          'font-display mt-10 mb-4 text-lg font-semibold tracking-tight text-foreground',
+          'font-title mt-10 mb-4 text-lg font-semibold tracking-tight text-foreground',
           className,
         )}
         {...props}
@@ -55,7 +55,7 @@ export function getMDXComponents(components?: MDXComponents) {
     ),
     h3: ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
       <h3
-        className={cn('font-display mt-8 mb-3 text-base font-semibold text-foreground', className)}
+        className={cn('font-title mt-8 mb-3 text-base font-semibold text-foreground', className)}
         {...props}
       />
     ),
@@ -65,7 +65,7 @@ export function getMDXComponents(components?: MDXComponents) {
     a: ({ className, ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) => (
       <a
         className={cn(
-          'text-brand underline underline-offset-4 transition-colors hover:text-brand/80',
+          'text-brand underline-offset-4 transition-colors hover:underline',
           className,
         )}
         {...props}
@@ -86,7 +86,7 @@ export function getMDXComponents(components?: MDXComponents) {
     blockquote: ({ className, ...props }: HTMLAttributes<HTMLQuoteElement>) => (
       <blockquote
         className={cn(
-          'my-6 rounded-xl border-l-4 border-brand bg-muted/40 px-6 py-4 text-muted-foreground',
+          'my-6 rounded-r-xl border-l-2 border-brand bg-smooth-100 px-6 py-4 text-muted-foreground',
           className,
         )}
         {...props}

@@ -10,8 +10,9 @@ interface PropsTableProps {
 }
 
 /**
- * Props table — hand-authored: a rounded hairline card, a quiet `bg-muted` header
- * row, and a mono/brand treatment for the prop name column.
+ * Props table — hand-authored: a hairline card, a quiet mono-eyebrow header
+ * row, and a brand-colored required marker next to prop names whose
+ * description leads with "Required".
  */
 export function PropsTable({ props }: PropsTableProps) {
   return (
@@ -19,27 +20,43 @@ export function PropsTable({ props }: PropsTableProps) {
       <table className="w-full min-w-[32rem] border-collapse text-sm">
         <thead>
           <tr className="border-b border-border bg-muted/50 text-left">
-            <th className="px-4 py-2.5 font-medium text-foreground">Prop</th>
-            <th className="px-4 py-2.5 font-medium text-foreground">Type</th>
-            <th className="hidden px-4 py-2.5 font-medium text-foreground sm:table-cell">
+            <th className="px-4 py-2.5 font-mono text-[11px] tracking-wider text-smooth-800 uppercase">
+              Prop
+            </th>
+            <th className="px-4 py-2.5 font-mono text-[11px] tracking-wider text-smooth-800 uppercase">
+              Type
+            </th>
+            <th className="hidden px-4 py-2.5 font-mono text-[11px] tracking-wider text-smooth-800 uppercase sm:table-cell">
               Default
             </th>
-            <th className="px-4 py-2.5 font-medium text-foreground">Description</th>
+            <th className="px-4 py-2.5 font-mono text-[11px] tracking-wider text-smooth-800 uppercase">
+              Description
+            </th>
           </tr>
         </thead>
         <tbody>
-          {props.map((prop) => (
-            <tr key={prop.name} className="border-b border-border last:border-0">
-              <td className="px-4 py-2.5 font-mono text-xs whitespace-nowrap text-brand">
-                {prop.name}
-              </td>
-              <td className="px-4 py-2.5 font-mono text-xs text-muted-foreground">{prop.type}</td>
-              <td className="hidden px-4 py-2.5 font-mono text-xs text-muted-foreground/70 sm:table-cell">
-                {prop.defaultValue ?? '—'}
-              </td>
-              <td className="px-4 py-2.5 text-muted-foreground">{prop.description}</td>
-            </tr>
-          ))}
+          {props.map((prop) => {
+            const isRequired = /^required\b/i.test(prop.description);
+            return (
+              <tr key={prop.name} className="border-b border-border last:border-0">
+                <td className="px-4 py-2.5 font-mono text-xs whitespace-nowrap text-foreground">
+                  {prop.name}
+                  {isRequired && (
+                    <span className="ml-0.5 text-brand" aria-hidden="true">
+                      *
+                    </span>
+                  )}
+                </td>
+                <td className="px-4 py-2.5 font-mono text-[12.5px] text-muted-foreground">
+                  {prop.type}
+                </td>
+                <td className="hidden px-4 py-2.5 font-mono text-xs text-muted-foreground/70 sm:table-cell">
+                  {prop.defaultValue ?? '—'}
+                </td>
+                <td className="px-4 py-2.5 text-muted-foreground">{prop.description}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

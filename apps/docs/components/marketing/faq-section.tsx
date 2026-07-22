@@ -1,13 +1,17 @@
 'use client';
 
-import type { ComponentProps } from 'react';
+import { type ComponentProps, useState } from 'react';
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
-import { ChevronDownIcon } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Plus } from 'lucide-react';
+import Link from 'next/link';
 import Script from 'next/script';
 import { motion, useReducedMotion } from 'motion/react';
 import { cn } from '@varient/ui';
 import Divider from '@/components/marketing/divider';
 import { SectionHeader } from '@/components/marketing/section-header';
+import { docsRoute, gitConfig } from '@/lib/shared';
+
+const ISSUES_URL = `https://github.com/${gitConfig.user}/${gitConfig.repo}/issues`;
 
 interface Faq {
   question: string;
@@ -63,10 +67,7 @@ const faqSchema = {
 function AccordionItem({ className, ...props }: ComponentProps<typeof AccordionPrimitive.Item>) {
   return (
     <AccordionPrimitive.Item
-      className={cn(
-        'rounded-xl border border-border bg-card/30 px-5 transition-colors data-[state=open]:border-foreground/12 data-[state=open]:bg-card',
-        className,
-      )}
+      className={cn('border-border border-b', className)}
       data-slot="accordion-item"
       {...props}
     />
@@ -76,25 +77,38 @@ function AccordionItem({ className, ...props }: ComponentProps<typeof AccordionP
 function AccordionTrigger({
   className,
   children,
+  isOpen,
+  shouldReduceMotion,
   ...props
-}: ComponentProps<typeof AccordionPrimitive.Trigger>) {
+}: ComponentProps<typeof AccordionPrimitive.Trigger> & {
+  isOpen: boolean;
+  shouldReduceMotion: boolean | null;
+}) {
   return (
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
         className={cn(
-          'flex flex-1 cursor-pointer items-start justify-between gap-4 py-4 text-left font-medium text-base text-foreground outline-none transition-colors',
+          'group flex flex-1 cursor-pointer items-center justify-between gap-4 py-5 text-left font-medium font-title text-base text-foreground outline-none transition-colors',
           'focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-          'disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180',
+          'disabled:pointer-events-none disabled:opacity-50',
           className,
         )}
         data-slot="accordion-trigger"
         {...props}
       >
         {children}
-        <ChevronDownIcon
-          aria-hidden
-          className="pointer-events-none size-4 shrink-0 translate-y-0.5 text-muted-foreground transition-transform duration-200"
-        />
+        <motion.span
+          animate={{ rotate: isOpen ? 45 : 0 }}
+          className={cn(
+            'flex size-6 shrink-0 items-center justify-center text-muted-foreground transition-colors group-hover:text-brand',
+            isOpen && 'text-brand',
+          )}
+          transition={
+            shouldReduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 30 }
+          }
+        >
+          <Plus aria-hidden className="size-4" />
+        </motion.span>
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   );
@@ -111,7 +125,7 @@ function AccordionContent({
       data-slot="accordion-content"
       {...props}
     >
-      <div className={cn('pb-4 pr-8 text-muted-foreground leading-relaxed', className)}>
+      <div className={cn('max-w-[60ch] pb-6 text-[14.5px] text-smooth-900 leading-relaxed', className)}>
         {children}
       </div>
     </AccordionPrimitive.Content>
@@ -120,6 +134,7 @@ function AccordionContent({
 
 export function FaqSection() {
   const shouldReduceMotion = useReducedMotion();
+  const [openValue, setOpenValue] = useState('');
 
   return (
     <section className="relative w-full bg-background px-6 py-24 md:px-8 md:py-32">
@@ -131,26 +146,66 @@ export function FaqSection() {
         type="application/ld+json"
       />
       <Divider />
-      <div className="mx-auto max-w-3xl">
-        <SectionHeader
-          description="Everything you need to know before you copy your first component."
-          eyebrow="FAQ"
-          title="Common questions"
-        />
+      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
+        <div className="self-start lg:sticky lg:top-24">
+          <SectionHeader
+            align="left"
+            description="Everything you need to know before you copy your first component."
+            eyebrow="// answers"
+            title="Answers, upfront."
+          />
+          <div className="mt-8 flex flex-col items-start gap-3">
+            <Link
+              className="group inline-flex items-center gap-1.5 text-foreground text-sm transition-colors duration-200 hover:text-brand"
+              href={docsRoute}
+            >
+              <span>Read the docs</span>
+              <ArrowRight
+                aria-hidden
+                className="size-3.5 shrink-0 opacity-60 transition-transform duration-200 group-hover:translate-x-0.5"
+              />
+            </Link>
+            <a
+              className="group inline-flex items-center gap-1.5 text-foreground text-sm transition-colors duration-200 hover:text-brand"
+              href={ISSUES_URL}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <span>Open an issue</span>
+              <ArrowUpRight
+                aria-hidden
+                className="size-3.5 shrink-0 opacity-60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </a>
+          </div>
+        </div>
         <motion.div
-          className="mt-12 space-y-2"
           initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 12 }}
           transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.4, delay: 0.1 }}
           viewport={{ once: true, amount: 0.2 }}
           whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
         >
-          <AccordionPrimitive.Root collapsible data-orientation="vertical" type="single">
-            {faqs.map((faq, index) => (
-              <AccordionItem key={faq.question} className="mb-2" value={`item-${index}`}>
-                <AccordionTrigger>{faq.question}</AccordionTrigger>
-                <AccordionContent>{faq.answer}</AccordionContent>
-              </AccordionItem>
-            ))}
+          <AccordionPrimitive.Root
+            collapsible
+            data-orientation="vertical"
+            onValueChange={setOpenValue}
+            type="single"
+            value={openValue}
+          >
+            {faqs.map((faq, index) => {
+              const value = `item-${index}`;
+              return (
+                <AccordionItem key={faq.question} value={value}>
+                  <AccordionTrigger
+                    isOpen={openValue === value}
+                    shouldReduceMotion={shouldReduceMotion}
+                  >
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent>{faq.answer}</AccordionContent>
+                </AccordionItem>
+              );
+            })}
           </AccordionPrimitive.Root>
         </motion.div>
       </div>

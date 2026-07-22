@@ -8,13 +8,15 @@
 @source '../../../packages/ui/src/**/*.{ts,tsx}';
 
 /* ═══════════════════════════════════════════════════════════════════════════
- * VARIENT TOKEN SYSTEM — neutral OKLCH gray ladder + semantic slots.
- * Two modes only, switched by `.dark` (next-themes / the fumadocs RootProvider).
- * Brand accent: ember (#FF5A1F) in the `--color-brand` slot.
+ * VARIENT TOKEN SYSTEM — SIGNAL identity. Cool blue-graphite OKLCH ladder
+ * (hue ≈ 240–250) + semantic slots. Two modes only, switched by `.dark`
+ * (next-themes / the fumadocs RootProvider). Brand accent: luminous jade with
+ * a cyan gradient partner — mode-scoped inks (jade-600 light, jade-400 dark).
  * ═══════════════════════════════════════════════════════════════════════════ */
 @theme inline {
-  --font-body: var(--font-inter);
-  --font-title: var(--font-poppins);
+  --font-body: var(--font-geist-sans);
+  --font-title: var(--font-sora);
+  --font-serif-accent: var(--font-instrument-serif), Georgia, serif;
   --shiki-theme: var(--shiki--light);
   --shiki--light: var(--shiki-theme);
   --shiki--dark: var(--shiki-theme);
@@ -83,38 +85,37 @@
   --shadow-custom:
     0px 0px 0px 1px rgba(0, 0, 0, 0.08),
     0px 1px 2px -1px rgba(0, 0, 0, 0.08), 0px 2px 4px 0px rgba(0, 0, 0, 0.04);
-  --lines-page: url('/lines-b.png');
   --color-fd-primary: var(--color-brand);
   --color-fd-secondary: var(--color-smooth-50);
 
-  /* Ember brand scale — mirrors packages/ui's ember-300/400/500/600
-     (see @varient/ui/styles/globals.css). */
-  --color-brand: #ff5a1f;
-  --color-brand-secondary: #f03e0c;
-  --color-brand-light: #ff7e44;
-  --color-brand-lighter: #ffa377;
-  /* Semantic status tokens — filled with Varient equivalents so nothing dangles. */
+  /* SIGNAL brand slots — jade ink for light surfaces (jade-600 family), kept
+     in exact sync with the `.light` block below. */
+  --color-brand: #059669;
+  --color-brand-secondary: #047857;
+  --color-brand-light: #10b981;
+  --color-brand-lighter: #34d399;
+  /* Semantic status tokens — success is deliberately NOT the brand jade. */
   --destructive: var(--danger);
-  --success: #059669;
-  --warning: #d97706;
+  --success: #15803d;
+  --warning: #b45309;
   --sidebar-accent: var(--color-smooth-200);
 
-  --color-smooth-50: oklch(1 0 0);
-  --color-smooth-100: oklch(0.985 0 0);
-  --color-smooth-200: oklch(0.97 0 0);
-  --color-smooth-300: oklch(0.955 0 0);
-  --color-smooth-400: oklch(0.935 0 0);
-  --color-smooth-500: oklch(0.91 0 0);
-  --color-smooth-600: oklch(0.88 0 0);
-  --color-smooth-700: oklch(0.82 0 0);
-  --color-smooth-800: oklch(0.62 0 0);
-  --color-smooth-900: oklch(0.58 0 0);
-  --color-smooth-950: oklch(0.48 0 0);
-  --color-smooth-1000: oklch(0.15 0 0);
+  --color-smooth-50: oklch(0.99 0.002 240);
+  --color-smooth-100: oklch(0.977 0.003 240);
+  --color-smooth-200: oklch(0.96 0.004 240);
+  --color-smooth-300: oklch(0.945 0.005 240);
+  --color-smooth-400: oklch(0.925 0.006 240);
+  --color-smooth-500: oklch(0.9 0.007 240);
+  --color-smooth-600: oklch(0.87 0.008 240);
+  --color-smooth-700: oklch(0.81 0.009 240);
+  --color-smooth-800: oklch(0.61 0.015 240);
+  --color-smooth-900: oklch(0.55 0.018 240);
+  --color-smooth-950: oklch(0.45 0.02 240);
+  --color-smooth-1000: oklch(0.17 0.015 245);
   --border: var(--color-smooth-300);
   --text-primary: var(--color-smooth-200);
   --text-quaternary: var(--color-smooth-1000);
-  --radius: 0.875rem;
+  --radius: 0.75rem;
   --color-input: var(--color-smooth-600);
   --color-fd-card: var(--color-smooth-100);
 }
@@ -124,27 +125,32 @@
     0px -1px 0px 0px hsla(0, 0%, 100%, 0.04),
     0px 0px 0px 1px hsla(0, 0%, 100%, 0.05), 0px 0px 0px 1px oklch(0.22 0 0),
     0px 1px 2px 0px rgba(0, 0, 0, 0.4), 0px 2px 4px 0px rgba(0, 0, 0, 0.36);
-  --lines-page: url('/lines-w.png');
 
-  --color-smooth-50: oklch(0.13 0 0);
-  --color-smooth-100: oklch(0.145 0 0);
-  --color-smooth-200: oklch(0.165 0 0);
-  --color-smooth-300: oklch(0.185 0 0);
-  --color-smooth-400: oklch(0.205 0 0);
-  --color-smooth-500: oklch(0.24 0 0);
-  --color-smooth-600: oklch(0.28 0 0);
-  --color-smooth-700: oklch(0.36 0 0);
-  --color-smooth-800: oklch(0.5 0 0);
-  --color-smooth-900: oklch(0.58 0 0);
-  --color-smooth-950: oklch(0.7 0 0);
-  --color-smooth-1000: oklch(0.94 0 0);
+  /* SIGNAL brand slots — luminous jade on graphite (jade-400 family). */
+  --color-brand: #34d399;
+  --color-brand-secondary: #10b981;
+  --color-brand-light: #6ee7b7;
+  --color-brand-lighter: #a7f3d0;
+
+  --color-smooth-50: oklch(0.135 0.012 250);
+  --color-smooth-100: oklch(0.15 0.013 250);
+  --color-smooth-200: oklch(0.17 0.014 250);
+  --color-smooth-300: oklch(0.19 0.015 250);
+  --color-smooth-400: oklch(0.21 0.015 250);
+  --color-smooth-500: oklch(0.245 0.016 250);
+  --color-smooth-600: oklch(0.285 0.016 250);
+  --color-smooth-700: oklch(0.365 0.016 250);
+  --color-smooth-800: oklch(0.52 0.02 245);
+  --color-smooth-900: oklch(0.6 0.02 240);
+  --color-smooth-950: oklch(0.72 0.015 235);
+  --color-smooth-1000: oklch(0.95 0.008 230);
   --border: var(--color-smooth-300);
   --text-primary: var(--color-smooth-200);
   --text-quaternary: var(--color-smooth-1000);
   --color-input: var(--color-smooth-700);
   --color-fd-card: var(--color-smooth-100);
   /* Brighter success/warning inks so they stay legible on dark surfaces. */
-  --success: #34d399;
+  --success: #4ade80;
   --warning: #fbbf24;
 }
 
@@ -155,24 +161,30 @@
   --shadow-custom:
     0px 0px 0px 1px rgba(0, 0, 0, 0.08),
     0px 1px 2px -1px rgba(0, 0, 0, 0.08), 0px 2px 4px 0px rgba(0, 0, 0, 0.04);
-  --lines-page: url('/lines-b.png');
 
-  --color-smooth-50: oklch(1 0 0);
-  --color-smooth-100: oklch(0.985 0 0);
-  --color-smooth-200: oklch(0.97 0 0);
-  --color-smooth-300: oklch(0.955 0 0);
-  --color-smooth-400: oklch(0.935 0 0);
-  --color-smooth-500: oklch(0.91 0 0);
-  --color-smooth-600: oklch(0.88 0 0);
-  --color-smooth-700: oklch(0.82 0 0);
-  --color-smooth-800: oklch(0.62 0 0);
-  --color-smooth-900: oklch(0.58 0 0);
-  --color-smooth-950: oklch(0.48 0 0);
-  --color-smooth-1000: oklch(0.15 0 0);
+  /* SIGNAL brand slots — jade ink for light surfaces (jade-600 family). */
+  --color-brand: #059669;
+  --color-brand-secondary: #047857;
+  --color-brand-light: #10b981;
+  --color-brand-lighter: #34d399;
+  --accent-gradient: linear-gradient(120deg, #059669, #0891b2);
+
+  --color-smooth-50: oklch(0.99 0.002 240);
+  --color-smooth-100: oklch(0.977 0.003 240);
+  --color-smooth-200: oklch(0.96 0.004 240);
+  --color-smooth-300: oklch(0.945 0.005 240);
+  --color-smooth-400: oklch(0.925 0.006 240);
+  --color-smooth-500: oklch(0.9 0.007 240);
+  --color-smooth-600: oklch(0.87 0.008 240);
+  --color-smooth-700: oklch(0.81 0.009 240);
+  --color-smooth-800: oklch(0.61 0.015 240);
+  --color-smooth-900: oklch(0.55 0.018 240);
+  --color-smooth-950: oklch(0.45 0.02 240);
+  --color-smooth-1000: oklch(0.17 0.015 245);
   --color-input: var(--color-smooth-600);
 
-  --success: #059669;
-  --warning: #d97706;
+  --success: #15803d;
+  --warning: #b45309;
   --sidebar-accent: var(--color-smooth-200);
   --accent-soft: rgb(0 0 0 / 0.04);
   --skeleton-shimmer: rgb(0 0 0 / 0.06);
@@ -207,7 +219,8 @@
 }
 
 ::selection {
-  @apply bg-smooth-200 text-brand;
+  background: color-mix(in oklch, var(--color-brand) 22%, transparent);
+  color: var(--color-foreground);
 }
 
 .shiki {
@@ -221,9 +234,15 @@
   @apply from-brand-secondary to-brand bg-gradient-to-bl;
 }
 
+/* Redefined for SIGNAL: the old light/dark PNG texture (`--lines-page`) is gone.
+   Legacy `.bg-lines-page` consumers now get the CSS fine-grid drafting texture
+   (same recipe as `.bg-grid-fine`) — no assets, flips with the token ladder. */
 .bg-lines-page {
-  background-image: var(--lines-page);
-  background-repeat: repeat;
+  --grid-line-color: color-mix(in oklch, var(--color-foreground) 3.5%, transparent);
+  background-image:
+    linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line-color) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 [data-slot='dropdown-menu-item'] {
@@ -395,17 +414,17 @@
 
 :root {
   --accent-soft: rgb(0 0 0 / 0.04);
-  --accent-gradient: linear-gradient(135deg, #ff5a1f, #ff8a3d);
+  --accent-gradient: linear-gradient(120deg, #059669, #0891b2);
   --skeleton-shimmer: rgb(0 0 0 / 0.06);
   --motion-duration: 180ms;
   --motion-duration-slow: 260ms;
   --motion-ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --font-mono: ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, Consolas, monospace;
+  --font-mono: var(--font-geist-mono), ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 .dark {
   --accent-soft: rgb(255 255 255 / 0.04);
-  --accent-gradient: linear-gradient(135deg, #ff5a1f, #ff9e6b);
+  --accent-gradient: linear-gradient(120deg, #34d399, #22d3ee);
   --skeleton-shimmer: rgb(255 255 255 / 0.06);
 }
 
@@ -637,4 +656,133 @@ html > body[data-scroll-locked] {
 .fd-toc a[aria-current] {
   color: var(--color-brand) !important;
   background-color: var(--color-smooth-200) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * SIGNAL GLOBAL UTILITIES — REVAMP-SPEC §3. Section agents consume these;
+ * they are defined ONLY here.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Aurora hero backdrop — two radial glows, brand jade + cyan partner ─── */
+.bg-aurora {
+  background:
+    radial-gradient(42% 50% at 30% 0%, color-mix(in oklch, var(--color-brand) 13%, transparent), transparent 70%),
+    radial-gradient(34% 42% at 72% 0%, rgb(34 211 238 / 0.09), transparent 70%);
+}
+
+/* ─── Film-grain noise overlay — inline SVG feTurbulence, no asset requests.
+   Use as an absolutely-positioned overlay layer (pointer-events-none). ─── */
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  opacity: 0.035;
+}
+.dark .bg-noise {
+  opacity: 0.025;
+}
+
+/* ─── Drafting-table `+` joint — 9×9 glyph drawn with two crossed hairline
+   gradients. Position via composition, e.g.
+   `absolute -left-[4.5px] -top-[4.5px]`. ─── */
+.plus-mark {
+  width: 9px;
+  height: 9px;
+  background:
+    linear-gradient(var(--color-smooth-800), var(--color-smooth-800)) center / 9px 1px no-repeat,
+    linear-gradient(var(--color-smooth-800), var(--color-smooth-800)) center / 1px 9px no-repeat;
+}
+
+/* ─── Section rails — content-width wrapper with hairline side rails; plus-mark
+   joints get composed at the intersections by the page layout. ─── */
+.section-rails {
+  border-inline: 1px solid var(--color-border);
+}
+
+/* ─── Vertical marquee — hero demo wall columns. Duplicate the column content
+   so the -50% translate loops seamlessly. `--marquee-duration` tunes speed. ─── */
+@keyframes marquee-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes marquee-down {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-marquee-up {
+  animation: marquee-up var(--marquee-duration, 42s) linear infinite;
+}
+.animate-marquee-down {
+  animation: marquee-down var(--marquee-duration, 42s) linear infinite;
+}
+.marquee-col:hover .animate-marquee-up,
+.marquee-col:hover .animate-marquee-down,
+.animate-marquee-up:hover,
+.animate-marquee-down:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-up,
+  .animate-marquee-down {
+    animation: none;
+  }
+}
+
+/* ─── Aurora border — animated conic beam tracing the CTA panel edge.
+   Fallback: browsers without `@property` (typed custom properties) cannot
+   interpolate --beam-angle, so the beam simply holds at 0deg — a static
+   jade→cyan seam instead of a spinning one. Acceptable degradation. ─── */
+@property --beam-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes beam-spin {
+  to {
+    --beam-angle: 360deg;
+  }
+}
+
+.aurora-border {
+  position: relative;
+}
+.aurora-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--beam-angle), transparent 0%, var(--color-brand) 12%, rgb(34 211 238 / 0.9) 20%, transparent 32%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: beam-spin 6s linear infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-border::before {
+    animation: none;
+    /* Static 1px brand ring through the same mask — no spinning beam. */
+    background: color-mix(in oklch, var(--color-brand) 40%, transparent);
+  }
+}
+
+/* ─── Glass — sticky header surface once scrolled past the hero ─── */
+.glass {
+  background: color-mix(in oklch, var(--color-smooth-50) 78%, transparent);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
 }

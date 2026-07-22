@@ -4,8 +4,9 @@
  * The 4-identity engine (`data-theme`, Nocturne/Studio/Paper/Aurora) is gone.
  * Two modes only, switched by `.dark` on <html> (next-themes / fumadocs
  * RootProvider) — this file is intentionally small: one surface ladder, one
- * signal accent (EMBER, #FF5A1F — indigo stays retired, the "AI purple"
- * tell), one radius, one motion signature.
+ * signal accent. SIGNAL identity: EMBER (#FF5A1F) is dead, replaced by JADE
+ * (#10b981/#059669) with a cyan gradient partner — indigo stays retired, the
+ * "AI purple" tell — one radius, one motion signature.
  *
  * Depth language: no ambient drop shadows. Elevation = a surface-color ladder
  * (bg-base → bg-subtle → bg-muted → bg-elevated) + a hairline border + an
@@ -27,18 +28,18 @@
   --text-secondary: var(--neutral-500);
   --text-tertiary: var(--neutral-400);
 
-  /* Ember signal — the ONE accent. */
-  --accent: var(--ember-500);
-  --accent-hover: var(--ember-600);
+  /* Jade signal — the ONE accent (SIGNAL identity; ember is dead). */
+  --accent: var(--jade-600); /* jade-600 — legible ink on light */
+  --accent-hover: var(--jade-700);
   --accent-contrast: #ffffff;
   --accent-soft: rgb(0 0 0 / 0.04);
-  --accent-gradient: linear-gradient(135deg, var(--ember-500), var(--ember-400));
+  --accent-gradient: linear-gradient(120deg, var(--jade-600), #0891b2);
 
   --radius-theme: 10px;
   --radius-theme-pill: 9999px;
 
   --shadow-theme: 0 1px 2px 0 rgb(0 0 0 / 0.04);
-  --glow-theme: 0 0 0 3px rgb(255 90 31 / 0.16);
+  --glow-theme: 0 0 0 3px rgb(5 150 105 / 0.18);
   --skeleton-shimmer: rgb(0 0 0 / 0.06);
 
   /* Package ships no fonts of its own — the host app's next/font wiring
@@ -67,14 +68,14 @@
   --text-secondary: var(--neutral-400);
   --text-tertiary: var(--neutral-600);
 
-  --accent: var(--ember-500);
-  --accent-hover: var(--ember-400);
-  --accent-contrast: #ffffff;
+  --accent: var(--jade-400); /* jade-400 — luminous on graphite */
+  --accent-hover: var(--jade-300);
+  --accent-contrast: #052e22;
   --accent-soft: rgb(255 255 255 / 0.04);
-  --accent-gradient: linear-gradient(135deg, var(--ember-500), var(--ember-300));
+  --accent-gradient: linear-gradient(120deg, var(--jade-400), #22d3ee);
 
   --shadow-theme: inset 0 1px 0 0 rgb(255 255 255 / 0.03);
-  --glow-theme: 0 0 0 1px rgb(255 90 31 / 0.3), 0 0 18px -2px rgb(255 90 31 / 0.22);
+  --glow-theme: 0 0 0 1px rgb(52 211 153 / 0.3), 0 0 18px -2px rgb(52 211 153 / 0.22);
   --skeleton-shimmer: rgb(255 255 255 / 0.06);
   color-scheme: dark;
 }

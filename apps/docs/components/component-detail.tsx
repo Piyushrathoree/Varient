@@ -81,14 +81,20 @@ export function ComponentDetail({ entry, content, sources }: ComponentDetailProp
         </nav>
 
         {/* Header */}
+        <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-brand">
+          {`// ${entry.category}`}
+        </p>
+        <h1 className="font-title mb-5 text-3xl font-semibold tracking-[-0.03em] text-foreground sm:text-4xl">
+          {entry.name}
+        </h1>
         <div className="mb-5 flex flex-wrap items-center gap-2">
-          <Badge variant="secondary" size="sm">
+          <Badge variant="secondary" size="sm" className="font-mono uppercase tracking-wide">
             {layerLabels[entry.layer]}
           </Badge>
-          <Badge variant="outline" size="sm">
+          <Badge variant="outline" size="sm" className="font-mono uppercase tracking-wide">
             {entry.category}
           </Badge>
-          <Badge variant="primary" size="sm">
+          <Badge variant="primary" size="sm" className="font-mono uppercase tracking-wide">
             Shipped
           </Badge>
           {entry.isNew && (
@@ -100,10 +106,7 @@ export function ComponentDetail({ entry, content, sources }: ComponentDetailProp
             </Badge>
           )}
         </div>
-        <h1 className="font-title mb-3 text-3xl font-bold -tracking-wide text-foreground sm:text-4xl">
-          {entry.name}
-        </h1>
-        <p className="mb-10 max-w-2xl text-base leading-relaxed text-muted-foreground">
+        <p className="mb-10 max-w-2xl text-base leading-relaxed text-smooth-900">
           {entry.description}
         </p>
 
@@ -112,9 +115,9 @@ export function ComponentDetail({ entry, content, sources }: ComponentDetailProp
           <h2 id="preview" className="sr-only scroll-mt-24">
             Preview
           </h2>
-          <div className="overflow-hidden rounded-2xl border border-border bg-background">
-            <Tabs defaultValue="preview" variant="pills">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-muted/30 px-3 py-2">
+          <div className="overflow-hidden rounded-xl border border-border bg-smooth-100">
+            <Tabs defaultValue="preview" variant="underline">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-smooth-50 px-3 py-2">
                 <Tabs.List aria-label="Preview and code">
                   <Tabs.Trigger value="preview" className="gap-1.5">
                     <Eye className="size-3.5" strokeWidth={1.75} aria-hidden />
@@ -125,7 +128,7 @@ export function ComponentDetail({ entry, content, sources }: ComponentDetailProp
                     Code
                   </Tabs.Trigger>
                 </Tabs.List>
-                <CopyButton text={usage} />
+                <CopyButton text={usage} className="hover:border-brand/40 hover:text-brand" />
               </div>
 
               <Tabs.Content value="preview">
@@ -154,12 +157,12 @@ export function ComponentDetail({ entry, content, sources }: ComponentDetailProp
         <section className="mb-14">
           <h2
             id="installation"
-            className="font-title mb-4 scroll-mt-24 text-xl font-semibold tracking-tight text-foreground"
+            className="font-title mb-4 scroll-mt-24 text-xl font-semibold tracking-[-0.03em] text-foreground"
           >
             Installation
           </h2>
 
-          <Tabs defaultValue="copy-source" variant="pills">
+          <Tabs defaultValue="copy-source" variant="underline">
             <Tabs.List aria-label="Installation method" className="mb-4">
               <Tabs.Trigger value="copy-source" className="gap-1.5">
                 <Terminal className="size-3.5" strokeWidth={1.75} aria-hidden />
@@ -193,7 +196,7 @@ export function ComponentDetail({ entry, content, sources }: ComponentDetailProp
           <section className="mb-14">
             <h2
               id="features"
-              className="font-title mb-4 scroll-mt-24 text-xl font-semibold tracking-tight text-foreground"
+              className="font-title mb-4 scroll-mt-24 text-xl font-semibold tracking-[-0.03em] text-foreground"
             >
               Features
             </h2>
@@ -213,14 +216,14 @@ export function ComponentDetail({ entry, content, sources }: ComponentDetailProp
           <section className="mb-14">
             <h2
               id="accessibility"
-              className="font-title mb-4 scroll-mt-24 text-xl font-semibold tracking-tight text-foreground"
+              className="font-title mb-4 scroll-mt-24 text-xl font-semibold tracking-[-0.03em] text-foreground"
             >
               Accessibility
             </h2>
 
             {hasKeyboard && (
               <div className="mb-6">
-                <h3 className="mb-3 text-sm font-semibold text-foreground">Keyboard interactions</h3>
+                <h3 className="font-title mb-3 text-sm font-semibold text-foreground">Keyboard interactions</h3>
                 <InfoTable
                   columns={['Key', 'Description']}
                   rows={(content?.keyboard ?? []).map((row) => [row.keys, row.description])}
@@ -230,7 +233,7 @@ export function ComponentDetail({ entry, content, sources }: ComponentDetailProp
 
             {hasAria && (
               <div className="mb-6">
-                <h3 className="mb-3 text-sm font-semibold text-foreground">ARIA attributes</h3>
+                <h3 className="font-title mb-3 text-sm font-semibold text-foreground">ARIA attributes</h3>
                 <InfoTable
                   columns={['Attribute', 'Element', 'Purpose']}
                   rows={(content?.aria ?? []).map((row) => [row.attribute, row.element, row.purpose])}
@@ -255,14 +258,14 @@ export function ComponentDetail({ entry, content, sources }: ComponentDetailProp
           <section className="mb-4">
             <h2
               id="props"
-              className="font-title mb-4 scroll-mt-24 text-xl font-semibold tracking-tight text-foreground"
+              className="font-title mb-4 scroll-mt-24 text-xl font-semibold tracking-[-0.03em] text-foreground"
             >
               Props
             </h2>
             {content?.props?.map((table, index) => (
               <div key={table.title ?? index}>
                 {table.title && (
-                  <h3 className="mb-3 text-sm font-semibold text-foreground">{table.title}</h3>
+                  <h3 className="font-title mb-3 text-sm font-semibold text-foreground">{table.title}</h3>
                 )}
                 <PropsTable props={table.rows} />
               </div>
@@ -366,7 +369,7 @@ function SourceCodeTabs({ sources }: { sources: HighlightedSource[] }) {
       `}</style>
 
       {sources.length > 1 && (
-        <div className="flex flex-wrap gap-1 border-b border-border bg-muted/20 px-3 py-2">
+        <div className="flex flex-wrap gap-1 border-b border-border bg-smooth-50 px-3 py-2">
           {sources.map((source, index) => (
             <button
               key={source.fileName}
@@ -376,7 +379,7 @@ function SourceCodeTabs({ sources }: { sources: HighlightedSource[] }) {
               className={cn(
                 'rounded-md px-2.5 py-1 font-mono text-xs transition-colors duration-150',
                 index === activeIndex
-                  ? 'bg-primary text-foreground'
+                  ? 'bg-primary text-brand'
                   : 'text-muted-foreground hover:text-foreground',
                 focusRing,
               )}
@@ -388,9 +391,12 @@ function SourceCodeTabs({ sources }: { sources: HighlightedSource[] }) {
       )}
 
       <div className="relative">
-        <CopyButton text={active.code} className="absolute right-3 top-3 z-10" />
+        <CopyButton
+          text={active.code}
+          className="absolute right-3 top-3 z-10 hover:border-brand/40 hover:text-brand"
+        />
         <div
-          className="varient-code-lines max-h-[36rem] overflow-auto bg-muted/20 p-6 font-mono text-sm leading-relaxed text-foreground/90"
+          className="varient-code-lines max-h-[36rem] overflow-auto bg-smooth-50 p-6 font-mono text-sm leading-relaxed text-foreground/90"
           dangerouslySetInnerHTML={{ __html: active.html }}
         />
       </div>
@@ -400,14 +406,14 @@ function SourceCodeTabs({ sources }: { sources: HighlightedSource[] }) {
 
 function CommandRow({ command }: { command: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-5 py-3.5">
-      <span aria-hidden className="select-none text-muted-foreground">
+    <div className="flex items-center gap-3 rounded-xl border border-border bg-smooth-100 px-5 py-3.5">
+      <span aria-hidden className="select-none font-mono text-brand">
         $
       </span>
       <code className="min-w-0 flex-1 overflow-x-auto font-mono text-sm whitespace-nowrap text-foreground">
         {command}
       </code>
-      <CopyButton text={command} />
+      <CopyButton text={command} className="hover:border-brand/40 hover:text-brand" />
     </div>
   );
 }

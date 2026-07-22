@@ -48,7 +48,7 @@ export const content: ComponentDocContent = {
     'The pan mode translates a wrapping `<g>` via a GPU-composited transform instead of rewriting the `<pattern>` x/y attributes every frame, avoiding per-frame layout recalculation of the tiled fill.',
     'Both animation modes pause automatically while offscreen via `useViewportActive`, and stop entirely under `prefers-reduced-motion`.',
     'Purely decorative: `aria-hidden` and `pointer-events-none` so it never intercepts focus or clicks from content stacked above it.',
-    'Optional brand-tinted highlights (`isBrandTinted`) for ember-accented cards without touching the neutral grid lines.',
+    'Optional brand-tinted highlights (`isBrandTinted`) for jade-accented cards without touching the neutral grid lines.',
   ],
   aria: [
     {

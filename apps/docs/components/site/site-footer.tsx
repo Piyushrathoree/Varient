@@ -48,9 +48,12 @@ const projectColumn: FooterColumn = {
 const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
-const columnTitleClass = 'mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground';
+const columnTitleClass = 'mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-smooth-800';
 const linkClass =
-  'inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground';
+  'inline-flex items-center gap-1 text-sm text-smooth-900 transition duration-200 hover:translate-x-[2px] hover:text-brand motion-reduce:transition-none motion-reduce:hover:translate-x-0';
+
+const wordmarkClass =
+  'font-title text-[clamp(4rem,14vw,12rem)] font-bold uppercase leading-none text-center select-none';
 
 function FooterLinkItem({ link }: { link: FooterLink }) {
   if (link.external) {
@@ -93,24 +96,28 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-border bg-background">
-      <div className="mx-auto max-w-7xl space-y-12 px-6 py-16 sm:py-20">
+      <div className="mx-auto max-w-7xl px-6 pt-16 sm:pt-20">
+        {/* Top: brand column + link columns */}
         <div className="grid gap-12 md:grid-cols-5">
           <div className="space-y-5 md:col-span-2">
             <Link
               aria-label="Varient home"
-              className={cn('inline-flex items-center gap-2 rounded-sm', focusRing)}
+              className={cn('inline-flex items-center gap-2.5 rounded-sm', focusRing)}
               href="/"
             >
-              <span className="font-title text-xl font-semibold tracking-tight text-foreground">
-                Vari<span className="text-brand">ent</span>
+              <span
+                aria-hidden
+                className="flex size-9 items-center justify-center rounded-lg bg-brand font-title text-lg font-bold leading-none text-background"
+              >
+                *
+              </span>
+              <span className="font-title text-xl font-semibold lowercase tracking-tight text-foreground">
+                varient
               </span>
             </Link>
-            <p className="max-w-sm text-balance text-sm leading-relaxed text-muted-foreground">
+            <p className="max-w-sm text-balance text-sm leading-relaxed text-smooth-900">
               Copy-paste React components for utilities, animations, and full-page sections. You
               own the code — no lock-in, no per-component installs.
-            </p>
-            <p className="font-mono text-xs text-muted-foreground">
-              {componentCount} components shipped
             </p>
           </div>
 
@@ -123,7 +130,7 @@ export function SiteFooter() {
                 <a
                   aria-label="Varient on GitHub"
                   className={cn(
-                    'inline-flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-foreground/15 hover:text-foreground',
+                    'inline-flex size-9 items-center justify-center rounded-full border border-border text-smooth-900 transition-colors hover:border-brand/40 hover:text-brand',
                     focusRing,
                   )}
                   href={GITHUB_URL}
@@ -137,13 +144,43 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div
-          aria-hidden
-          className="h-px bg-[length:6px_1px] bg-repeat-x opacity-20 [background-image:linear-gradient(90deg,var(--color-border)_1px,transparent_1px)]"
-        />
+        {/* Middle: monument wordmark — stroked outline, gradient fill sweeps in on hover */}
+        <div aria-hidden className="group relative mt-16 sm:mt-20">
+          <div
+            className={cn(
+              wordmarkClass,
+              'text-transparent [-webkit-text-stroke:1px_var(--color-smooth-700)]',
+            )}
+          >
+            Varient
+          </div>
+          <div
+            className={cn(
+              wordmarkClass,
+              'text-gradient-brand pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 motion-reduce:transition-none',
+            )}
+          >
+            Varient
+          </div>
+        </div>
+      </div>
 
-        <div className="flex flex-col gap-3 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; {new Date().getFullYear()} Varient. All rights reserved.</p>
+      {/* Bottom bar between hairlines */}
+      <div className="mt-12 border-t border-border sm:mt-16">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 border-b border-border px-6 py-5 text-sm text-smooth-900 sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-mono text-xs">&copy; {new Date().getFullYear()} Varient &middot; MIT</p>
+          <p className="text-xs text-smooth-800">Built for the motion-obsessed</p>
+          <p className="inline-flex items-center gap-2 rounded-full border border-border bg-smooth-100 px-3 py-1.5 font-mono text-[11px] text-smooth-900">
+            <span aria-hidden className="relative flex size-1.5">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-brand opacity-60 motion-reduce:hidden" />
+              <span className="relative inline-flex size-1.5 rounded-full bg-brand" />
+            </span>
+            <span>All systems ship</span>
+            <span aria-hidden className="text-smooth-800">
+              &middot;
+            </span>
+            <span>{componentCount} components shipped</span>
+          </p>
         </div>
       </div>
     </footer>

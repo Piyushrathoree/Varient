@@ -44,17 +44,19 @@ export function ComponentCard({ entry, size = 'compact' }: ComponentCardProps) {
       </LazyMount>
     ) : isInProgress ? (
       <div className="flex flex-col items-center gap-2 text-center">
-        <div className="flex size-9 items-center justify-center rounded-full border border-yellow-500/30 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400">
+        <div className="flex size-9 items-center justify-center rounded-full border border-warning/30 bg-warning/10 text-warning">
           <Clock className="size-4" strokeWidth={1.75} />
         </div>
-        <span className="font-display block text-sm font-semibold text-foreground/80">
+        <span className="font-title block text-sm font-semibold text-foreground/80">
           {entry.name}
         </span>
-        <span className="text-xs text-muted-foreground">Preview coming soon</span>
+        <span className="font-mono text-[10px] uppercase tracking-wider text-smooth-800">
+          Preview coming soon
+        </span>
       </div>
     ) : (
       <div
-        className="skeleton-shimmer flex w-full max-w-[220px] flex-col gap-2.5 rounded-xl border border-dashed border-border bg-muted/40 px-5 py-4"
+        className="skeleton-shimmer flex w-full max-w-[220px] flex-col gap-2.5 rounded-xl border border-dashed border-border bg-smooth-100 px-5 py-4"
         aria-hidden
       >
         <div className="h-3 w-2/3 rounded-full bg-border" />
@@ -66,8 +68,8 @@ export function ComponentCard({ entry, size = 'compact' }: ComponentCardProps) {
   const card = (
     <div
       className={cn(
-        'group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-[transform,border-color,box-shadow] duration-200 motion-reduce:transition-none',
-        href && 'hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-lg',
+        'group spotlight-surface flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-[transform,border-color] duration-200 motion-reduce:transition-none',
+        href && 'hover:-translate-y-0.5 hover:border-brand/40',
         !isShipped && 'opacity-90',
       )}
     >
@@ -88,10 +90,10 @@ export function ComponentCard({ entry, size = 'compact' }: ComponentCardProps) {
 
       <div className={cn('flex flex-1 flex-col gap-3 border-t border-border p-5', isWide && 'sm:p-6')}>
         <div className="flex items-start justify-between gap-2">
-          <h3 className={cn('font-display font-semibold text-foreground', isWide && 'text-lg')}>
+          <h3 className={cn('font-title font-semibold text-foreground', isWide && 'text-lg')}>
             {entry.name}
           </h3>
-          <span className="shrink-0 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          <span className="shrink-0 font-mono text-[10px] uppercase tracking-wider text-smooth-800">
             {entry.category}
           </span>
         </div>
@@ -108,7 +110,7 @@ export function ComponentCard({ entry, size = 'compact' }: ComponentCardProps) {
             <Badge variant={status.variant} size="sm">
               {status.label}
             </Badge>
-            <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-smooth-800/70">
               {layerLabels[entry.layer]}
             </span>
           </div>

@@ -18,7 +18,7 @@ interface PreviewStageProps {
 }
 
 const iconButtonClass =
-  'inline-flex size-7 items-center justify-center rounded-md border border-transparent text-muted-foreground transition-colors duration-150 hover:border-border hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.97] motion-reduce:active:scale-100 motion-reduce:transition-none';
+  'inline-flex size-7 items-center justify-center rounded-md border border-border bg-smooth-50 text-smooth-800 transition-colors duration-150 hover:border-brand/40 hover:bg-smooth-100 hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.97] motion-reduce:active:scale-100 motion-reduce:transition-none';
 
 const themeIcons: Record<PreviewThemeMode, typeof Sun> = {
   inherit: Monitor,
@@ -34,10 +34,10 @@ const nextThemeMode: Record<PreviewThemeMode, PreviewThemeMode> = {
 
 /**
  * The live-preview canvas used by the component detail page and mdx previews.
- * Wraps `PreviewFrame`'s dotted-canvas styling with a slim control cluster:
- * Replay (remounts children) and a per-preview theme override (inherit → light
- * → dark) that flips tokens only inside this stage via the `.light`/`.dark`
- * class scoping already defined in global.css.
+ * Wraps `PreviewFrame`'s dotted-canvas styling with a slim bordered chip
+ * cluster: Replay (remounts children) and a per-preview theme override
+ * (inherit → light → dark) that flips tokens only inside this stage via the
+ * `.light`/`.dark` class scoping already defined in global.css.
  */
 export function PreviewStage({
   children,
@@ -52,10 +52,10 @@ export function PreviewStage({
   const ThemeIcon = themeIcons[previewTheme];
 
   return (
-    <div className={cn('overflow-hidden rounded-2xl border border-border bg-background', className)}>
+    <div className={cn('overflow-hidden rounded-xl border border-border bg-smooth-100', className)}>
       <div
         className={cn(
-          'relative isolate flex overflow-hidden bg-background text-foreground',
+          'relative isolate flex overflow-hidden bg-smooth-100 text-foreground',
           previewTheme !== 'inherit' && previewTheme,
           alignTop ? 'items-start justify-center' : 'items-center justify-center',
           previewFrameSizeStyles[minHeight],
@@ -63,7 +63,7 @@ export function PreviewStage({
       >
         <PreviewDotGrid />
 
-        <div className="absolute right-3 top-3 z-20 flex items-center gap-1 rounded-lg border border-border/60 bg-background/80 p-1 backdrop-blur-sm">
+        <div className="absolute right-3 top-3 z-20 flex items-center gap-1.5">
           <button
             type="button"
             className={iconButtonClass}

@@ -7,11 +7,11 @@ import { SiteFooter } from '@/components/site/site-footer';
 // below it, so /docs pages end in the same footer as the rest of the site.
 export default function Layout({ children }: LayoutProps<'/docs'>) {
   return (
-    <>
+    <div className="bg-background">
       <DocsLayout tree={source.getPageTree()} {...baseOptions()}>
         {children}
       </DocsLayout>
       <SiteFooter />
-    </>
+    </div>
   );
 }

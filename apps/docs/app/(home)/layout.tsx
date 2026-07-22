@@ -11,7 +11,7 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
     // fall back to instant opacity — no per-component opt-in needed.
     <MotionConfig reducedMotion="user">
       <CommandMenuProvider>
-        <div className="flex min-h-screen flex-col">
+        <div className="flex min-h-screen flex-col bg-background">
           <SiteHeader />
           <div className="flex flex-1 flex-col">{children}</div>
           <SiteFooter />

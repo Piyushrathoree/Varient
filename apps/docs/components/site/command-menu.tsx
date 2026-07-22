@@ -21,6 +21,14 @@ const GITHUB_URL = `https://github.com/${gitConfig.user}/${gitConfig.repo}`;
 
 const layers: ComponentLayer[] = ['foundation', 'animated', 'sections'];
 
+// SIGNAL surface classes — shared across every `CommandPalette.Group` / `.Item` instance below
+// so the smooth-ladder + jade treatment stays consistent without touching the primitives.
+const GROUP_HEADING_CLASSNAME =
+  '[&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-[11px] [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wider [&_[cmdk-group-heading]]:text-smooth-800';
+
+const ACTIVE_ROW_CLASSNAME =
+  'data-[selected=true]:bg-smooth-200 data-[selected=true]:text-brand data-[selected=true]:shadow-[inset_2px_0_0_0_var(--color-brand)]';
+
 const layerIcons: Record<ComponentLayer, LucideIcon> = {
   foundation: Layers3,
   animated: Sparkles,
@@ -87,8 +95,17 @@ export function CommandMenuProvider({ children }: { children: ReactNode }) {
     <CommandMenuContext.Provider value={value}>
       {children}
 
-      <CommandPalette isOpen={open} onOpenChange={setOpen} label="Command menu">
-        <CommandPalette.Input autoFocus placeholder="Search components, docs, actions…" />
+      <CommandPalette
+        isOpen={open}
+        onOpenChange={setOpen}
+        label="Command menu"
+        className="bg-smooth-50"
+      >
+        <CommandPalette.Input
+          autoFocus
+          placeholder="Search components, docs, actions…"
+          className="font-body placeholder:font-mono placeholder:text-[13px] placeholder:tracking-tight placeholder:text-smooth-800"
+        />
         <CommandPalette.List>
           <CommandPalette.Empty>No results found.</CommandPalette.Empty>
 
@@ -100,14 +117,23 @@ export function CommandMenuProvider({ children }: { children: ReactNode }) {
             if (entries.length === 0) return null;
 
             return (
-              <CommandPalette.Group key={layer} heading={layerLabels[layer]}>
+              <CommandPalette.Group
+                key={layer}
+                heading={layerLabels[layer]}
+                className={GROUP_HEADING_CLASSNAME}
+              >
                 {entries.map((entry) => (
                   <CommandPalette.Item
                     key={entry.slug}
                     value={`${entry.name} ${entry.category}`}
                     icon={<LayerIcon strokeWidth={1.75} />}
-                    shortcut={entry.category}
+                    shortcut={
+                      <span className="rounded border border-border bg-smooth-100 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-smooth-800">
+                        {entry.category}
+                      </span>
+                    }
                     onSelect={() => goTo(`/components/${entry.slug}`)}
+                    className={ACTIVE_ROW_CLASSNAME}
                   >
                     {entry.name}
                   </CommandPalette.Item>
@@ -118,11 +144,12 @@ export function CommandMenuProvider({ children }: { children: ReactNode }) {
 
           <CommandPalette.Separator />
 
-          <CommandPalette.Group heading="Docs">
+          <CommandPalette.Group heading="Docs" className={GROUP_HEADING_CLASSNAME}>
             <CommandPalette.Item
               value="Getting started documentation guide"
               icon={<BookOpen strokeWidth={1.75} />}
               onSelect={() => goTo('/docs')}
+              className={ACTIVE_ROW_CLASSNAME}
             >
               Getting started
             </CommandPalette.Item>
@@ -130,7 +157,7 @@ export function CommandMenuProvider({ children }: { children: ReactNode }) {
 
           <CommandPalette.Separator />
 
-          <CommandPalette.Group heading="Actions">
+          <CommandPalette.Group heading="Actions" className={GROUP_HEADING_CLASSNAME}>
             <CommandPalette.Item
               value="Toggle theme light dark mode"
               icon={isDark ? <Sun strokeWidth={1.75} /> : <Moon strokeWidth={1.75} />}
@@ -138,6 +165,7 @@ export function CommandMenuProvider({ children }: { children: ReactNode }) {
                 setTheme(isDark ? 'light' : 'dark');
                 setOpen(false);
               }}
+              className={ACTIVE_ROW_CLASSNAME}
             >
               Toggle theme
             </CommandPalette.Item>
@@ -148,13 +176,14 @@ export function CommandMenuProvider({ children }: { children: ReactNode }) {
                 window.open(GITHUB_URL, '_blank', 'noopener,noreferrer');
                 setOpen(false);
               }}
+              className={ACTIVE_ROW_CLASSNAME}
             >
               Open GitHub
             </CommandPalette.Item>
           </CommandPalette.Group>
         </CommandPalette.List>
 
-        <CommandPalette.Footer>
+        <CommandPalette.Footer className="font-mono text-[11px] uppercase tracking-wide text-smooth-800">
           <span>Navigate with ↑↓</span>
           <KbdGroup keys={['↵']} size="sm" />
         </CommandPalette.Footer>

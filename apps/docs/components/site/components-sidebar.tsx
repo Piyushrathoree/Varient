@@ -42,12 +42,14 @@ const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 const groupLabelClass =
-  'mb-2 flex items-center gap-1.5 px-3 font-mono text-xs uppercase tracking-widest text-muted-foreground';
+  'mb-2 flex items-center gap-1.5 px-3 font-mono text-[11px] uppercase tracking-[0.16em] text-smooth-800';
 
 const itemBaseClass =
   'flex w-full items-center justify-between gap-2 rounded-lg px-3 py-1.5 text-left text-sm transition-colors duration-150';
-const itemActiveClass = 'bg-brand/10 font-medium text-brand';
-const itemInactiveClass = 'text-muted-foreground hover:bg-muted hover:text-foreground';
+const itemActiveClass = 'bg-smooth-200 font-medium text-brand [box-shadow:inset_2px_0_0_var(--color-brand)]';
+const itemInactiveClass = 'text-smooth-900 hover:bg-smooth-200';
+
+const countClass = 'shrink-0 font-mono text-[10px] text-smooth-800';
 
 interface ComponentsSidebarProps {
   className?: string;
@@ -107,8 +109,8 @@ export function ComponentsSidebar({ className, variant = 'desktop' }: Components
       <button
         aria-label="Search components"
         className={cn(
-          'mb-6 flex w-full items-center gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2 text-left text-sm text-muted-foreground transition-colors duration-150',
-          'hover:border-brand/40 hover:text-foreground',
+          'mb-6 flex w-full items-center gap-2 rounded-lg border border-border bg-smooth-100 px-3 py-2 text-left text-sm text-smooth-800 transition-colors duration-150',
+          'hover:border-brand/40 hover:bg-smooth-200 hover:text-foreground',
           focusRing,
         )}
         onClick={openCommandMenu}
@@ -134,7 +136,7 @@ export function ComponentsSidebar({ className, variant = 'desktop' }: Components
           <LayoutGrid aria-hidden className="size-4 shrink-0" />
           All components
         </span>
-        <span className="font-mono text-[10px] text-brand">{getReadyCount()}</span>
+        <span className={countClass}>{getReadyCount()}</span>
       </Link>
 
       <nav className="flex flex-col gap-6">
@@ -177,7 +179,7 @@ export function ComponentsSidebar({ className, variant = 'desktop' }: Components
               <p className={groupLabelClass}>
                 <LayerIcon aria-hidden className="size-3.5" />
                 {layerLabels[layer]}
-                <span className="ml-0.5 text-muted-foreground/60">{layerGroupCount}</span>
+                <span className="ml-0.5 text-smooth-800">{layerGroupCount}</span>
               </p>
               <ul className="flex flex-col gap-0.5">
                 {layerCategories[layer].map((category) => {
@@ -200,14 +202,7 @@ export function ComponentsSidebar({ className, variant = 'desktop' }: Components
                         )}
                       >
                         <span className="truncate">{category}</span>
-                        <span
-                          className={cn(
-                            'shrink-0 font-mono text-[10px]',
-                            isActive ? 'text-brand' : 'text-muted-foreground/60',
-                          )}
-                        >
-                          {count}
-                        </span>
+                        <span className={countClass}>{count}</span>
                       </button>
                     </li>
                   );

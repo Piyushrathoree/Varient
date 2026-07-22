@@ -3,46 +3,63 @@
 @import './themes.css';
 
 :root {
-  /* Signal — EMBER. The one accent, spent sparingly (focus/active/charge/state).
-     Indigo is retired: Tailwind indigo-500 is the documented "AI purple" tell. */
-  --ember-50: #fff4ee;
-  --ember-100: #ffe4d5;
-  --ember-200: #ffc6a8;
-  --ember-300: #ffa377;
-  --ember-400: #ff7e44;
-  --ember-500: #ff5a1f; /* PRIMARY signal */
-  --ember-600: #f03e0c;
-  --ember-700: #c22f08;
-  --ember-800: #94240a;
-  --ember-900: #6b1c0c;
+  /* Signal — JADE. The one accent, spent sparingly (focus/active/charge/state).
+     EMBER (#ff5a1f) IS DEAD — this is the SIGNAL identity: cool blue-graphite
+     surfaces, one luminous jade accent with a cyan gradient partner. Indigo
+     stays retired too: Tailwind indigo-500 is the documented "AI purple" tell. */
+  --jade-50: #ecfdf5;
+  --jade-100: #d1fae5;
+  --jade-200: #a7f3d0;
+  --jade-300: #6ee7b7;
+  --jade-400: #34d399;
+  --jade-500: #10b981; /* PRIMARY signal */
+  --jade-600: #059669;
+  --jade-700: #047857;
+  --jade-800: #065f46;
+  --jade-900: #064e3b;
 
-  /* `brand-*` aliases ember so any legacy reference retextures automatically.
-     Prefer `ember-*` / semantic `accent` tokens in new code. */
-  --brand-50: var(--ember-50);
-  --brand-100: var(--ember-100);
-  --brand-200: var(--ember-200);
-  --brand-300: var(--ember-300);
-  --brand-400: var(--ember-400);
-  --brand-500: var(--ember-500);
-  --brand-600: var(--ember-600);
-  --brand-700: var(--ember-700);
-  --brand-800: var(--ember-800);
-  --brand-900: var(--ember-900);
+  /* LEGACY: `--ember-*` is now just an alias of `--jade-*`, kept so every
+     component still referencing ember-* retextures to jade automatically
+     without touching 100+ files. Prefer `--jade-*` / semantic `accent`
+     tokens in new code — do not add new ember-* usages. */
+  --ember-50: var(--jade-50);
+  --ember-100: var(--jade-100);
+  --ember-200: var(--jade-200);
+  --ember-300: var(--jade-300);
+  --ember-400: var(--jade-400);
+  --ember-500: var(--jade-500);
+  --ember-600: var(--jade-600);
+  --ember-700: var(--jade-700);
+  --ember-800: var(--jade-800);
+  --ember-900: var(--jade-900);
 
-  /* Neutral */
+  /* `brand-*` aliases jade so any legacy reference retextures automatically.
+     Prefer `jade-*` / semantic `accent` tokens in new code. */
+  --brand-50: var(--jade-50);
+  --brand-100: var(--jade-100);
+  --brand-200: var(--jade-200);
+  --brand-300: var(--jade-300);
+  --brand-400: var(--jade-400);
+  --brand-500: var(--jade-500);
+  --brand-600: var(--jade-600);
+  --brand-700: var(--jade-700);
+  --brand-800: var(--jade-800);
+  --brand-900: var(--jade-900);
+
+  /* Neutral — cool graphite ladder (SIGNAL), hue-shifted off the old warm/neutral grays */
   --neutral-0: #ffffff;
-  --neutral-50: #fafafa;
-  --neutral-100: #f4f4f5;
-  --neutral-200: #e4e4e7;
-  --neutral-300: #d1d1d6;
-  --neutral-400: #a1a1aa;
-  --neutral-500: #71717a;
-  --neutral-600: #52525b;
-  --neutral-700: #3f3f46;
-  --neutral-800: #27272a;
-  --neutral-850: #1c1c1f;
-  --neutral-900: #131316;
-  --neutral-950: #0a0a0d;
+  --neutral-50: #f9fafc;
+  --neutral-100: #f2f4f7;
+  --neutral-200: #e2e6ec;
+  --neutral-300: #ccd2da;
+  --neutral-400: #9fa7b2;
+  --neutral-500: #6f7784;
+  --neutral-600: #505866;
+  --neutral-700: #3d434e;
+  --neutral-800: #242933;
+  --neutral-850: #1a1e25;
+  --neutral-900: #12151b;
+  --neutral-950: #0b0e13;
 
   /* Semantic */
   --success: #22c55e;
@@ -90,8 +107,8 @@
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-  --glow-brand: 0 0 20px rgb(255 90 31 / 0.4);
-  --glow-brand-strong: 0 0 28px rgb(255 90 31 / 0.45);
+  --glow-brand: 0 0 20px rgb(16 185 129 / 0.4);
+  --glow-brand-strong: 0 0 28px rgb(16 185 129 / 0.45);
   --glow-white: 0 0 20px rgb(255 255 255 / 0.1);
 
   /* Animation */
@@ -131,6 +148,17 @@
   --color-ember-700: var(--ember-700);
   --color-ember-800: var(--ember-800);
   --color-ember-900: var(--ember-900);
+
+  --color-jade-50: var(--jade-50);
+  --color-jade-100: var(--jade-100);
+  --color-jade-200: var(--jade-200);
+  --color-jade-300: var(--jade-300);
+  --color-jade-400: var(--jade-400);
+  --color-jade-500: var(--jade-500);
+  --color-jade-600: var(--jade-600);
+  --color-jade-700: var(--jade-700);
+  --color-jade-800: var(--jade-800);
+  --color-jade-900: var(--jade-900);
 
   --color-neutral-0: var(--neutral-0);
   --color-neutral-50: var(--neutral-50);

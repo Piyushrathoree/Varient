@@ -1,24 +1,30 @@
-import { Bricolage_Grotesque, Inter } from 'next/font/google';
+import { Instrument_Serif, Sora } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import Script from 'next/script';
 import './global.css';
 
-/** Body face — crisp neutral sans for prose and UI chrome. */
-const inter = Inter({
+/**
+ * Display face — Sora, loaded into `--font-sora` and wired to the `--font-title`
+ * slot in global.css. Geometric and confident: the SIGNAL instrument-panel voice.
+ */
+const sora = Sora({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-sora',
+  weight: ['400', '500', '600', '700', '800'],
   display: 'swap',
 });
 
 /**
- * Display face — loaded into the legacy `--font-poppins` slot so global.css
- * token wiring stays unchanged. Bricolage Grotesque: geometric, editorial, not
- * the overused Poppins/Inter pairing.
+ * Serif accent — Instrument Serif italic, used for a single accent word in the
+ * hero H1 (and optionally the CTA headline). Wired to `--font-serif-accent`.
  */
-const display = Bricolage_Grotesque({
+const serifAccent = Instrument_Serif({
   subsets: ['latin'],
-  variable: '--font-poppins',
-  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-instrument-serif',
+  weight: '400',
+  style: ['normal', 'italic'],
   display: 'swap',
 });
 
@@ -26,7 +32,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <html
       lang="en"
-      className={`${inter.className} ${inter.variable} ${display.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable} ${sora.variable} ${serifAccent.variable}`}
       suppressHydrationWarning
     >
       <body className="flex min-h-screen flex-col bg-background font-body text-foreground antialiased">

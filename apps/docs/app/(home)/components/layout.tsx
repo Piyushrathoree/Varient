@@ -56,7 +56,7 @@ export default function ComponentsSectionLayout({ children }: { children: ReactN
         aria-expanded={open}
         aria-label="Browse components"
         className={cn(
-          'fixed bottom-5 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-background px-4 py-2.5 text-sm font-medium text-foreground shadow-lg backdrop-blur-xl lg:hidden',
+          'glass fixed bottom-5 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground lg:hidden',
           focusRing,
         )}
         onClick={() => setOpen(true)}
@@ -84,19 +84,21 @@ export default function ComponentsSectionLayout({ children }: { children: ReactN
           aria-label="Browse components"
           aria-modal="true"
           className={cn(
-            'absolute inset-y-0 left-0 flex w-[85vw] max-w-xs flex-col border-r border-border bg-background p-4 shadow-xl transition-transform duration-200',
+            'absolute inset-y-0 left-0 flex w-[85vw] max-w-xs flex-col border-r border-border bg-background p-4 transition-transform duration-200',
             open ? 'translate-x-0' : '-translate-x-full',
             'motion-reduce:transition-none',
           )}
           id="components-mobile-nav"
           role="dialog"
         >
-          <div className="mb-2 flex items-center justify-between">
-            <span className="font-semibold text-foreground text-sm">Components</span>
+          <div className="mb-3 flex items-center justify-between border-b border-border pb-3">
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-smooth-800">
+              Components
+            </span>
             <button
               aria-label="Close"
               className={cn(
-                'inline-flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground',
+                'inline-flex size-8 items-center justify-center rounded-full text-smooth-800 transition-colors duration-150 hover:bg-smooth-200 hover:text-foreground',
                 focusRing,
               )}
               onClick={() => setOpen(false)}
