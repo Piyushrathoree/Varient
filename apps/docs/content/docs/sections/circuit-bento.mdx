@@ -1,0 +1,84 @@
+---
+title: Circuit Bento
+description: A CPU hub with animated SVG circuit traces feeding a three-up tooling grid.
+---
+
+<ComponentPreview name="circuit-bento" variant="section" />
+
+## Installation
+
+Copy the component from `packages/ui/src/components/sections/circuit-bento/` into your project.
+
+```bash
+bun add motion clsx tailwind-merge
+```
+
+## Usage
+
+```tsx
+import { CircuitBento, type CircuitBentoItem } from '@/components/sections/circuit-bento';
+
+const items: CircuitBentoItem[] = [
+  {
+    title: 'React',
+    description: 'The library for web and native user interfaces.',
+    href: 'https://react.dev',
+  },
+  {
+    title: 'Motion',
+    description: 'Production-grade animation for React.',
+    href: 'https://motion.dev',
+  },
+  {
+    title: 'Tailwind CSS',
+    description: 'Utility-first styling mapped onto design tokens.',
+    href: 'https://tailwindcss.com',
+  },
+];
+
+export function LandingPage() {
+  return (
+    <CircuitBento
+      hubLabel="Powered By"
+      title={
+        <>
+          Built on a foundation of fast,{' '}
+          <span className="text-brand">production-grade</span> tooling
+        </>
+      }
+      items={items}
+    />
+  );
+}
+```
+
+## Props
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'ReactNode', description: 'Section headline. Defaults to a title with a single brand-colored span.' },
+    { name: 'hubLabel', type: 'string', defaultValue: "'Powered By'", description: 'Silkscreen label rendered on the central CPU hub.' },
+    { name: 'items', type: 'CircuitBentoItem[]', defaultValue: 'defaultCircuitItems', description: 'Tooling cards under the traces. Each can set title, description, href, and icon.' },
+    { name: 'isCompact', type: 'boolean', defaultValue: 'false', description: 'Tighter type, padding, and line-clamps for gallery frames.' },
+    { name: 'className', type: 'string', description: 'Additional Tailwind classes merged via cn(), applied to the root section.' },
+  ]}
+/>
+
+### CircuitBentoItem
+
+<PropsTable
+  props={[
+    { name: 'title', type: 'string', description: 'Card headline.' },
+    { name: 'description', type: 'string', description: 'Supporting copy below the title.' },
+    { name: 'href', type: 'string', description: 'Optional external link. When set, the card is an anchor with a trailing arrow.' },
+    { name: 'icon', type: 'ReactNode', description: 'Optional mark above the title. Defaults to a built-in geometric icon cycled by card index.' },
+  ]}
+/>
+
+## Accessibility
+
+The section is labelled via `aria-labelledby` pointing at a `useId()`-generated heading. The SVG traces are a single labelled image; CPU pins and pulse strokes are decorative. Linked cards expose a concatenated accessible name (`title — description`) and open in a new tab with `rel="noopener noreferrer"`. Traveling pulses are disabled under `prefers-reduced-motion` and pause while the traces are offscreen.
+
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift + Tab` | Moves focus through linked tooling cards. |

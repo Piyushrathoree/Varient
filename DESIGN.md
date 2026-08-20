@@ -1287,6 +1287,30 @@ interface FeaturesProps {
 
 ---
 
+### Circuit Bento
+**File:** `components/sections/circuit-bento/`
+
+CPU hub with animated orthogonal SVG traces feeding a three-up tooling grid.
+```typescript
+interface CircuitBentoItem {
+  title: string
+  description: string
+  href?: string
+  icon?: React.ReactNode
+}
+
+interface CircuitBentoProps {
+  title?: React.ReactNode
+  hubLabel?: string          // default 'Powered By'
+  items?: CircuitBentoItem[]
+  isCompact?: boolean
+  className?: string
+}
+```
+Traces use traveling info / brand / warning gradient pulses that dissolve into the hub. Pulses respect `prefers-reduced-motion` and pause while offscreen. Cards compose from Foundation `Card`.
+
+---
+
 ### Pricing Table
 **File:** `components/sections/pricing/`
 
