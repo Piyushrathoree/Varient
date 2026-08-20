@@ -1,5 +1,0 @@
-# Universal
-**/.git/  **/build/  **/.cache/
-
-# Node/JS/TS (Next.js + TypeScript)
-**/node_modules/  **/*.min.js  **/*.min.css  **/.next/  **/.nuxt/
