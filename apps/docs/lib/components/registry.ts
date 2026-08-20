@@ -194,6 +194,7 @@ export const components: ComponentEntry[] = [
   entry('Changelog', 'sections', 'Content', 'Versioned list of product updates.', 'shipped'),
   entry('Team Grid', 'sections', 'Content', 'Grid of team member profiles.', 'shipped'),
   entry('Bento Features', 'sections', 'Content', 'Asymmetric bento-style feature showcase.', 'shipped'),
+  entry('Circuit Bento', 'sections', 'Content', 'CPU hub with animated SVG circuit traces feeding a three-up tooling grid.', 'shipped', true),
   entry('Pricing', 'sections', 'Commerce', 'Tiered pricing comparison table.', 'shipped'),
   entry('Comparison Table', 'sections', 'Commerce', 'Feature-by-feature plan comparison.', 'shipped'),
   entry('Footer', 'sections', 'Utility', 'Site footer with links and branding.', 'shipped'),

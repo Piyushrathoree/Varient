@@ -453,6 +453,12 @@ export {
   type BentoFeaturesProps,
 } from './components/sections/bento-features';
 export {
+  CircuitBento,
+  defaultCircuitItems,
+  type CircuitBentoItem,
+  type CircuitBentoProps,
+} from './components/sections/circuit-bento';
+export {
   Timeline,
   defaultTimelineItems,
   type TimelineItem,
